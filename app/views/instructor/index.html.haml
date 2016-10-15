@@ -1,0 +1,8 @@
+%h1 Instructors
+%p (Sorted by last name)
+.row
+  - @instructors.each_slice(@instructors.size / 3 + 1).each do |slice|
+    .col-md-4
+      %ul
+        - slice.each do |instructor|
+          %li= link_to instructor.name, instructor_path(id: instructor.id)

@@ -1,0 +1,33 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title FacultyReportPreparation
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    = csrf_meta_tags
+  %body
+    %ul.nav.nav-pills
+      %li{role: "presentation"}
+        = link_to "Home", "/" # root_path
+      %li{role: "presentation"}
+        = link_to "Evaluation Data", evaluation_index_path
+      %li{role: "presentation"}
+        = link_to "Faculty Member Data", instructor_index_path
+      %li{role: "presentation"}
+        - if user_signed_in?
+          = link_to "Sign out", destroy_user_session_path, method: :delete
+        - else
+          = link_to "Sign in", new_user_session_path
+
+    - if notice.present?
+      %div.alert.alert-info= notice
+    - if alert.present?
+      %div.alert.alert-warning= alert
+    - if flash[:errors].present? && flash[:errors].respond_to?(:full_messages)
+      - flash[:errors].full_messages.each do |error|
+        %div.alert.alert-danger= error
+    - elsif flash[:errors].present? && flash[:errors].instance_of?(String)
+      %div.alert.alert-danger= flash[:errors]
+
+    = content_for?(:content) ? yield(:content) : yield
