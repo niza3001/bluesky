@@ -1,0 +1,1062 @@
+  [1m[36m (18.3ms)[0m  [1mCREATE TABLE "schema_migrations" ("version" varchar(255) NOT NULL) [0m
+  [1m[35m (0.2ms)[0m  select sqlite_version(*)
+  [1m[36m (16.0ms)[0m  [1mCREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version")[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.3ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+Migrating to CreateEvaluations (20160328192306)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.6ms)[0m  CREATE TABLE "evaluations" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "term" varchar(255), "subject" varchar(255), "course" varchar(255), "section" varchar(255), "instructor" varchar(255), "enrollment" integer, "item1_mean" decimal, "item2_mean" decimal, "item3_mean" decimal, "item4_mean" decimal, "item5_mean" decimal, "item6_mean" decimal, "item7_mean" decimal, "item8_mean" decimal, "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160328192306"]]
+  [1m[35m (17.1ms)[0m  commit transaction
+Migrating to CreateInstructors (20160329171000)
+  [1m[36m (0.2ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.7ms)[0m  CREATE TABLE "instructors" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160329171000"]]
+  [1m[35m (13.0ms)[0m  commit transaction
+Migrating to MakeInstructorAnAssocation (20160329171547)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  SELECT DISTINCT "evaluations"."instructor" FROM "evaluations"
+  [1m[36m (1.4ms)[0m  [1mCREATE TEMPORARY TABLE "aevaluations" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "term" varchar(255), "subject" varchar(255), "course" varchar(255), "section" varchar(255), "instructor_name" varchar(255), "enrollment" integer, "item1_mean" decimal, "item2_mean" decimal, "item3_mean" decimal, "item4_mean" decimal, "item5_mean" decimal, "item6_mean" decimal, "item7_mean" decimal, "item8_mean" decimal, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.3ms)[0m  SELECT * FROM "evaluations"
+  [1m[36m (0.5ms)[0m  [1mDROP TABLE "evaluations"[0m
+  [1m[35m (0.4ms)[0m  CREATE TABLE "evaluations" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "term" varchar(255), "subject" varchar(255), "course" varchar(255), "section" varchar(255), "instructor_name" varchar(255), "enrollment" integer, "item1_mean" decimal, "item2_mean" decimal, "item3_mean" decimal, "item4_mean" decimal, "item5_mean" decimal, "item6_mean" decimal, "item7_mean" decimal, "item8_mean" decimal, "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.2ms)[0m  [1mSELECT * FROM "aevaluations"[0m
+  [1m[35m (0.5ms)[0m  DROP TABLE "aevaluations"
+  [1m[36m (0.4ms)[0m  [1mALTER TABLE "evaluations" ADD "instructor_id" integer[0m
+  [1m[35m (0.2ms)[0m  CREATE  INDEX "index_evaluations_on_instructor_id" ON "evaluations" ("instructor_id")
+  [1m[36m (0.3ms)[0m  [1mCREATE TEMPORARY TABLE "aevaluations" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "term" varchar(255), "subject" varchar(255), "course" varchar(255), "section" varchar(255), "instructor_name" varchar(255), "enrollment" integer, "item1_mean" decimal, "item2_mean" decimal, "item3_mean" decimal, "item4_mean" decimal, "item5_mean" decimal, "item6_mean" decimal, "item7_mean" decimal, "item8_mean" decimal, "created_at" datetime, "updated_at" datetime, "instructor_id" integer) [0m
+  [1m[35m (0.2ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_evaluations_on_instructor_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_evaluations_on_instructor_id' AND type='index'
+
+  [1m[36m (0.3ms)[0m  [1mCREATE  INDEX "tindex_aevaluations_on_instructor_id" ON "aevaluations" ("instructor_id")[0m
+  [1m[35m (0.2ms)[0m  SELECT * FROM "evaluations"
+  [1m[36m (0.6ms)[0m  [1mDROP TABLE "evaluations"[0m
+  [1m[35m (0.4ms)[0m  CREATE TABLE "evaluations" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "term" varchar(255), "subject" varchar(255), "course" varchar(255), "section" varchar(255), "enrollment" integer, "item1_mean" decimal, "item2_mean" decimal, "item3_mean" decimal, "item4_mean" decimal, "item5_mean" decimal, "item6_mean" decimal, "item7_mean" decimal, "item8_mean" decimal, "created_at" datetime, "updated_at" datetime, "instructor_id" integer) 
+  [1m[36m (0.2ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='tindex_aevaluations_on_instructor_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='tindex_aevaluations_on_instructor_id' AND type='index'
+[0m
+  [1m[35m (0.2ms)[0m  CREATE  INDEX "index_evaluations_on_instructor_id" ON "evaluations" ("instructor_id")
+  [1m[36m (0.2ms)[0m  [1mSELECT * FROM "aevaluations"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "aevaluations"
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160329171547"]]
+  [1m[35m (16.0ms)[0m  commit transaction
+Migrating to AddTestdataFlagToEvaluation (20160331222137)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "evaluations" ADD "is_test_data" boolean
+  [1m[36mSQL (0.3ms)[0m  [1mUPDATE "evaluations" SET "is_test_data" = 't'[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES (?)  [["version", "20160331222137"]]
+  [1m[36m (13.6ms)[0m  [1mcommit transaction[0m
+Migrating to DeviseCreateUsers (20160331223818)
+  [1m[35m (0.2ms)[0m  begin transaction
+  [1m[36m (0.9ms)[0m  [1mCREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar(255) DEFAULT '' NOT NULL, "encrypted_password" varchar(255) DEFAULT '' NOT NULL, "reset_password_token" varchar(255), "reset_password_sent_at" datetime, "remember_created_at" datetime, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" datetime, "last_sign_in_at" datetime, "current_sign_in_ip" varchar(255), "last_sign_in_ip" varchar(255), "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) [0m
+  [1m[35m (0.6ms)[0m  CREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email")
+  [1m[36m (0.2ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_email' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_email' AND type='index'
+[0m
+  [1m[35m (0.3ms)[0m  CREATE UNIQUE INDEX "index_users_on_reset_password_token" ON "users" ("reset_password_token")
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160331223818"]]
+  [1m[35m (14.2ms)[0m  commit transaction
+Migrating to CreateCourseNames (20160406171314)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.5ms)[0m  CREATE TABLE "course_names" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "subject_course" varchar(255), "name" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160406171314"]]
+  [1m[35m (11.8ms)[0m  commit transaction
+Migrating to AddGprToEvaluation (20160407163328)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.6ms)[0m  ALTER TABLE "evaluations" ADD "gpr" decimal
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160407163328"]]
+  [1m[35m (18.9ms)[0m  commit transaction
+Migrating to ChangeNumberColumnsToInteger (20160408215456)
+  [1m[36m (0.2ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.3ms)[0m  SELECT "evaluations"."id", "evaluations"."course", "evaluations"."section" FROM "evaluations"
+  [1m[36m (0.5ms)[0m  [1mCREATE TEMPORARY TABLE "aevaluations" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "term" varchar(255), "subject" varchar(255), "course" varchar(255), "section" varchar(255), "enrollment" integer, "item1_mean" decimal, "item2_mean" decimal, "item3_mean" decimal, "item4_mean" decimal, "item5_mean" decimal, "item6_mean" decimal, "item7_mean" decimal, "item8_mean" decimal, "created_at" datetime, "updated_at" datetime, "instructor_id" integer, "is_test_data" boolean, "gpr" decimal) [0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_evaluations_on_instructor_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_evaluations_on_instructor_id' AND type='index'
+
+  [1m[36m (0.2ms)[0m  [1mCREATE  INDEX "tindex_aevaluations_on_instructor_id" ON "aevaluations" ("instructor_id")[0m
+  [1m[35m (0.3ms)[0m  SELECT * FROM "evaluations"
+  [1m[36m (0.5ms)[0m  [1mDROP TABLE "evaluations"[0m
+  [1m[35m (0.3ms)[0m  CREATE TABLE "evaluations" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "term" varchar(255), "subject" varchar(255), "section" varchar(255), "enrollment" integer, "item1_mean" decimal, "item2_mean" decimal, "item3_mean" decimal, "item4_mean" decimal, "item5_mean" decimal, "item6_mean" decimal, "item7_mean" decimal, "item8_mean" decimal, "created_at" datetime, "updated_at" datetime, "instructor_id" integer, "is_test_data" boolean, "gpr" decimal) 
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='tindex_aevaluations_on_instructor_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='tindex_aevaluations_on_instructor_id' AND type='index'
+[0m
+  [1m[35m (0.2ms)[0m  CREATE  INDEX "index_evaluations_on_instructor_id" ON "evaluations" ("instructor_id")
+  [1m[36m (0.1ms)[0m  [1mSELECT * FROM "aevaluations"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "aevaluations"
+  [1m[36m (0.2ms)[0m  [1mCREATE TEMPORARY TABLE "aevaluations" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "term" varchar(255), "subject" varchar(255), "section" varchar(255), "enrollment" integer, "item1_mean" decimal, "item2_mean" decimal, "item3_mean" decimal, "item4_mean" decimal, "item5_mean" decimal, "item6_mean" decimal, "item7_mean" decimal, "item8_mean" decimal, "created_at" datetime, "updated_at" datetime, "instructor_id" integer, "is_test_data" boolean, "gpr" decimal) [0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_evaluations_on_instructor_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_evaluations_on_instructor_id' AND type='index'
+
+  [1m[36m (0.2ms)[0m  [1mCREATE  INDEX "tindex_aevaluations_on_instructor_id" ON "aevaluations" ("instructor_id")[0m
+  [1m[35m (0.1ms)[0m  SELECT * FROM "evaluations"
+  [1m[36m (0.6ms)[0m  [1mDROP TABLE "evaluations"[0m
+  [1m[35m (0.3ms)[0m  CREATE TABLE "evaluations" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "term" varchar(255), "subject" varchar(255), "enrollment" integer, "item1_mean" decimal, "item2_mean" decimal, "item3_mean" decimal, "item4_mean" decimal, "item5_mean" decimal, "item6_mean" decimal, "item7_mean" decimal, "item8_mean" decimal, "created_at" datetime, "updated_at" datetime, "instructor_id" integer, "is_test_data" boolean, "gpr" decimal) 
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='tindex_aevaluations_on_instructor_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='tindex_aevaluations_on_instructor_id' AND type='index'
+[0m
+  [1m[35m (0.2ms)[0m  CREATE  INDEX "index_evaluations_on_instructor_id" ON "evaluations" ("instructor_id")
+  [1m[36m (0.2ms)[0m  [1mSELECT * FROM "aevaluations"[0m
+  [1m[35m (0.4ms)[0m  DROP TABLE "aevaluations"
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "evaluations" ADD "course" integer[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "evaluations" ADD "section" integer
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160408215456"]]
+  [1m[35m (12.7ms)[0m  commit transaction
+Migrating to AddExtraNameToInstructor (20160418150933)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.6ms)[0m  ALTER TABLE "instructors" ADD "extra_name" varchar(255)
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160418150933"]]
+  [1m[35m (11.9ms)[0m  commit transaction
+Migrating to RolifyCreateRoles (20160428220218)
+  [1m[36m (0.2ms)[0m  [1mbegin transaction[0m
+  [1m[35m (1.0ms)[0m  CREATE TABLE "roles" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "resource_id" integer, "resource_type" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36m (0.2ms)[0m  [1mCREATE TABLE "users_roles" ("user_id" integer, "role_id" integer) [0m
+  [1m[35m (0.3ms)[0m  CREATE  INDEX "index_roles_on_name" ON "roles" ("name")
+  [1m[36m (0.2ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_roles_on_name' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_roles_on_name' AND type='index'
+[0m
+  [1m[35m (0.4ms)[0m  CREATE  INDEX "index_roles_on_name_and_resource_type_and_resource_id" ON "roles" ("name", "resource_type", "resource_id")
+  [1m[36m (0.3ms)[0m  [1mCREATE  INDEX "index_users_roles_on_user_id_and_role_id" ON "users_roles" ("user_id", "role_id")[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES (?)  [["version", "20160428220218"]]
+  [1m[36m (16.0ms)[0m  [1mcommit transaction[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.3ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36m (4.4ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_evaluations_on_instructor_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_evaluations_on_instructor_id' AND type='index'
+[0m
+  [1m[35m (0.3ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_roles_on_name_and_resource_type_and_resource_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_roles_on_name_and_resource_type_and_resource_id' AND type='index'
+
+  [1m[36m (0.2ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_roles_on_name' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_roles_on_name' AND type='index'
+[0m
+  [1m[35m (0.3ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+
+  [1m[36m (0.3ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_email' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_email' AND type='index'
+[0m
+  [1m[35m (0.2ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_roles_on_user_id_and_role_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_roles_on_user_id_and_role_id' AND type='index'
+
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mInstructor Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "instructors"  WHERE "instructors"."name" = 'Tiffani Williams' LIMIT 1[0m
+  [1m[35mSQL (0.6ms)[0m  INSERT INTO "instructors" ("created_at", "name", "updated_at") VALUES (?, ?, ?)  [["created_at", "2016-10-15 23:21:22.697068"], ["name", "Tiffani Williams"], ["updated_at", "2016-10-15 23:21:22.697068"]]
+  [1m[36m (18.5ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mInstructor Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "instructors"  WHERE ("instructors"."name" = 'Tiffani Williams' AND "instructors"."id" != 1) LIMIT 1[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "evaluations" ("course", "created_at", "enrollment", "instructor_id", "item1_mean", "item2_mean", "item3_mean", "item4_mean", "item5_mean", "item6_mean", "item7_mean", "item8_mean", "section", "subject", "term", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["course", 110], ["created_at", "2016-10-15 23:21:22.781712"], ["enrollment", 39], ["instructor_id", 1], ["item1_mean", 3.83], ["item2_mean", 3.85], ["item3_mean", 4.99], ["item4_mean", 4.41], ["item5_mean", 4.27], ["item6_mean", 3.83], ["item7_mean", 3.08], ["item8_mean", 3.99], ["section", 501], ["subject", "CSCE"], ["term", "2015C"], ["updated_at", "2016-10-15 23:21:22.781712"]]
+  [1m[36m (16.9ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mInstructor Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "instructors"  WHERE ("instructors"."name" = 'Tiffani Williams' AND "instructors"."id" != 1) LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "evaluations" ("course", "created_at", "enrollment", "instructor_id", "item1_mean", "item2_mean", "item3_mean", "item4_mean", "item5_mean", "item6_mean", "item7_mean", "item8_mean", "section", "subject", "term", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["course", 110], ["created_at", "2016-10-15 23:21:22.805910"], ["enrollment", 46], ["instructor_id", 1], ["item1_mean", 4.14], ["item2_mean", 3.49], ["item3_mean", 4.46], ["item4_mean", 3.43], ["item5_mean", 4.12], ["item6_mean", 3.5], ["item7_mean", 4.5], ["item8_mean", 3.59], ["section", 502], ["subject", "CSCE"], ["term", "2015C"], ["updated_at", "2016-10-15 23:21:22.805910"]]
+  [1m[36m (11.5ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mInstructor Exists (0.4ms)[0m  [1mSELECT  1 AS one FROM "instructors"  WHERE ("instructors"."name" = 'Tiffani Williams' AND "instructors"."id" != 1) LIMIT 1[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "evaluations" ("course", "created_at", "enrollment", "instructor_id", "item1_mean", "item2_mean", "item3_mean", "item4_mean", "item5_mean", "item6_mean", "item7_mean", "item8_mean", "section", "subject", "term", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["course", 110], ["created_at", "2016-10-15 23:21:22.824235"], ["enrollment", 31], ["instructor_id", 1], ["item1_mean", 4.27], ["item2_mean", 3.89], ["item3_mean", 4.15], ["item4_mean", 3.24], ["item5_mean", 4.06], ["item6_mean", 4.53], ["item7_mean", 3.7], ["item8_mean", 3.09], ["section", 503], ["subject", "CSCE"], ["term", "2015C"], ["updated_at", "2016-10-15 23:21:22.824235"]]
+  [1m[36m (12.6ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mInstructor Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "instructors"  WHERE "instructors"."name" = 'Joseph Daniel Hurley' LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "instructors" ("created_at", "name", "updated_at") VALUES (?, ?, ?)  [["created_at", "2016-10-15 23:21:22.841646"], ["name", "Joseph Daniel Hurley"], ["updated_at", "2016-10-15 23:21:22.841646"]]
+  [1m[36m (12.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mInstructor Exists (0.4ms)[0m  [1mSELECT  1 AS one FROM "instructors"  WHERE ("instructors"."name" = 'Joseph Daniel Hurley' AND "instructors"."id" != 2) LIMIT 1[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "evaluations" ("course", "created_at", "enrollment", "instructor_id", "item1_mean", "item2_mean", "item3_mean", "item4_mean", "item5_mean", "item6_mean", "item7_mean", "item8_mean", "section", "subject", "term", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["course", 111], ["created_at", "2016-10-15 23:21:22.860125"], ["enrollment", 36], ["instructor_id", 2], ["item1_mean", 3.6], ["item2_mean", 3.84], ["item3_mean", 3.99], ["item4_mean", 4.03], ["item5_mean", 4.48], ["item6_mean", 4.29], ["item7_mean", 3.63], ["item8_mean", 3.41], ["section", 501], ["subject", "CSCE"], ["term", "2015C"], ["updated_at", "2016-10-15 23:21:22.860125"]]
+  [1m[36m (12.2ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mInstructor Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "instructors"  WHERE ("instructors"."name" = 'Joseph Daniel Hurley' AND "instructors"."id" != 2) LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "evaluations" ("course", "created_at", "enrollment", "instructor_id", "item1_mean", "item2_mean", "item3_mean", "item4_mean", "item5_mean", "item6_mean", "item7_mean", "item8_mean", "section", "subject", "term", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["course", 111], ["created_at", "2016-10-15 23:21:22.878925"], ["enrollment", 22], ["instructor_id", 2], ["item1_mean", 3.24], ["item2_mean", 3.34], ["item3_mean", 3.16], ["item4_mean", 3.14], ["item5_mean", 3.59], ["item6_mean", 3.05], ["item7_mean", 4.16], ["item8_mean", 3.84], ["section", 502], ["subject", "CSCE"], ["term", "2015C"], ["updated_at", "2016-10-15 23:21:22.878925"]]
+  [1m[36m (11.6ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.2ms)[0m  begin transaction
+  [1m[36mInstructor Exists (0.5ms)[0m  [1mSELECT  1 AS one FROM "instructors"  WHERE ("instructors"."name" = 'Joseph Daniel Hurley' AND "instructors"."id" != 2) LIMIT 1[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "evaluations" ("course", "created_at", "enrollment", "instructor_id", "item1_mean", "item2_mean", "item3_mean", "item4_mean", "item5_mean", "item6_mean", "item7_mean", "item8_mean", "section", "subject", "term", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["course", 111], ["created_at", "2016-10-15 23:21:22.897580"], ["enrollment", 36], ["instructor_id", 2], ["item1_mean", 3.8], ["item2_mean", 3.56], ["item3_mean", 3.49], ["item4_mean", 3.51], ["item5_mean", 3.08], ["item6_mean", 3.43], ["item7_mean", 4.92], ["item8_mean", 4.4], ["section", 503], ["subject", "CSCE"], ["term", "2015C"], ["updated_at", "2016-10-15 23:21:22.897580"]]
+  [1m[36m (10.9ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.2ms)[0m  begin transaction
+  [1m[36mInstructor Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "instructors"  WHERE "instructors"."name" = 'Walter Daugherity' LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "instructors" ("created_at", "name", "updated_at") VALUES (?, ?, ?)  [["created_at", "2016-10-15 23:21:22.914136"], ["name", "Walter Daugherity"], ["updated_at", "2016-10-15 23:21:22.914136"]]
+  [1m[36m (10.8ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.2ms)[0m  begin transaction
+  [1m[36mInstructor Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "instructors"  WHERE ("instructors"."name" = 'Walter Daugherity' AND "instructors"."id" != 3) LIMIT 1[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "evaluations" ("course", "created_at", "enrollment", "instructor_id", "item1_mean", "item2_mean", "item3_mean", "item4_mean", "item5_mean", "item6_mean", "item7_mean", "item8_mean", "section", "subject", "term", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["course", 121], ["created_at", "2016-10-15 23:21:22.931115"], ["enrollment", 42], ["instructor_id", 3], ["item1_mean", 3.14], ["item2_mean", 4.74], ["item3_mean", 4.9], ["item4_mean", 3.62], ["item5_mean", 3.93], ["item6_mean", 3.18], ["item7_mean", 4.49], ["item8_mean", 4.98], ["section", 501], ["subject", "CSCE"], ["term", "2015C"], ["updated_at", "2016-10-15 23:21:22.931115"]]
+  [1m[36m (11.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mInstructor Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "instructors"  WHERE ("instructors"."name" = 'Walter Daugherity' AND "instructors"."id" != 3) LIMIT 1[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "evaluations" ("course", "created_at", "enrollment", "instructor_id", "item1_mean", "item2_mean", "item3_mean", "item4_mean", "item5_mean", "item6_mean", "item7_mean", "item8_mean", "section", "subject", "term", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["course", 121], ["created_at", "2016-10-15 23:21:22.948599"], ["enrollment", 31], ["instructor_id", 3], ["item1_mean", 4.33], ["item2_mean", 3.34], ["item3_mean", 3.99], ["item4_mean", 4.05], ["item5_mean", 3.48], ["item6_mean", 4.77], ["item7_mean", 4.55], ["item8_mean", 4.29], ["section", 502], ["subject", "CSCE"], ["term", "2015C"], ["updated_at", "2016-10-15 23:21:22.948599"]]
+  [1m[36m (10.8ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mInstructor Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "instructors"  WHERE ("instructors"."name" = 'Walter Daugherity' AND "instructors"."id" != 3) LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "evaluations" ("course", "created_at", "enrollment", "instructor_id", "item1_mean", "item2_mean", "item3_mean", "item4_mean", "item5_mean", "item6_mean", "item7_mean", "item8_mean", "section", "subject", "term", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["course", 121], ["created_at", "2016-10-15 23:21:22.968820"], ["enrollment", 45], ["instructor_id", 3], ["item1_mean", 4.8], ["item2_mean", 4.08], ["item3_mean", 3.88], ["item4_mean", 4.92], ["item5_mean", 4.79], ["item6_mean", 3.5], ["item7_mean", 4.28], ["item8_mean", 3.7], ["section", 503], ["subject", "CSCE"], ["term", "2015C"], ["updated_at", "2016-10-15 23:21:22.968820"]]
+  [1m[36m (8.2ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mInstructor Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "instructors"  WHERE ("instructors"."name" = 'Walter Daugherity' AND "instructors"."id" != 3) LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "evaluations" ("course", "created_at", "enrollment", "instructor_id", "item1_mean", "item2_mean", "item3_mean", "item4_mean", "item5_mean", "item6_mean", "item7_mean", "item8_mean", "section", "subject", "term", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["course", 121], ["created_at", "2016-10-15 23:21:22.985074"], ["enrollment", 21], ["instructor_id", 3], ["item1_mean", 3.48], ["item2_mean", 3.24], ["item3_mean", 4.04], ["item4_mean", 4.67], ["item5_mean", 4.85], ["item6_mean", 3.32], ["item7_mean", 4.91], ["item8_mean", 4.6], ["section", 504], ["subject", "CSCE"], ["term", "2015C"], ["updated_at", "2016-10-15 23:21:22.985074"]]
+  [1m[36m (10.6ms)[0m  [1mcommit transaction[0m
+  [1m[35m (1.3ms)[0m  begin transaction
+  [1m[36mInstructor Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "instructors"  WHERE ("instructors"."name" = 'Walter Daugherity' AND "instructors"."id" != 3) LIMIT 1[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "evaluations" ("course", "created_at", "enrollment", "instructor_id", "item1_mean", "item2_mean", "item3_mean", "item4_mean", "item5_mean", "item6_mean", "item7_mean", "item8_mean", "section", "subject", "term", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["course", 121], ["created_at", "2016-10-15 23:21:23.005351"], ["enrollment", 44], ["instructor_id", 3], ["item1_mean", 3.54], ["item2_mean", 3.4], ["item3_mean", 4.71], ["item4_mean", 3.05], ["item5_mean", 3.01], ["item6_mean", 4.22], ["item7_mean", 4.55], ["item8_mean", 4.39], ["section", 505], ["subject", "CSCE"], ["term", "2015C"], ["updated_at", "2016-10-15 23:21:23.005351"]]
+  [1m[36m (10.9ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mInstructor Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "instructors"  WHERE ("instructors"."name" = 'Walter Daugherity' AND "instructors"."id" != 3) LIMIT 1[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "evaluations" ("course", "created_at", "enrollment", "instructor_id", "item1_mean", "item2_mean", "item3_mean", "item4_mean", "item5_mean", "item6_mean", "item7_mean", "item8_mean", "section", "subject", "term", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["course", 121], ["created_at", "2016-10-15 23:21:23.024803"], ["enrollment", 36], ["instructor_id", 3], ["item1_mean", 3.54], ["item2_mean", 4.45], ["item3_mean", 3.75], ["item4_mean", 4.27], ["item5_mean", 3.33], ["item6_mean", 4.48], ["item7_mean", 4.8], ["item8_mean", 4.21], ["section", 506], ["subject", "CSCE"], ["term", "2015C"], ["updated_at", "2016-10-15 23:21:23.024803"]]
+  [1m[36m (11.6ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mInstructor Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "instructors"  WHERE ("instructors"."name" = 'Walter Daugherity' AND "instructors"."id" != 3) LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "evaluations" ("course", "created_at", "enrollment", "instructor_id", "item1_mean", "item2_mean", "item3_mean", "item4_mean", "item5_mean", "item6_mean", "item7_mean", "item8_mean", "section", "subject", "term", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["course", 121], ["created_at", "2016-10-15 23:21:23.043265"], ["enrollment", 34], ["instructor_id", 3], ["item1_mean", 3.7], ["item2_mean", 3.82], ["item3_mean", 4.83], ["item4_mean", 4.48], ["item5_mean", 3.71], ["item6_mean", 4.3], ["item7_mean", 3.9], ["item8_mean", 4.52], ["section", 507], ["subject", "CSCE"], ["term", "2015C"], ["updated_at", "2016-10-15 23:21:23.043265"]]
+  [1m[36m (10.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mInstructor Exists (0.4ms)[0m  [1mSELECT  1 AS one FROM "instructors"  WHERE ("instructors"."name" = 'Walter Daugherity' AND "instructors"."id" != 3) LIMIT 1[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "evaluations" ("course", "created_at", "enrollment", "instructor_id", "item1_mean", "item2_mean", "item3_mean", "item4_mean", "item5_mean", "item6_mean", "item7_mean", "item8_mean", "section", "subject", "term", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  [["course", 121], ["created_at", "2016-10-15 23:21:23.061552"], ["enrollment", 43], ["instructor_id", 3], ["item1_mean", 4.7], ["item2_mean", 3.56], ["item3_mean", 3.56], ["item4_mean", 4.6], ["item5_mean", 4.38], ["item6_mean", 4.78], ["item7_mean", 4.92], ["item8_mean", 4.73], ["section", 508], ["subject", "CSCE"], ["term", "2015C"], ["updated_at", "2016-10-15 23:21:23.061552"]]
+  [1m[36m (10.6ms)[0m  [1mcommit transaction[0m
+
+
+Started GET "/" for 165.91.13.124 at 2016-10-15 23:22:10 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by HomeController#index as HTML
+  Rendered home/index.html.haml within layouts/home (23.3ms)
+Completed 200 OK in 6141ms (Views: 6125.2ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/application.self.css?body=1" for 165.91.13.124 at 2016-10-15 23:22:17 +0000
+
+
+Started GET "/assets/jquery.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:22:17 +0000
+
+
+Started GET "/assets/admin.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:22:17 +0000
+
+
+Started GET "/assets/turbolinks.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:22:17 +0000
+
+
+Started GET "/assets/jquery_ujs.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:22:17 +0000
+
+
+Started GET "/assets/bootstrap.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:22:17 +0000
+
+
+Started GET "/assets/course_name.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:22:17 +0000
+
+
+Started GET "/assets/home.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:22:17 +0000
+
+
+Started GET "/assets/evaluation.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:22:17 +0000
+
+
+Started GET "/assets/instructor.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:22:17 +0000
+
+
+Started GET "/assets/application.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:22:17 +0000
+
+
+Started GET "/users/sign_in" for 165.91.13.124 at 2016-10-15 23:22:34 +0000
+Processing by Devise::SessionsController#new as HTML
+  Rendered devise/shared/_links.html.haml (4.2ms)
+  Rendered devise/sessions/new.html.haml within layouts/devise (90.1ms)
+  Rendered layouts/application.html.haml (204.1ms)
+Completed 200 OK in 330ms (Views: 312.1ms | ActiveRecord: 0.7ms)
+
+
+Started GET "/" for 165.91.13.124 at 2016-10-15 23:22:39 +0000
+Processing by HomeController#index as HTML
+  Rendered home/index.html.haml within layouts/home (9.4ms)
+Completed 200 OK in 192ms (Views: 191.0ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/users/sign_in" for 165.91.13.124 at 2016-10-15 23:22:41 +0000
+Processing by Devise::SessionsController#new as HTML
+  Rendered devise/shared/_links.html.haml (1.4ms)
+  Rendered devise/sessions/new.html.haml within layouts/devise (10.0ms)
+  Rendered layouts/application.html.haml (308.5ms)
+Completed 200 OK in 334ms (Views: 330.9ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/users/sign_up" for 165.91.13.124 at 2016-10-15 23:22:56 +0000
+Processing by Devise::RegistrationsController#new as HTML
+  Rendered devise/shared/_links.html.haml (0.7ms)
+  Rendered devise/registrations/new.html.haml within layouts/devise (13.8ms)
+  Rendered layouts/application.html.haml (340.5ms)
+Completed 200 OK in 371ms (Views: 367.1ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/users" for 165.91.13.124 at 2016-10-15 23:23:00 +0000
+Processing by Devise::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"HAQSfT3/i1wDfrP8GVaLk9yezDZy6Uwqu07Gmzs1kRA=", "user"=>{"email"=>"sina.mohseni89@gmail.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.2ms)[0m  begin transaction
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users"  WHERE "users"."email" = 'sina.mohseni89@gmail.com' LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  rollback transaction
+  Rendered devise/shared/_links.html.haml (0.6ms)
+  Rendered devise/registrations/new.html.haml within layouts/devise (14.9ms)
+  Rendered layouts/application.html.haml (251.5ms)
+Completed 200 OK in 551ms (Views: 283.3ms | ActiveRecord: 0.6ms)
+
+
+Started GET "/assets/application.self.css?body=1" for 165.91.13.124 at 2016-10-15 23:23:01 +0000
+
+
+Started GET "/assets/jquery.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:01 +0000
+
+
+Started GET "/assets/bootstrap.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:01 +0000
+
+
+Started GET "/assets/turbolinks.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:01 +0000
+
+
+Started GET "/assets/jquery_ujs.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:01 +0000
+
+
+Started GET "/assets/course_name.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:01 +0000
+
+
+Started GET "/assets/admin.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:01 +0000
+
+
+Started GET "/assets/evaluation.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:01 +0000
+
+
+Started GET "/assets/home.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:01 +0000
+
+
+Started GET "/assets/instructor.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:01 +0000
+
+
+Started GET "/assets/application.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:01 +0000
+
+
+Started POST "/users" for 165.91.13.124 at 2016-10-15 23:23:06 +0000
+Processing by Devise::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"HAQSfT3/i1wDfrP8GVaLk9yezDZy6Uwqu07Gmzs1kRA=", "user"=>{"email"=>"sina.mohseni89@gmail.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35mUser Exists (0.3ms)[0m  SELECT  1 AS one FROM "users"  WHERE "users"."email" = 'sina.mohseni89@gmail.com' LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mrollback transaction[0m
+  Rendered devise/shared/_links.html.haml (0.8ms)
+  Rendered devise/registrations/new.html.haml within layouts/devise (36.2ms)
+  Rendered layouts/application.html.haml (221.7ms)
+Completed 200 OK in 293ms (Views: 269.4ms | ActiveRecord: 0.5ms)
+
+
+Started GET "/assets/application.self.css?body=1" for 165.91.13.124 at 2016-10-15 23:23:06 +0000
+
+
+Started GET "/assets/jquery_ujs.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:06 +0000
+
+
+Started GET "/assets/bootstrap.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:06 +0000
+
+
+Started GET "/assets/turbolinks.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:06 +0000
+
+
+Started GET "/assets/jquery.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:06 +0000
+
+
+Started GET "/assets/admin.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:06 +0000
+
+
+Started GET "/assets/course_name.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:06 +0000
+
+
+Started GET "/assets/evaluation.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:06 +0000
+
+
+Started GET "/assets/home.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:06 +0000
+
+
+Started GET "/assets/instructor.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:06 +0000
+
+
+Started GET "/assets/application.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:06 +0000
+
+
+Started GET "/" for 165.91.13.124 at 2016-10-15 23:23:08 +0000
+Processing by HomeController#index as HTML
+  Rendered home/index.html.haml within layouts/home (1.1ms)
+Completed 200 OK in 230ms (Views: 229.3ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/application.self.css?body=1" for 165.91.13.124 at 2016-10-15 23:23:08 +0000
+
+
+Started GET "/assets/bootstrap.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:09 +0000
+
+
+Started GET "/assets/turbolinks.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:09 +0000
+
+
+Started GET "/assets/jquery.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:09 +0000
+
+
+Started GET "/assets/jquery_ujs.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:09 +0000
+
+
+Started GET "/assets/admin.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:09 +0000
+
+
+Started GET "/assets/course_name.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:09 +0000
+
+
+Started GET "/assets/evaluation.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:09 +0000
+
+
+Started GET "/assets/home.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:09 +0000
+
+
+Started GET "/assets/instructor.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:09 +0000
+
+
+Started GET "/assets/application.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:09 +0000
+
+
+Started GET "/users/sign_in" for 165.91.13.124 at 2016-10-15 23:23:10 +0000
+Processing by Devise::SessionsController#new as HTML
+  Rendered devise/shared/_links.html.haml (0.6ms)
+  Rendered devise/sessions/new.html.haml within layouts/devise (9.5ms)
+  Rendered layouts/application.html.haml (209.3ms)
+Completed 200 OK in 230ms (Views: 227.7ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/users/sign_up" for 165.91.13.124 at 2016-10-15 23:23:12 +0000
+Processing by Devise::RegistrationsController#new as HTML
+  Rendered devise/shared/_links.html.haml (0.8ms)
+  Rendered devise/registrations/new.html.haml within layouts/devise (15.2ms)
+  Rendered layouts/application.html.haml (197.3ms)
+Completed 200 OK in 226ms (Views: 223.9ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/users" for 165.91.13.124 at 2016-10-15 23:23:22 +0000
+Processing by Devise::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"HAQSfT3/i1wDfrP8GVaLk9yezDZy6Uwqu07Gmzs1kRA=", "user"=>{"email"=>"sina.mohseni89@gmail.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users"  WHERE "users"."email" = 'sina.mohseni89@gmail.com' LIMIT 1[0m
+Binary data inserted for `string` type on column `encrypted_password`
+  [1m[35mSQL (0.6ms)[0m  INSERT INTO "users" ("created_at", "email", "encrypted_password", "updated_at") VALUES (?, ?, ?, ?)  [["created_at", "2016-10-15 23:23:22.781584"], ["email", "sina.mohseni89@gmail.com"], ["encrypted_password", "$2a$10$fv0bYyJHXRGKFkyxZyoFfumyfUkkR4pWmCvp2j9xoHHTaYKJDwQTK"], ["updated_at", "2016-10-15 23:23:22.781584"]]
+  [1m[36mRole Load (1.6ms)[0m  [1mSELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ?[0m  [["user_id", 1]]
+  [1m[35mUser Load (0.2ms)[0m  SELECT "users".* FROM "users" INNER JOIN "users_roles" ON "users_roles"."user_id" = "users"."id" INNER JOIN "roles" ON "roles"."id" = "users_roles"."role_id" WHERE (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT  "roles".* FROM "roles"  WHERE "roles"."name" = 'admin' AND "roles"."resource_type" IS NULL AND "roles"."resource_id" IS NULL  ORDER BY "roles"."id" ASC LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "roles" ("created_at", "name", "updated_at") VALUES (?, ?, ?)  [["created_at", "2016-10-15 23:23:22.885010"], ["name", "admin"], ["updated_at", "2016-10-15 23:23:22.885010"]]
+  [1m[36mRole Load (2.5ms)[0m  [1mSELECT  "roles".* FROM "roles"  WHERE "roles"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "users_roles" ("role_id", "user_id") VALUES (?, ?)  [["role_id", 1], ["user_id", 1]]
+  [1m[36m (13.2ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+Binary data inserted for `string` type on column `current_sign_in_ip`
+Binary data inserted for `string` type on column `last_sign_in_ip`
+  [1m[36mSQL (0.5ms)[0m  [1mUPDATE "users" SET "current_sign_in_at" = ?, "current_sign_in_ip" = ?, "last_sign_in_at" = ?, "last_sign_in_ip" = ?, "sign_in_count" = ?, "updated_at" = ? WHERE "users"."id" = 1[0m  [["current_sign_in_at", "2016-10-15 23:23:22.918148"], ["current_sign_in_ip", "165.91.13.124"], ["last_sign_in_at", "2016-10-15 23:23:22.918148"], ["last_sign_in_ip", "165.91.13.124"], ["sign_in_count", 1], ["updated_at", "2016-10-15 23:23:22.919585"]]
+  [1m[35m (11.5ms)[0m  commit transaction
+Redirected to https://software-engineering-sina-mohseni.c9users.io/
+Completed 302 Found in 242ms (ActiveRecord: 32.1ms)
+
+
+Started GET "/" for 165.91.13.124 at 2016-10-15 23:23:22 +0000
+Processing by HomeController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1[0m
+  [1m[35mRole Load (0.3ms)[0m  SELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))  [["user_id", 1]]
+  Rendered home/index.html.haml within layouts/home (11.0ms)
+Completed 200 OK in 184ms (Views: 182.4ms | ActiveRecord: 0.8ms)
+
+
+Started GET "/assets/application.self.css?body=1" for 165.91.13.124 at 2016-10-15 23:23:23 +0000
+
+
+Started GET "/assets/turbolinks.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:23 +0000
+
+
+Started GET "/assets/jquery.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:23 +0000
+
+
+Started GET "/assets/jquery_ujs.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:23 +0000
+
+
+Started GET "/assets/bootstrap.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:23 +0000
+
+
+Started GET "/assets/admin.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:23 +0000
+
+
+Started GET "/assets/course_name.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:23 +0000
+
+
+Started GET "/assets/evaluation.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:23 +0000
+
+
+Started GET "/assets/home.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:23 +0000
+
+
+Started GET "/assets/instructor.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:23 +0000
+
+
+Started GET "/assets/application.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:23:23 +0000
+
+
+Started GET "/evaluation/import" for 165.91.13.124 at 2016-10-15 23:23:57 +0000
+Processing by EvaluationController#import as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1[0m
+  [1m[35mRole Load (0.3ms)[0m  SELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))  [["user_id", 1]]
+  Rendered evaluation/import.html.haml within layouts/centered_form (6.7ms)
+  Rendered layouts/application.html.haml (238.0ms)
+Completed 200 OK in 267ms (Views: 259.9ms | ActiveRecord: 0.6ms)
+
+
+Started POST "/evaluation/upload" for 165.91.13.124 at 2016-10-15 23:24:09 +0000
+Processing by EvaluationController#upload as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"HAQSfT3/i1wDfrP8GVaLk9yezDZy6Uwqu07Gmzs1kRA=", "data_file"=>#<ActionDispatch::Http::UploadedFile:0x007fdd732c1ae8 @tempfile=#<Tempfile:/tmp/RackMultipart20161015-37443-1v30wdb>, @original_filename="CSCE606Projects2016C.xlsx", @content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", @headers="Content-Disposition: form-data; name=\"data_file\"; filename=\"CSCE606Projects2016C.xlsx\"\r\nContent-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\r\n">, "commit"=>"Upload"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1[0m
+Redirected to https://software-engineering-sina-mohseni.c9users.io/evaluation/import
+Completed 302 Found in 154ms (ActiveRecord: 0.4ms)
+
+
+Started GET "/evaluation/import" for 165.91.13.124 at 2016-10-15 23:24:09 +0000
+Processing by EvaluationController#import as HTML
+  [1m[35mUser Load (0.4ms)[0m  SELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1
+  [1m[36mRole Load (0.2ms)[0m  [1mSELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))[0m  [["user_id", 1]]
+  Rendered evaluation/import.html.haml within layouts/centered_form (6.7ms)
+  Rendered layouts/application.html.haml (187.2ms)
+Completed 200 OK in 206ms (Views: 201.1ms | ActiveRecord: 0.6ms)
+
+
+Started GET "/assets/application.self.css?body=1" for 165.91.13.124 at 2016-10-15 23:24:10 +0000
+
+
+Started GET "/assets/jquery_ujs.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:24:10 +0000
+
+
+Started GET "/assets/bootstrap.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:24:10 +0000
+
+
+Started GET "/assets/jquery.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:24:10 +0000
+
+
+Started GET "/assets/turbolinks.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:24:10 +0000
+
+
+Started GET "/assets/course_name.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:24:10 +0000
+
+
+Started GET "/assets/admin.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:24:10 +0000
+
+
+Started GET "/assets/home.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:24:10 +0000
+
+
+Started GET "/assets/evaluation.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:24:10 +0000
+
+
+Started GET "/assets/instructor.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:24:10 +0000
+
+
+Started GET "/assets/application.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:24:10 +0000
+
+
+Started POST "/evaluation/upload" for 165.91.13.124 at 2016-10-15 23:25:40 +0000
+Processing by EvaluationController#upload as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"HAQSfT3/i1wDfrP8GVaLk9yezDZy6Uwqu07Gmzs1kRA=", "data_file"=>#<ActionDispatch::Http::UploadedFile:0x007fdd70114f68 @tempfile=#<Tempfile:/tmp/RackMultipart20161015-37443-zshi7z>, @original_filename="amato-teaching-evals.xlsx", @content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", @headers="Content-Disposition: form-data; name=\"data_file\"; filename=\"amato-teaching-evals.xlsx\"\r\nContent-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\r\n">, "commit"=>"Upload"}
+  [1m[35mUser Load (0.4ms)[0m  SELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1
+Redirected to https://software-engineering-sina-mohseni.c9users.io/evaluation/import
+Completed 302 Found in 116ms (ActiveRecord: 0.4ms)
+
+
+Started GET "/evaluation/import" for 165.91.13.124 at 2016-10-15 23:25:40 +0000
+Processing by EvaluationController#import as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1[0m
+  [1m[35mRole Load (0.1ms)[0m  SELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))  [["user_id", 1]]
+  Rendered evaluation/import.html.haml within layouts/centered_form (1.4ms)
+  Rendered layouts/application.html.haml (159.4ms)
+Completed 200 OK in 171ms (Views: 166.1ms | ActiveRecord: 0.5ms)
+
+
+Started GET "/assets/application.self.css?body=1" for 165.91.13.124 at 2016-10-15 23:25:40 +0000
+
+
+Started GET "/assets/jquery.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:25:41 +0000
+
+
+Started GET "/assets/jquery_ujs.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:25:41 +0000
+
+
+Started GET "/assets/turbolinks.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:25:41 +0000
+
+
+Started GET "/assets/course_name.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:25:41 +0000
+
+
+Started GET "/assets/bootstrap.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:25:41 +0000
+
+
+Started GET "/assets/admin.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:25:41 +0000
+
+
+Started GET "/assets/evaluation.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:25:41 +0000
+
+
+Started GET "/assets/home.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:25:41 +0000
+
+
+Started GET "/assets/instructor.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:25:41 +0000
+
+
+Started GET "/assets/application.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:25:41 +0000
+
+
+Started POST "/evaluation/upload" for 165.91.13.124 at 2016-10-15 23:25:54 +0000
+Processing by EvaluationController#upload as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"HAQSfT3/i1wDfrP8GVaLk9yezDZy6Uwqu07Gmzs1kRA=", "data_file"=>#<ActionDispatch::Http::UploadedFile:0x007fdd6c005ef0 @tempfile=#<Tempfile:/tmp/RackMultipart20161015-37443-1uw16co>, @original_filename="CSCE606Projects2016C.xlsx", @content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", @headers="Content-Disposition: form-data; name=\"data_file\"; filename=\"CSCE606Projects2016C.xlsx\"\r\nContent-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\r\n">, "commit"=>"Upload"}
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1[0m
+Redirected to https://software-engineering-sina-mohseni.c9users.io/evaluation/import
+Completed 302 Found in 150ms (ActiveRecord: 0.3ms)
+
+
+Started GET "/evaluation/import" for 165.91.13.124 at 2016-10-15 23:25:54 +0000
+Processing by EvaluationController#import as HTML
+  [1m[35mUser Load (0.4ms)[0m  SELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1
+  [1m[36mRole Load (0.2ms)[0m  [1mSELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))[0m  [["user_id", 1]]
+  Rendered evaluation/import.html.haml within layouts/centered_form (5.1ms)
+  Rendered layouts/application.html.haml (186.9ms)
+Completed 200 OK in 205ms (Views: 199.9ms | ActiveRecord: 0.6ms)
+
+
+Started GET "/assets/application.self.css?body=1" for 165.91.13.124 at 2016-10-15 23:25:54 +0000
+
+
+Started GET "/assets/jquery.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:25:54 +0000
+
+
+Started GET "/assets/turbolinks.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:25:54 +0000
+
+
+Started GET "/assets/bootstrap.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:25:54 +0000
+
+
+Started GET "/assets/course_name.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:25:54 +0000
+
+
+Started GET "/assets/admin.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:25:54 +0000
+
+
+Started GET "/assets/jquery_ujs.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:25:54 +0000
+
+
+Started GET "/assets/evaluation.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:25:54 +0000
+
+
+Started GET "/assets/home.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:25:54 +0000
+
+
+Started GET "/assets/instructor.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:25:54 +0000
+
+
+Started GET "/assets/application.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:25:54 +0000
+
+
+Started POST "/evaluation/upload" for 165.91.13.124 at 2016-10-15 23:26:04 +0000
+Processing by EvaluationController#upload as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"HAQSfT3/i1wDfrP8GVaLk9yezDZy6Uwqu07Gmzs1kRA=", "data_file"=>#<ActionDispatch::Http::UploadedFile:0x007fdd71cc6568 @tempfile=#<Tempfile:/tmp/RackMultipart20161015-37443-1q7f692>, @original_filename="2015A.pdf", @content_type="application/pdf", @headers="Content-Disposition: form-data; name=\"data_file\"; filename=\"2015A.pdf\"\r\nContent-Type: application/pdf\r\n">, "commit"=>"Upload"}
+  [1m[35mUser Load (0.5ms)[0m  SELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1
+Redirected to https://software-engineering-sina-mohseni.c9users.io/evaluation/import
+Completed 302 Found in 4ms (ActiveRecord: 0.5ms)
+
+
+Started GET "/evaluation/import" for 165.91.13.124 at 2016-10-15 23:26:04 +0000
+Processing by EvaluationController#import as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1[0m
+  [1m[35mRole Load (0.1ms)[0m  SELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))  [["user_id", 1]]
+  Rendered evaluation/import.html.haml within layouts/centered_form (1.8ms)
+  Rendered layouts/application.html.haml (172.7ms)
+Completed 200 OK in 186ms (Views: 181.5ms | ActiveRecord: 0.6ms)
+
+
+Started GET "/assets/application.self.css?body=1" for 165.91.13.124 at 2016-10-15 23:26:04 +0000
+
+
+Started GET "/assets/jquery.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:26:04 +0000
+
+
+Started GET "/assets/bootstrap.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:26:04 +0000
+
+
+Started GET "/assets/jquery_ujs.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:26:04 +0000
+
+
+Started GET "/assets/admin.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:26:04 +0000
+
+
+Started GET "/assets/turbolinks.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:26:04 +0000
+
+
+Started GET "/assets/course_name.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:26:04 +0000
+
+
+Started GET "/assets/evaluation.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:26:04 +0000
+
+
+Started GET "/assets/home.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:26:04 +0000
+
+
+Started GET "/assets/instructor.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:26:04 +0000
+
+
+Started GET "/assets/application.self.js?body=1" for 165.91.13.124 at 2016-10-15 23:26:04 +0000
+
+
+Started GET "/evaluation" for 165.91.13.124 at 2016-10-15 23:26:07 +0000
+Processing by EvaluationController#index as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1[0m
+  [1m[35mRole Load (0.1ms)[0m  SELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))  [["user_id", 1]]
+  [1m[36m (0.2ms)[0m  [1mSELECT "evaluations"."term" FROM "evaluations"  WHERE (NOT (instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL))[0m
+Redirected to https://software-engineering-sina-mohseni.c9users.io/evaluation/2015C
+Completed 302 Found in 25ms (ActiveRecord: 1.3ms)
+
+
+Started GET "/evaluation/2015C" for 165.91.13.124 at 2016-10-15 23:26:07 +0000
+Processing by EvaluationController#show as HTML
+  Parameters: {"id"=>"2015C"}
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1
+  [1m[36mRole Load (0.2ms)[0m  [1mSELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))[0m  [["user_id", 1]]
+  [1m[35mEvaluation Load (0.5ms)[0m  SELECT "evaluations".* FROM "evaluations"  WHERE (NOT (instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL)) AND "evaluations"."term" = '2015C'
+  [1m[36mInstructor Load (0.3ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.1ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mInstructor Load (0.1ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 2]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 2]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 2]]
+  [1m[36mInstructor Load (0.1ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36m (0.2ms)[0m  [1mSELECT "evaluations"."term" FROM "evaluations"[0m
+  Rendered evaluation/show.html.haml within layouts/application (31.4ms)
+Completed 200 OK in 245ms (Views: 188.8ms | ActiveRecord: 2.6ms)
+
+
+Started GET "/instructor" for 165.91.13.124 at 2016-10-15 23:26:10 +0000
+Processing by InstructorController#index as HTML
+  [1m[35mUser Load (0.4ms)[0m  SELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1
+  [1m[36mRole Load (0.2ms)[0m  [1mSELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))[0m  [["user_id", 1]]
+  [1m[35m (0.3ms)[0m  SELECT "evaluations"."instructor_id" FROM "evaluations"  WHERE (NOT (instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL))
+  [1m[36mInstructor Load (0.3ms)[0m  [1mSELECT "instructors".* FROM "instructors"  WHERE "instructors"."id" IN (1, 2, 3)[0m
+  Rendered instructor/index.html.haml within layouts/application (3.7ms)
+Completed 200 OK in 275ms (Views: 266.2ms | ActiveRecord: 1.1ms)
+
+
+Started GET "/instructor/3" for 165.91.13.124 at 2016-10-15 23:26:15 +0000
+Processing by InstructorController#show as HTML
+  Parameters: {"id"=>"3"}
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1
+  [1m[36mRole Load (0.2ms)[0m  [1mSELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))[0m  [["user_id", 1]]
+  [1m[35mInstructor Load (0.2ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mEvaluation Load (0.3ms)[0m  [1mSELECT "evaluations".* FROM "evaluations"  WHERE "evaluations"."instructor_id" = ? AND (NOT (instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL))[0m  [["instructor_id", 3]]
+  [1m[35mEvaluation Load (0.3ms)[0m  SELECT "evaluations".* FROM "evaluations"  WHERE (NOT (instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL))
+  [1m[36mInstructor Load (0.2ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.1ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mInstructor Load (0.2ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 2]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 2]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 2]]
+  [1m[36mInstructor Load (0.2ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCourseName Load (0.3ms)[0m  [1mSELECT  "course_names".* FROM "course_names"  WHERE "course_names"."subject_course" = 'CSCE 121'  ORDER BY "course_names"."id" ASC LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "course_names".* FROM "course_names"  WHERE "course_names"."subject_course" = 'CSCE 121'  ORDER BY "course_names"."id" ASC LIMIT 1
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "evaluations".* FROM "evaluations"  WHERE "evaluations"."instructor_id" = ? AND (NOT (instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL))[0m  [["instructor_id", 3]]
+  Rendered instructor/show.html.haml within layouts/application (29.7ms)
+Completed 200 OK in 336ms (Views: 190.1ms | ActiveRecord: 5.9ms)
+
+
+Started GET "/instructor" for 165.91.13.124 at 2016-10-15 23:26:17 +0000
+Processing by InstructorController#index as HTML
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))[0m  [["user_id", 1]]
+  [1m[35m (0.3ms)[0m  SELECT "evaluations"."instructor_id" FROM "evaluations"  WHERE (NOT (instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL))
+  [1m[36mInstructor Load (0.3ms)[0m  [1mSELECT "instructors".* FROM "instructors"  WHERE "instructors"."id" IN (1, 2, 3)[0m
+  Rendered instructor/index.html.haml within layouts/application (1.1ms)
+Completed 200 OK in 328ms (Views: 321.7ms | ActiveRecord: 1.0ms)
+
+
+Started GET "/evaluation" for 165.91.13.124 at 2016-10-15 23:26:17 +0000
+Processing by EvaluationController#index as HTML
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1
+  [1m[36mRole Load (0.2ms)[0m  [1mSELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))[0m  [["user_id", 1]]
+  [1m[35m (0.2ms)[0m  SELECT "evaluations"."term" FROM "evaluations"  WHERE (NOT (instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL))
+Redirected to https://software-engineering-sina-mohseni.c9users.io/evaluation/2015C
+Completed 302 Found in 6ms (ActiveRecord: 0.7ms)
+
+
+Started GET "/evaluation/2015C" for 165.91.13.124 at 2016-10-15 23:26:18 +0000
+Processing by EvaluationController#show as HTML
+  Parameters: {"id"=>"2015C"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1[0m
+  [1m[35mRole Load (0.2ms)[0m  SELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))  [["user_id", 1]]
+  [1m[36mEvaluation Load (0.4ms)[0m  [1mSELECT "evaluations".* FROM "evaluations"  WHERE (NOT (instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL)) AND "evaluations"."term" = '2015C'[0m
+  [1m[35mInstructor Load (0.2ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mInstructor Load (0.2ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 2]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 2]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 2]]
+  [1m[35mInstructor Load (0.2ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35m (0.3ms)[0m  SELECT "evaluations"."term" FROM "evaluations"
+  Rendered evaluation/show.html.haml within layouts/application (29.9ms)
+Completed 200 OK in 246ms (Views: 220.9ms | ActiveRecord: 2.1ms)
+
+
+Started GET "/evaluation" for 165.91.13.124 at 2016-10-15 23:26:38 +0000
+Processing by EvaluationController#index as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1[0m
+  [1m[35mRole Load (0.1ms)[0m  SELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))  [["user_id", 1]]
+  [1m[36m (0.2ms)[0m  [1mSELECT "evaluations"."term" FROM "evaluations"  WHERE (NOT (instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL))[0m
+Redirected to https://software-engineering-sina-mohseni.c9users.io/evaluation/2015C
+Completed 302 Found in 6ms (ActiveRecord: 0.7ms)
+
+
+Started GET "/evaluation/2015C" for 165.91.13.124 at 2016-10-15 23:26:38 +0000
+Processing by EvaluationController#show as HTML
+  Parameters: {"id"=>"2015C"}
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))[0m  [["user_id", 1]]
+  [1m[35mEvaluation Load (0.4ms)[0m  SELECT "evaluations".* FROM "evaluations"  WHERE (NOT (instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL)) AND "evaluations"."term" = '2015C'
+  [1m[36mInstructor Load (0.2ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mInstructor Load (0.1ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 2]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 2]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 2]]
+  [1m[36mInstructor Load (0.1ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.2ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36m (0.3ms)[0m  [1mSELECT "evaluations"."term" FROM "evaluations"[0m
+  Rendered evaluation/show.html.haml within layouts/application (25.8ms)
+Completed 200 OK in 219ms (Views: 198.1ms | ActiveRecord: 1.9ms)
+
+
+Started GET "/" for 165.91.13.124 at 2016-10-15 23:26:38 +0000
+Processing by HomeController#index as HTML
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1
+  [1m[36mRole Load (0.2ms)[0m  [1mSELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))[0m  [["user_id", 1]]
+  Rendered home/index.html.haml within layouts/home (5.6ms)
+Completed 200 OK in 186ms (Views: 184.8ms | ActiveRecord: 0.5ms)
+
+
+Started GET "/evaluation/missing_data" for 165.91.13.124 at 2016-10-15 23:26:51 +0000
+Processing by EvaluationController#missing_data as HTML
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))[0m  [["user_id", 1]]
+  [1m[35mEvaluation Load (0.3ms)[0m  SELECT "evaluations".* FROM "evaluations"  WHERE (instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL OR gpr is NULL)
+  [1m[36mInstructor Load (0.1ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mInstructor Load (0.1ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 2]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 2]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 2]]
+  [1m[36mInstructor Load (0.1ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  Rendered evaluation/missing_data.html.haml within layouts/application (29.2ms)
+Completed 200 OK in 204ms (Views: 186.8ms | ActiveRecord: 1.3ms)
+
+
+Started GET "/evaluation" for 165.91.13.124 at 2016-10-15 23:26:55 +0000
+Processing by EvaluationController#index as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1[0m
+  [1m[35mRole Load (0.1ms)[0m  SELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))  [["user_id", 1]]
+  [1m[36m (0.2ms)[0m  [1mSELECT "evaluations"."term" FROM "evaluations"  WHERE (NOT (instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL))[0m
+Redirected to https://software-engineering-sina-mohseni.c9users.io/evaluation/2015C
+Completed 302 Found in 6ms (ActiveRecord: 0.7ms)
+
+
+Started GET "/evaluation/2015C" for 165.91.13.124 at 2016-10-15 23:26:56 +0000
+Processing by EvaluationController#show as HTML
+  Parameters: {"id"=>"2015C"}
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))[0m  [["user_id", 1]]
+  [1m[35mEvaluation Load (0.3ms)[0m  SELECT "evaluations".* FROM "evaluations"  WHERE (NOT (instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL)) AND "evaluations"."term" = '2015C'
+  [1m[36mInstructor Load (0.1ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mInstructor Load (0.2ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 2]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 2]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 2]]
+  [1m[36mInstructor Load (0.2ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.1ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.1ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36m (0.2ms)[0m  [1mSELECT "evaluations"."term" FROM "evaluations"[0m
+  Rendered evaluation/show.html.haml within layouts/application (17.7ms)
+Completed 200 OK in 189ms (Views: 173.3ms | ActiveRecord: 1.7ms)
+
+
+Started GET "/" for 165.91.13.124 at 2016-10-15 23:26:58 +0000
+Processing by HomeController#index as HTML
+  [1m[35mUser Load (0.5ms)[0m  SELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1
+  [1m[36mRole Load (0.3ms)[0m  [1mSELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))[0m  [["user_id", 1]]
+  Rendered home/index.html.haml within layouts/home (9.6ms)
+Completed 200 OK in 303ms (Views: 300.6ms | ActiveRecord: 0.8ms)
+
+
+Started GET "/instructor" for 165.91.13.124 at 2016-10-15 23:27:03 +0000
+Processing by InstructorController#index as HTML
+  [1m[35mUser Load (0.5ms)[0m  SELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1
+  [1m[36mRole Load (0.2ms)[0m  [1mSELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))[0m  [["user_id", 1]]
+  [1m[35m (0.4ms)[0m  SELECT "evaluations"."instructor_id" FROM "evaluations"  WHERE (NOT (instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL))
+  [1m[36mInstructor Load (0.2ms)[0m  [1mSELECT "instructors".* FROM "instructors"  WHERE "instructors"."id" IN (1, 2, 3)[0m
+  Rendered instructor/index.html.haml within layouts/application (1.0ms)
+Completed 200 OK in 378ms (Views: 369.6ms | ActiveRecord: 1.3ms)
+
+
+Started GET "/instructor/2" for 165.91.13.124 at 2016-10-15 23:27:05 +0000
+Processing by InstructorController#show as HTML
+  Parameters: {"id"=>"2"}
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1
+  [1m[36mRole Load (0.2ms)[0m  [1mSELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))[0m  [["user_id", 1]]
+  [1m[35mInstructor Load (0.1ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 2]]
+  [1m[36mEvaluation Load (0.2ms)[0m  [1mSELECT "evaluations".* FROM "evaluations"  WHERE "evaluations"."instructor_id" = ? AND (NOT (instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL))[0m  [["instructor_id", 2]]
+  [1m[35mEvaluation Load (0.4ms)[0m  SELECT "evaluations".* FROM "evaluations"  WHERE (NOT (instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL))
+  [1m[36mInstructor Load (0.2ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mInstructor Load (0.1ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 2]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 2]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 2]]
+  [1m[36mInstructor Load (0.2ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCourseName Load (0.3ms)[0m  [1mSELECT  "course_names".* FROM "course_names"  WHERE "course_names"."subject_course" = 'CSCE 111'  ORDER BY "course_names"."id" ASC LIMIT 1[0m
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "course_names".* FROM "course_names"  WHERE "course_names"."subject_course" = 'CSCE 111'  ORDER BY "course_names"."id" ASC LIMIT 1
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "evaluations".* FROM "evaluations"  WHERE "evaluations"."instructor_id" = ? AND (NOT (instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL))[0m  [["instructor_id", 2]]
+  Rendered instructor/show.html.haml within layouts/application (7.5ms)
+Completed 200 OK in 240ms (Views: 216.0ms | ActiveRecord: 2.2ms)
+
+
+Started GET "/evaluation" for 165.91.13.124 at 2016-10-15 23:27:07 +0000
+Processing by EvaluationController#index as HTML
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))[0m  [["user_id", 1]]
+  [1m[35m (0.2ms)[0m  SELECT "evaluations"."term" FROM "evaluations"  WHERE (NOT (instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL))
+Redirected to https://software-engineering-sina-mohseni.c9users.io/evaluation/2015C
+Completed 302 Found in 6ms (ActiveRecord: 0.7ms)
+
+
+Started GET "/evaluation/2015C" for 165.91.13.124 at 2016-10-15 23:27:07 +0000
+Processing by EvaluationController#show as HTML
+  Parameters: {"id"=>"2015C"}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users"  WHERE "users"."id" = 1  ORDER BY "users"."id" ASC LIMIT 1[0m
+  [1m[35mRole Load (0.2ms)[0m  SELECT "roles".* FROM "roles" INNER JOIN "users_roles" ON "roles"."id" = "users_roles"."role_id" WHERE "users_roles"."user_id" = ? AND (((roles.name = 'admin') AND (roles.resource_type IS NULL) AND (roles.resource_id IS NULL)))  [["user_id", 1]]
+  [1m[36mEvaluation Load (0.5ms)[0m  [1mSELECT "evaluations".* FROM "evaluations"  WHERE (NOT (instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL)) AND "evaluations"."term" = '2015C'[0m
+  [1m[35mInstructor Load (0.2ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mInstructor Load (0.2ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 2]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 2]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 2]]
+  [1m[35mInstructor Load (0.2ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "instructors".* FROM "instructors"  WHERE "instructors"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35m (0.2ms)[0m  SELECT "evaluations"."term" FROM "evaluations"
+  Rendered evaluation/show.html.haml within layouts/application (28.4ms)
+Completed 200 OK in 233ms (Views: 209.9ms | ActiveRecord: 2.1ms)
