@@ -1,10 +1,10 @@
-class EvaluationController < ApplicationController
+class ExportModel < ApplicationController
 
   before_action :authenticate_user!
 
   def new
     if can? :write, :all
-      @evaluation = Evaluation.new
+      @evaluation = ExportModel.new
       # pluck call must remain :name, :id to have the correct ordering for the select box helper
       @instructors = Instructor.select_menu_options
       render layout: "layouts/centered_form"
@@ -16,7 +16,7 @@ class EvaluationController < ApplicationController
   def create
     key_attrs, other_attrs = split_attributes(evaluation_params)
 
-    @evaluation = Evaluation.where(key_attrs).first_or_initialize
+    @evaluation = ExportModel.where(key_attrs).first_or_initialize
     @evaluation.assign_attributes(other_attrs)
     @evaluation.save
 
@@ -65,27 +65,10 @@ class EvaluationController < ApplicationController
     end
   end
 
-  def import
-    if can? :write, :all
-      render layout: "layouts/centered_form"
-    else
-      redirect_to evaluation_index_path
-    end
-  end
-
-  def import_gpr
-    if can? :write, :all
-      render layout: "layouts/centered_form"
-    else
-      redirect_to evaluation_index_path
-    end
-  end
-
   def export
     temp = params[:Itemz]
     term = params.require(:id)
-    evaluation_groups = Evaluation.no_missing_data.where(term: term).default_sorted_groups
-    #new_evaluation_groups = evaluation_groups
+    evaluation_groups = ExportModel.no_missing_data.where(term: term).default_sorted_groups
     send_data EvaluationReportExporter.new(evaluation_groups).generate(params[:Itemz]), filename: "#{term}_evaluation_report_#{Time.now.strftime('%F')}.csv"
   end
 

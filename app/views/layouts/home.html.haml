@@ -7,6 +7,30 @@
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = csrf_meta_tags
   %body
+    - if user_signed_in? 
+      %ul.nav.nav-pills
+        %li{role: "presentation"}
+          = link_to "Home", "/" # root_path    
+        %li{role: "presentation"}
+          .dropdown
+          %a.btn.btn-link.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
+            View By
+            %span.caret
+          %ul.dropdown-menu.dropdown-menu-left
+            %li
+              = link_to "View Evaluation Data", evaluation_index_path
+            %li
+              = link_to "View Faculty Member Data", instructor_index_path  
+            %li
+              = link_to "View Missing Data", missing_data_evaluation_index_path
+            %li
+              = link_to "View Course Names", course_name_index_path
+        %li{role: "presentation"}
+          - if user_signed_in?
+            = link_to "Sign out", destroy_user_session_path, method: :delete
+          - else
+            = link_to "Sign in", new_user_session_path
+
 
   - if notice.present?
     %div.alert.alert-info= notice
