@@ -118,7 +118,9 @@ class EvaluationController < ApplicationController
 
   def upload
     if params[:data_file] != nil
-      importer = ::PicaReportImporter.new(params.require(:data_file).tempfile)
+      file = params[:data_file]
+      filename = file.original_filename
+      importer = ::PicaReportImporter.new(params.require(:data_file).tempfile, filename)
       importer.import
       results = importer.results
 
@@ -132,7 +134,7 @@ class EvaluationController < ApplicationController
     flash[:errors] = ex.to_s
     redirect_to import_evaluation_index_path
   rescue
-    flash[:errors] = "There was an error parsing that XLSX file. Maybe it is corrupt? Please note that only XLSX files are supported, not XLS."
+    flash[:errors] = "There was an error parsing your Excel file. Maybe it is corrupt?"
     redirect_to import_evaluation_index_path
   end
 
