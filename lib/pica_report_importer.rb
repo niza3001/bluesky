@@ -35,7 +35,7 @@ class PicaReportImporter
 
       # currently all files are saved on the server
     else
-      raise MalformedFileException, "unrecognized format for PICA data import: " + @extension
+      raise "There was an error parsing your Excel f    ile. Maybe it is corrupt?"
     end
   end
 
