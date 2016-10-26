@@ -20,7 +20,7 @@ Feature: Integrate data uploaded from excel files downloaded from PICA website
     When User selects a non-excel file
     And User clicks on the Upload button
     Then User should be on the import page
-    And User should see message stating There was an error parsing that XLSX file. Maybe it is corrupt?
+    And User should see message stating There was an error parsing your Excel file. Maybe it is corrupt?
 
   Scenario: User does not select a file to uploaded
     Given User is authenticated

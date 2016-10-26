@@ -14,6 +14,7 @@ class EvaluationImportUtils
         _, is_new = Evaluation.create_if_needed_and_update(key_attrs, other_attrs)
         { status: is_new }
       when 'ENGR'
+        # This will only add professors it has already seen before
         inst = Instructor.where(name: Instructor.normalize_name(other_attrs[:instructor])).first
         if inst
           _, is_new = Evaluation.create_if_needed_and_update(key_attrs, other_attrs)

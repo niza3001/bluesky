@@ -1,4 +1,7 @@
+require 'roo'
+require 'roo-xls'
 require 'rubyXL'
+require 'fileutils'
 
 class PicaReportImporter
 
@@ -19,10 +22,23 @@ class PicaReportImporter
 
   RENAMES = { :sect => :section }
 
-  def initialize(uploaded_file)
-    # TODO: check for wrong filetype here
-    @workbook = RubyXL::Parser.parse_buffer(uploaded_file)
+  def initialize(uploaded_file, filename)
+    @extension = filename.split('.').last
+
+    if @extension == 'xlsx'
+      @workbook = RubyXL::Parser.parse_buffer(uploaded_file)
+    elsif @extension == 'xls'
+      file = File.join("public", filename)
+      FileUtils.cp uploaded_file.path, file
+
+      @workbook = Roo::Spreadsheet.open(file)
+
+      # currently all files are saved on the server
+    else
+      puts "ERROR: unrecognized format for PICA data import: " + @extension
+    end
   end
+
 
   def import
     @results = EvaluationImportUtils.import(evaluation_hashes)
@@ -38,37 +54,68 @@ class PicaReportImporter
 
   private
   def evaluation_hashes
+    puts "EVALUATION HASHES CALLED"
     @evaluation_hashes ||= parse_sheet
   end
 
   def parse_sheet
-    sheet = @workbook.first
-
-    # figure out the columns of the data from the headers
-    column_header_indices = {}
-    sheet[0].cells.each_with_index do |cell, i|
-      column_header_indices[cell.value.downcase.to_sym] = i
-    end
-
     evaluations = []
 
-    sheet.each_with_index do |row, row_num|
-      # skip the first row. It's just column headings
-      next if row_num == 0
+    if @extension == 'xlsx'
+      sheet = @workbook.first
 
-      evaluation = {}
-      DESIRED_DATA.each do |data_type|
-        row_index = column_header_indices[data_type]
-        raise MalformedFileException.new if row_index.nil?
-        cell = row.cells[row_index]
-
-        data_type = RENAMES[data_type] if RENAMES[data_type]
-        evaluation[data_type] = cell && cell.value
+      # figure out the columns of the data from the headers
+      column_header_indices = {}
+      sheet[0].cells.each_with_index do |cell, i|
+        column_header_indices[cell.value.downcase.to_sym] = i
       end
 
-      evaluations.push(evaluation) if evaluation.values.reject(&:nil?).size > 0
+      sheet.each_with_index do |row, row_num|
+        # skip the first row. It's just column headings
+        next if row_num == 0
+
+        evaluation = {}
+        DESIRED_DATA.each do |data_type|
+          row_index = column_header_indices[data_type]
+          raise MalformedFileException.new if row_index.nil?
+          cell = row.cells[row_index]
+
+          data_type = RENAMES[data_type] if RENAMES[data_type]
+          evaluation[data_type] = cell && cell.value
+        end
+
+        evaluations.push(evaluation) if evaluation.values.reject(&:nil?).size > 0
+      end
+    elsif @extension == 'xls'
+      @workbook.default_sheet = @workbook.sheets.first
+
+      # figure out the columns of the data from the headers
+      column_header_indices = {}
+
+      @workbook.row(1).each_with_index { |header, i|
+        column_header_indices[header.downcase.to_sym] = i
+      }
+
+      ((@workbook.first_row + 1)..@workbook.last_row).each_with_index do |row, row_num|
+        evaluation = {}
+        DESIRED_DATA.each do |data_type|
+          row_index = column_header_indices[data_type]
+          raise MalformedFileException.new if row_index.nil?
+          cell = @workbook.cell(row_num + 2, row_index + 1)
+
+          data_type = RENAMES[data_type] if RENAMES[data_type]
+          if data_type == :course || data_type == :section || data_type == :enrollment
+            evaluation[data_type] = cell.to_int
+          else
+            evaluation[data_type] = cell
+          end
+        end
+
+        evaluations.push(evaluation) if evaluation.values.reject(&:nil?).size > 0
+      end
     end
 
+    puts evaluations.inspect
     evaluations
   end
 end
