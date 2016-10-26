@@ -9,6 +9,7 @@
             %ul.nav.nav-pills.nav-stacked
               %li= link_to "Import PICA evaluation data", import_evaluation_index_path
               %li= link_to "Import GPR distribution data", import_gpr_evaluation_index_path
+              %li= link_to "Import course names data", import_course_name_index_path
               %li= link_to "Add Paper Evaluation", new_evaluation_path
         - if can? :read, :all
           .well.well-sm{style: "display: inline-block"}

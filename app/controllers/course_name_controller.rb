@@ -25,6 +25,34 @@ class CourseNameController < ApplicationController
     @courses = Evaluation.all.group_by { |e| e.subject.to_s + e.course.to_s }.map(&:last).map(&:first)
   end
 
+  def import
+    if can? :write, :all
+      render layout: "layouts/centered_form"
+    else
+      redirect_to course_name_index_path
+    end
+  end
+
+  def upload
+    if params[:data_file] != nil
+      importer = ::CourseNameImporter.new(params.require(:data_file).tempfile)
+      importer.import
+      results = importer.results
+
+      flash[:notice] = "#{results[:created]} new course names imported. #{results[:updated]} course names updated. #{results[:failed]} course names were not imported."
+      redirect_to course_name_index_path
+    else
+      flash[:errors] = "File not attached, please select file to upload"
+      redirect_to import_course_name_index_path
+    end
+  rescue ::CourseNameImporter::MalformedFileException => ex
+    flash[:errors] = ex.to_s
+    redirect_to import_course_name_index_path
+  rescue
+    flash[:errors] = "There was an error parsing that XLSX file. Maybe it is corrupt? Please note that only XLSX files are supported, not XLS."
+    redirect_to import_course_name_index_path
+  end
+
   private
   def subject_course
     if params[:course_name].nil?
