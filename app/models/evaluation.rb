@@ -6,7 +6,7 @@ class Evaluation < ActiveRecord::Base
   def self.all_Items
      self.all.select(:Item).distinct.order(:Item).pluck(:Item)
   end
-  
+
   # needed for rolify
   resourcify
 
@@ -90,8 +90,8 @@ class Evaluation < ActiveRecord::Base
     CourseName.where(subject_course: subject_course).first.try(:name)
   end
 
-   def csv_data(columns)
-     
+  def csv_data(columns)
+
     temp_csv = [
       term,
       subject,
@@ -99,10 +99,9 @@ class Evaluation < ActiveRecord::Base
       section,
       instructor.name,
       enrollment
-      ]
-     
-     itemss = [
-      
+    ]
+
+    itemss = [
       item1_mean,
       item2_mean,
       item3_mean,
@@ -111,39 +110,20 @@ class Evaluation < ActiveRecord::Base
       item6_mean,
       item7_mean,
       item8_mean
-      ] 
-      
-   
-   # temp_csv = Array.new
-   # temp_csv = CSV_data[0..5]
-    r = 0
-    rr = 0
-    # Add/remove Item 1..8 on everything
-    (1..8).each do |x|
-          #puts columns["#{x}"]
-          #puts x
-         
-           if (columns["#{x}"] == "1" )
-             rr = rr + 1
-             temp_csv[5 + rr] = itemss[r]             #item2_mean
-             
-          #   puts r
-           end 
-           r = r + 1 
-         end 
-         
-         
-      
-    puts temp_csv
-     #puts temp_csv
-     temp_csv.map(&:to_s)
-     
-   end
-  
+    ]
 
-  
+    if columns.nil?
+      temp_csv = temp_csv + itemss
+    else
+      count = 0
+      (1..8).each do |x|
+        if columns.key?(x.to_s)
+          temp_csv[count + 6] = itemss[x]
+          count = count + 1
+        end
+      end
+    end
 
-
-  
-
+    temp_csv
+  end
 end
