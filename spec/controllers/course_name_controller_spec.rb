@@ -70,4 +70,40 @@ RSpec.describe CourseNameController, type: :controller do
       expect(assigns(:courses).count).to eq(2)
     end
   end
+
+  describe "GET #import" do
+    it "renders the pretty centered form template" do
+      get :import
+      expect(response).to render_template 'layouts/centered_form'
+    end
+  end
+
+  describe "POST #upload" do
+    it "fails gracefully for non .xlsx fils" do
+      @file = fixture_file_upload('/random.dat', 'application/octet-stream')
+      post :upload, data_file: @file
+      expect(response).to redirect_to(import_course_name_index_path)
+      expect(flash[:errors]).to_not be(nil)
+    end
+
+    it "gracefully rejects malformatted .xlsx files" do
+      @file = fixture_file_upload('/malformed_course_name.xlsx', 'application/vnd.ms-excel')
+      post :upload, data_file: @file
+      expect(response).to redirect_to(import_course_name_index_path)
+      expect(flash[:errors]).to_not be(nil)
+    end
+
+    it "accepts .xlsx files for uploading" do
+      @file = fixture_file_upload('/course_names.xlsx', 'application/vnd.ms-excel')
+      post :upload, data_file: @file
+      expect(response).to redirect_to("/course_name")
+    end
+
+    it "creates the correct evaluation records for the test data" do
+      @file = fixture_file_upload('/course_names.xlsx', 'application/vnd.ms-excel')
+      post :upload, data_file: @file
+      expect(CourseName.where(subject_course: 'CSCE 111').first_or_initialize.name).to eq('Introduction to Algorithms')
+    end
+  end
+
 end
