@@ -35,7 +35,7 @@ class PicaReportImporter
 
       # currently all files are saved on the server
     else
-      puts "ERROR: unrecognized format for PICA data import: " + @extension
+      raise MalformedFileException, "unrecognized format for PICA data import: " + @extension
     end
   end
 
