@@ -118,7 +118,7 @@ class Evaluation < ActiveRecord::Base
       count = 0
       (1..8).each do |x|
         if columns.key?(x.to_s)
-          temp_csv[count + 6] = itemss[x]
+          temp_csv[count + 6] = itemss[x - 1]
           count = count + 1
         end
       end

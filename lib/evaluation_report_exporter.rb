@@ -51,9 +51,9 @@ class EvaluationReportExporter
 
       # Add/remove Item 1..8 on everything
       count = 0
-      (1..8).each_with_index do |x, idx|
+      (1..8).each do |x|
         if itemz.key?(x.to_s)
-          temp_HEADINGS[count + 6] = HEADINGS[idx + 6]
+          temp_HEADINGS[count + 6] = HEADINGS[x + 5]
           count = count + 1
         end
       end

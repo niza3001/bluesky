@@ -35,13 +35,12 @@ class EvaluationController < ApplicationController
 
       latest_term = params[:term] || Evaluation.no_missing_data.pluck(:term).uniq.sort.reverse.first
 
-       if latest_term.nil?
+      if latest_term.nil?
         flash[:notice] = "No evaluation data exists yet! Try importing some."
         redirect_to root_path
       else
         redirect_to evaluation_path(id: latest_term)
       end
-
     else
       redirect_to root_path
     end
