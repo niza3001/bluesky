@@ -30,6 +30,10 @@ gem 'devise'
 # User rubyXL gem for reading and writing xlsx files
 gem 'rubyXL'
 
+# User roo gem for reading and writing xls files
+gem 'roo'
+gem 'roo-xls'
+
 gem 'pdf-reader-turtletext' # Gem for parsing PDF reports
 
 gem 'rake', group: :test # for TravisCI

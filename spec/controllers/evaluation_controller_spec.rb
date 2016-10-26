@@ -216,14 +216,14 @@ RSpec.describe EvaluationController, type: :controller do
   end
 
   describe "POST #upload" do
-    it "fails gracefully for non .xlsx fils" do
+    it "fails gracefully for non excel files" do
       @file = fixture_file_upload('/random.dat', 'application/octet-stream')
       post :upload, data_file: @file
       expect(response).to redirect_to(import_evaluation_index_path)
       expect(flash[:errors]).to_not be(nil)
     end
 
-    it "gracefully rejects malformatted .xlsx files" do
+    it "gracefully rejects malformatted excel files" do
       @file = fixture_file_upload('/StatisticsReport_withoutCourseColumn.xlsx', 'application/vnd.ms-excel')
       post :upload, data_file: @file
       expect(response).to redirect_to(import_evaluation_index_path)
@@ -232,6 +232,12 @@ RSpec.describe EvaluationController, type: :controller do
 
     it "accepts .xlsx files for uploading" do
       @file = fixture_file_upload('/StatisticsReport.xlsx', 'application/vnd.ms-excel')
+      post :upload, data_file: @file
+      expect(response).to redirect_to("/evaluation")
+    end
+
+    it "accepts .xls files for uploading" do
+      @file = fixture_file_upload('/StatisticsReport.xls', 'application/vnd.ms-excel')
       post :upload, data_file: @file
       expect(response).to redirect_to("/evaluation")
     end

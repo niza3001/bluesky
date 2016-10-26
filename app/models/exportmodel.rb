@@ -1,4 +1,4 @@
-class Evaluation < ActiveRecord::Base
+class ExportModel < ActiveRecord::Base
 
   belongs_to :instructor
   validates_associated :instructor
@@ -27,7 +27,7 @@ class Evaluation < ActiveRecord::Base
   validates :item8_mean, numericality: { allow_blank: true }
 
   scope :no_missing_data, -> {where.not("instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL")}
-  scope :missing_data, ->{where("instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL OR gpr is NULL")}
+  scope :missing_data, -> {where("instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL OR gpr is NULL")}
 
   KEY_ATTRIBUTES = [:term, :subject, :course, :section].freeze
 
@@ -90,19 +90,14 @@ class Evaluation < ActiveRecord::Base
     CourseName.where(subject_course: subject_course).first.try(:name)
   end
 
-   def csv_data(columns)
-     
-    temp_csv = [
+  def csv_data
+    [
       term,
       subject,
       course,
       section,
       instructor.name,
-      enrollment
-      ]
-     
-     itemss = [
-      
+      enrollment,
       item1_mean,
       item2_mean,
       item3_mean,
@@ -111,37 +106,8 @@ class Evaluation < ActiveRecord::Base
       item6_mean,
       item7_mean,
       item8_mean
-      ] 
-      
-   
-   # temp_csv = Array.new
-   # temp_csv = CSV_data[0..5]
-    r = 0
-    rr = 0
-    # Add/remove Item 1..8 on everything
-    (1..8).each do |x|
-          #puts columns["#{x}"]
-          #puts x
-         
-           if (columns["#{x}"] == "1" )
-             rr = rr + 1
-             temp_csv[5 + rr] = itemss[r]             #item2_mean
-             
-          #   puts r
-           end 
-           r = r + 1 
-         end 
-         
-         
-      
-    puts temp_csv
-     #puts temp_csv
-     temp_csv.map(&:to_s)
-     
-   end
-  
-
-  
+    ].map(&:to_s)
+  end
 
 
   

@@ -1,19 +1,8 @@
 %p.text-right
   .pull-right
-    .dropdown
-      %a.btn.btn-link.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
-        Actions
-        %span.caret
-      %ul.dropdown-menu.dropdown-menu-right
-        - if can? :write, :all
-          %li
-            = link_to "Import PICA Data", import_evaluation_index_path
-        %li
-          = link_to "Export This Report", export_evaluation_path
-        %li
-          = link_to "View Missing Data", missing_data_evaluation_index_path
-        %li
-          = link_to "View Course Names", course_name_index_path
+    = link_to "Import PICA Data", import_evaluation_index_path, class: "btn btn-primary" 
+    = link_to "Import GPR distribution data", import_gpr_evaluation_index_path, class: "btn btn-primary" 
+    
   = form_tag evaluation_index_path, method: :get, class: "form-inline" do
     .form-group
       %label{for: "term"} Select Term:
@@ -21,6 +10,8 @@
         - @terms.each do |term|
           %option{value: term, selected: (term == params[:id] ? "selected" : nil)}= term
     %button{type: "submit", class: "btn btn-primary"} Go
+
+%h1 Evaluation Table: 
 
 %table.table.table-condensed
   %thead
@@ -72,3 +63,25 @@
         %td.green-highlight= compute_course_level_average(group, @evaluation_groups).round(2)
       %tr
         %td{colspan: 17}
+        
+%h2 Select Items to export:
+
+= form_tag export_evaluation_path, method: :get do
+  = "Item 1"
+  =check_box_tag "Itemz[1]" , 1, nil, :id => "It1"
+  = "Item 2"
+  =check_box_tag "Itemz[2]" , 1, nil, :id => "It2"
+  = "Item 3"
+  =check_box_tag "Itemz[3]" , 1, nil, :id => "It3"
+  = "Item 4"
+  =check_box_tag "Itemz[4]" , 1, nil, :id => "It4"
+  = "Item 5"
+  =check_box_tag "Itemz[5]" , 1, nil, :id => "It5"
+  = "Item 6"
+  =check_box_tag "Itemz[6]" , 1, nil, :id => "It6"
+  = "Item 7"
+  =check_box_tag "Itemz[7]" , 1, nil, :id => "It7"
+  = "Item 8"
+  =check_box_tag "Itemz[8]" , 1, nil, :id => "It8"
+  
+  =submit_tag 'Export to Excel'
