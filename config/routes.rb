@@ -41,8 +41,10 @@ Rails.application.routes.draw do
     get 'export', on: :member
   end
 
-  resources :course_name
-
+  resources :course_name do
+    get  'import',       on: :collection
+    post 'upload',       on: :collection
+  end
 
   # Example resource route with options:
   #   resources :products do
