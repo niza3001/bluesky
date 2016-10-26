@@ -54,7 +54,6 @@ class PicaReportImporter
 
   private
   def evaluation_hashes
-    puts "EVALUATION HASHES CALLED"
     @evaluation_hashes ||= parse_sheet
   end
 
@@ -115,7 +114,6 @@ class PicaReportImporter
       end
     end
 
-    puts evaluations.inspect
     evaluations
   end
 end

@@ -219,14 +219,14 @@ RSpec.describe EvaluationController, type: :controller do
     it "fails gracefully for non excel files" do
       @file = fixture_file_upload('/random.dat', 'application/octet-stream')
       post :upload, data_file: @file
-      expect(response).to redirect_to(import_evaluation_index_path)
+      expect(response).to redirect_to("/evaluation/import")
       expect(flash[:errors]).to_not be(nil)
     end
 
     it "gracefully rejects malformatted excel files" do
       @file = fixture_file_upload('/StatisticsReport_withoutCourseColumn.xlsx', 'application/vnd.ms-excel')
       post :upload, data_file: @file
-      expect(response).to redirect_to(import_evaluation_index_path)
+      expect(response).to redirect_to("/evaluation/import")
       expect(flash[:errors]).to_not be(nil)
     end
 
@@ -237,26 +237,26 @@ RSpec.describe EvaluationController, type: :controller do
     end
 
     it "accepts .xls files for uploading" do
-      @file = fixture_file_upload('/StatisticsReport.xls', 'application/vnd.ms-excel')
+      @file = fixture_file_upload('/OldStatsReport.xls', 'application/vnd.ms-excel')
       post :upload, data_file: @file
       expect(response).to redirect_to("/evaluation")
     end
 
-    it "creates evaluation records for data the test file" do
+    it "creates evaluation records for data the xlsx test file" do
       @file = fixture_file_upload('/StatisticsReport.xlsx', 'application/vnd.ms-excel')
       expect(Evaluation.count).to eq(0)
       post :upload, data_file: @file
       expect(Evaluation.count).to eq(9)
     end
 
-    it "creates instructor records for data the test file" do
-      @file = fixture_file_upload('/StatisticsReport.xlsx', 'application/vnd.ms-excel')
+    it "creates instructor records for data the xls test file" do
+      @file = fixture_file_upload('/OldStatsReport.xls', 'application/vnd.ms-excel')
       expect(Instructor.count).to eq(0)
       post :upload, data_file: @file
       expect(Instructor.count).to eq(3)
     end
 
-    it "creates the correct evaluation records for the test data" do
+    it "creates the correct evaluation records for the xlsx test data" do
       @file = fixture_file_upload('/StatisticsReport.xlsx', 'application/vnd.ms-excel')
       expect(Evaluation.count).to eq(0)
       post :upload, data_file: @file

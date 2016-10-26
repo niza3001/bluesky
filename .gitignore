@@ -58,3 +58,4 @@ build-iPhoneSimulator/
 /db/*.sqlite3
 *.sqlite3
 *.sqlite
+/public/*.xls
