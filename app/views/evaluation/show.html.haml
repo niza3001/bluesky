@@ -1,17 +1,27 @@
 %p.text-right
   .pull-right
-    = link_to "Import PICA Data", import_evaluation_index_path, class: "btn btn-primary" 
-    = link_to "Import GPR distribution data", import_gpr_evaluation_index_path, class: "btn btn-primary" 
-    
+    = link_to "Import PICA Data", import_evaluation_index_path, class: "btn btn-primary"
+    = link_to "Import GPR distribution data", import_gpr_evaluation_index_path, class: "btn btn-primary"
+
   = form_tag evaluation_index_path, method: :get, class: "form-inline" do
     .form-group
       %label{for: "term"} Select Term:
       %select{name: "term", id: "term", class: "form-control"}
         - @terms.each do |term|
           %option{value: term, selected: (term == params[:id] ? "selected" : nil)}= term
+      %label{for: "instructor"} Select Instructor:
+      %select{name: "instructor", id: "instructor", class: "form-control"}
+        %option{value: nil, selected: ( params[:instructor_name].nil? ? "selected" : nil)}="All"
+        - @instructor_names.each do |instructor|
+          %option{value: instructor, selected: (instructor == params[:instructor_name] ? "selected" : nil)}= instructor
+      %label{for: "course_name"} Select Course:
+      %select{name: "course_name", id: "course_name", class: "form-control"}
+        %option{value: nil, selected: ( params[:course_name].nil? ? "selected" : nil)}="All"
+        - @course_names.each do |course_name|
+          %option{value: course_name, selected: (course_name == params[:course_name] ? "selected" : nil)}= course_name
     %button{type: "submit", class: "btn btn-primary"} Go
 
-%h1 Evaluation Table: 
+%h1 Evaluation Table:
 
 %table.table.table-condensed
   %thead
@@ -63,7 +73,7 @@
         %td.green-highlight= compute_course_level_average(group, @evaluation_groups).round(2)
       %tr
         %td{colspan: 17}
-        
+
 %h2 Select Items to export:
 
 = form_tag export_evaluation_path, method: :get do
@@ -83,5 +93,5 @@
   =check_box_tag "Itemz[7]" , 1, nil, :id => "It7"
   = "Item 8"
   =check_box_tag "Itemz[8]" , 1, nil, :id => "It8"
-  
+
   =submit_tag 'Export to Excel'

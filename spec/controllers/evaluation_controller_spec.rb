@@ -102,6 +102,16 @@ RSpec.describe EvaluationController, type: :controller do
         expect(assigns(:evaluation_groups)).to eq([[eval1], [eval2]])
     end
 
+    it "select correct evaluations" do
+        ins1  = FactoryGirl.create(:instructor, id: 1, name: 'James Bond')
+        ins2  = FactoryGirl.create(:instructor, id: 2, name: 'Bat Man')
+        eval1 = FactoryGirl.create(:evaluation, course: 110, term: '2015C', instructor_id: 1)
+        eval2 = FactoryGirl.create(:evaluation, course: 110, term: '2015C', instructor_id: 2)
+        eval3 = FactoryGirl.create(:evaluation, course: 111, term: '2014C', instructor_id: 2)
+        get :show, id: '2015C', course_name: 'CSCE 110', instructor_name: 'James Bond'
+        expect(assigns(:evaluation_groups)).to eq([[eval1]])
+    end
+
     it "assigns @terms" do
       eval1 = FactoryGirl.create(:evaluation, term: '2015C')
       eval2 = FactoryGirl.create(:evaluation, term: '2015B')
@@ -154,7 +164,6 @@ RSpec.describe EvaluationController, type: :controller do
     end
   end
 
-
   describe "GET #edit" do
     it "renders the edit template" do
       FactoryGirl.create(:evaluation)
@@ -182,7 +191,6 @@ RSpec.describe EvaluationController, type: :controller do
       expect(assigns(:evaluation_groups).count).to be(2)
     end
   end
-
 
   describe "PUT #update" do
     before :each do

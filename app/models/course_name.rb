@@ -3,10 +3,7 @@ class CourseName < ActiveRecord::Base
     message: "must be in the form ABCD 123. (e.g. CSCE 121)" }
   validates :name, presence: true
 
-
   def self.create_if_needed_and_update(attrs)
-
-    # sc = attrs[:subject_course]
     course_name = where(subject_course: attrs[:subject_course]).first_or_initialize
 
     is_new_record = course_name.new_record?

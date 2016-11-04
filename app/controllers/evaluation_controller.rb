@@ -34,12 +34,20 @@ class EvaluationController < ApplicationController
     if can? :read, :all
 
       latest_term = params[:term] || Evaluation.no_missing_data.pluck(:term).uniq.sort.reverse.first
+      selected_instructor = params[:instructor];
+      selected_course = params[:course_name];
+
+      puts "selected instructor: "
+      puts selected_instructor ;
+
+      puts "selected course: "
+      puts selected_course ;
 
       if latest_term.nil?
         flash[:notice] = "No evaluation data exists yet! Try importing some."
         redirect_to root_path
       else
-        redirect_to evaluation_path(id: latest_term)
+        redirect_to evaluation_path(id: latest_term, instructor_name: selected_instructor, course_name: selected_course)
       end
     else
       redirect_to root_path
@@ -48,9 +56,33 @@ class EvaluationController < ApplicationController
 
   def show
     if can? :read, :all
-      term = params[:id] || Evaluation.no_missing_data.pluck(:term).uniq.sort.reverse.first
-      @evaluation_groups = Evaluation.no_missing_data.where(term: term).default_sorted_groups
       @terms = Evaluation.pluck(:term).uniq.sort.reverse
+      @instructor_names = Instructor.pluck(:name).uniq.sort
+      @course_names = CourseName.pluck(:subject_course).uniq.sort
+
+      term = params[:id] || Evaluation.no_missing_data.pluck(:term).uniq.sort.reverse.first
+      instructor_name = params[:instructor_name]
+      course_name = params[:course_name]
+
+      if course_name.nil? || course_name == "All"
+        subj = Evaluation.pluck(:subject).uniq.sort
+        course = Evaluation.pluck(:course).uniq.sort
+      else
+        subj_course = course_name.gsub(/\s+/m, ' ').strip.split(" ")
+        subj = subj_course[0]
+        course = subj_course[1]
+      end
+
+      if instructor_name.nil? || instructor_name == "All"
+        instructor_id = Evaluation.pluck(:instructor_id)
+      else
+        instructor_id =
+          Instructor.where(name: Instructor.normalize_name(instructor_name)).first.id
+      end
+
+      @evaluation_groups =
+        Evaluation.no_missing_data.where(
+          term: term, subject: subj, course: course, instructor_id: instructor_id).default_sorted_groups
     else
       redirect_to root_path
     end
