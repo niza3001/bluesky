@@ -1,8 +1,6 @@
 %p.text-right
   .pull-right
-    = link_to "Import PICA Data", import_evaluation_index_path, class: "btn btn-primary" 
-    = link_to "Import GPR distribution data", import_gpr_evaluation_index_path, class: "btn btn-primary" 
-    = link_to "Highlight Missed Data", "", class: "btn btn-primary" 
+    = link_to "Highlight Missed Data", "", class: "btn btn-primary"
     
   = form_tag evaluation_index_path, method: :get, class: "form-inline" do
     .form-group
@@ -17,20 +15,24 @@
 %table.table.table-condensed
   %thead.light-gray-highlight
     %tr
-      - if can? :write, :all
-        %th Edit
-      %th 
-        = link_to "Term", missing_data_evaluation_index_path
-      %th Subject
-      %th Course
-      %th Section
-      %th 
-        = link_to "Instructor", evaluation_index_path
-      %th Enrollment
-      - (1..8).each do |num|
-        %th
-          = "Item #{num} mean"
-      %th GPR
+      = form_tag "", method: :get do
+        - if can? :write, :all
+          %th Edit
+        %th 
+          = link_to "Term", missing_data_evaluation_index_path
+        %th Subject
+        %th Course
+        %th Section
+        %th 
+          = link_to "Instructor", evaluation_index_path
+        %th Enrollment
+        - (1..8).each do |num|
+          %th
+            = "Item #{num}"
+            =check_box_tag "Itemz[#{num}]" , 1, nil, :id => "It#{num}"
+        %th GPR
+        %th.light-gray-highlight
+          =submit_tag 'Export to Excel'
 
   %tbody
     - @evaluation_groups.each do |group|

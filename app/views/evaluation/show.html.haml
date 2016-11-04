@@ -1,7 +1,5 @@
 %p.text-right
   .pull-right
-    = link_to "Import PICA Data", import_evaluation_index_path, class: "btn btn-primary"
-    = link_to "Import GPR distribution data", import_gpr_evaluation_index_path, class: "btn btn-primary"
     = link_to "Highlight Missing Data", "", class: "btn btn-primary"
 
   = form_tag evaluation_index_path, method: :get, class: "form-inline" do
@@ -46,7 +44,7 @@
         %th.light-gray-highlight GPR
         %th.light-gray-highlight Mean Student Eval Score
         %th.light-gray-highlight Course Level Average
-        %th
+        %th.light-gray-highlight
           =submit_tag 'Export to Excel'
 
 
@@ -93,6 +91,7 @@
             %b= compute_mean_student_eval_score(group).round(2)
           %td.gray-highlight
             %b= compute_course_level_average(group, @evaluation_groups).round(2)
+          %td.gray-highlight
       %tr
         %td{colspan: 17}
 
