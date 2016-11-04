@@ -1,4 +1,4 @@
-re%h1 Import course names data
+%h1 Import course names data
 
 = form_tag({action: :upload}, multipart: true) do
   .form-group
@@ -10,4 +10,6 @@ re%h1 Import course names data
       be in
       %u XLSX
       format.
-  = submit_tag 'Upload', class: "btn btn-primary"
+  = submit_tag 'Upload Table', class: "btn btn-primary"
+  = link_to "Add Course Names", course_name_index_path, class: "btn btn-primary"
+  = link_to "Cancel", root_path, class: "btn btn-primary"

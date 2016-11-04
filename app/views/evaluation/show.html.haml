@@ -2,6 +2,7 @@
   .pull-right
     = link_to "Import PICA Data", import_evaluation_index_path, class: "btn btn-primary"
     = link_to "Import GPR distribution data", import_gpr_evaluation_index_path, class: "btn btn-primary"
+    = link_to "Highlight Missing Data", "", class: "btn btn-primary"
 
   = form_tag evaluation_index_path, method: :get, class: "form-inline" do
     .form-group
@@ -26,72 +27,72 @@
 %table.table.table-condensed
   %thead
     %tr
-      - if can? :write, :all
-        %th Edit
-      %th Term
-      %th Subject
-      %th Course
-      %th Section
-      %th Instructor
-      %th Enrollment
-      - (1..8).each do |num|
+      = form_tag export_evaluation_path, method: :get do
         %th
-          = "Item #{num} mean"
-      %th Mean Student Eval Score
-      %th Course Level Average
+        - if can? :write, :all
+          %th.light-gray-highlight Edit
+        %th.light-gray-highlight
+          = link_to "Term", missing_data_evaluation_index_path
+        %th.light-gray-highlight Subject
+        %th.light-gray-highlight Course
+        %th.light-gray-highlight Section
+        %th.light-gray-highlight
+          = link_to "Instructor", evaluation_index_path
+        %th.light-gray-highlight Enrollment
+        - (1..8).each do |num|
+          %th.light-gray-highlight
+            = "Item #{num}"
+            =check_box_tag "Itemz[#{num}]" , 1, nil, :id => "It#{num}"
+        %th.light-gray-highlight GPR
+        %th.light-gray-highlight Mean Student Eval Score
+        %th.light-gray-highlight Course Level Average
+        %th
+          =submit_tag 'Export to Excel'
+
 
   %tbody
     - @evaluation_groups.each do |group|
       - group.each do |evaluation|
         %tr
+          %td{colspan: 1}
           - if can? :write, :all
             %td
               = link_to "Edit", edit_evaluation_path(evaluation)
-          %td
+          %td{ class: (evaluation.term.nil? ? "highlighted" : "" ) }
             = evaluation.term
-          %td
+          %td{ class: (evaluation.subject.nil? ? "highlighted" : "" ) }
             = evaluation.subject
-          %td
+          %td{ class: (evaluation.course.nil? ? "highlighted" : "" ) }
             = evaluation.course
-          %td
+          %td{ class: (evaluation.section.nil? ? "highlighted" : "" ) }
             = evaluation.section
-          %td
+          %td{ class: (evaluation.instructor.nil? ? "highlighted" : "" ) }
             - if evaluation.instructor.present?
               = link_to evaluation.instructor.name, instructor_path(id: evaluation.instructor.id)
-          %td
+          %td{ class: (evaluation.enrollment.nil? ? "highlighted" : "" ) }
             = evaluation.enrollment
           - (1..8).each do |num|
-            %td
+            %td{ class: (evaluation.method("item#{num}_mean".to_sym).call.nil? ? "highlighted" : "" ) }
               = evaluation.method("item#{num}_mean".to_sym).call
+          %td{ class: (evaluation.gpr.nil? ? "highlighted" : "" ) }
+            = evaluation.gpr
           %td{colspan: 2}
       %tr
-        %td{colspan: 6}
-        %td= compute_total_enrollment(group)
-        - (1..8).each do |x|
-          %td.highlighted= compute_weighted_average_for_item(x, group).round(2)
-        %td.green-highlight= compute_mean_student_eval_score(group).round(2)
-        %td.green-highlight= compute_course_level_average(group, @evaluation_groups).round(2)
+        %b
+          %td{colspan: 1}
+          %td.gray-highlight
+            %b Total
+          %td.gray-highlight{colspan: 5}
+          %td.gray-highlight
+            %b= compute_total_enrollment(group)
+          - (1..8).each do |x|
+            %td.gray-highlight
+              %b= compute_weighted_average_for_item(x, group).round(2)
+          %td.gray-highlight{colspan: 1}
+          %td.gray-highlight
+            %b= compute_mean_student_eval_score(group).round(2)
+          %td.gray-highlight
+            %b= compute_course_level_average(group, @evaluation_groups).round(2)
       %tr
         %td{colspan: 17}
 
-%h2 Select Items to export:
-
-= form_tag export_evaluation_path, method: :get do
-  = "Item 1"
-  =check_box_tag "Itemz[1]" , 1, nil, :id => "It1"
-  = "Item 2"
-  =check_box_tag "Itemz[2]" , 1, nil, :id => "It2"
-  = "Item 3"
-  =check_box_tag "Itemz[3]" , 1, nil, :id => "It3"
-  = "Item 4"
-  =check_box_tag "Itemz[4]" , 1, nil, :id => "It4"
-  = "Item 5"
-  =check_box_tag "Itemz[5]" , 1, nil, :id => "It5"
-  = "Item 6"
-  =check_box_tag "Itemz[6]" , 1, nil, :id => "It6"
-  = "Item 7"
-  =check_box_tag "Itemz[7]" , 1, nil, :id => "It7"
-  = "Item 8"
-  =check_box_tag "Itemz[8]" , 1, nil, :id => "It8"
-
-  =submit_tag 'Export to Excel'
