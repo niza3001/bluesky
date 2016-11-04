@@ -1,5 +1,5 @@
 .outer
-  .middle
+  .middle 
     .inner.text-center
       %h1 FPR Utilities
       -if user_signed_in?
@@ -7,17 +7,17 @@
           .well.well-sm{style: "display: inline-block"}
             %h3 Import data
             %ul.nav.nav-pills.nav-stacked
-              %li= link_to "Import PICA evaluation data", import_evaluation_index_path
-              %li= link_to "Import GPR distribution data", import_gpr_evaluation_index_path
-              %li= link_to "Import course names data", import_course_name_index_path
+              %li= link_to "Import PICA Evaluation Data", import_evaluation_index_path
+              %li= link_to "Import GPR Distribution Data", import_gpr_evaluation_index_path
+              %li= link_to "Import Course Names", import_course_name_index_path
               %li= link_to "Add Paper Evaluation", new_evaluation_path
         - if can? :read, :all
           .well.well-sm{style: "display: inline-block"}
             %h3 View data
             %ul.nav.nav-pills.nav-stacked
               %li= link_to "View Evaluation Data", evaluation_index_path
-              %li= link_to "View Missing Data", missing_data_evaluation_index_path
               %li= link_to "View Faculty FPR Data", instructor_index_path
+              %li= link_to "View Missing Data", missing_data_evaluation_index_path
               %li= link_to "View Course Names", course_name_index_path
         - else
           %p= "please ask an administrator to authorize your account"

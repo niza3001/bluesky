@@ -24,11 +24,19 @@
   background: rgb(108, 204, 75);
 }
 
+.gray-highlight {
+  background: rgb(157, 146, 114);
+}
+
+.light-gray-highlight {
+  background: rgb(158, 151, 142);
+}
+
 .outer {
     display: table;
     position: absolute;
-    height: 100%;
-    width: 100%;
+    height: 90%;
+    width: 90%;
 }
 
 .middle {
