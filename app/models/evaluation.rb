@@ -1,7 +1,9 @@
 class Evaluation < ActiveRecord::Base
 
   belongs_to :instructor
+  belongs_to :course_name
   validates_associated :instructor
+  validates_associated :course_name
 
   def self.all_Items
      self.all.select(:Item).distinct.order(:Item).pluck(:Item)
@@ -97,6 +99,7 @@ class Evaluation < ActiveRecord::Base
       subject,
       course,
       section,
+      course_name,
       instructor.name,
       enrollment
     ]

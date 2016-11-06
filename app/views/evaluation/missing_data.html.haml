@@ -1,55 +1,72 @@
 %p.text-right
   .pull-right
-    = link_to "Highlight Missed Data", "", class: "btn btn-primary"
+    = link_to "Highlight Missing Data", "", class: "btn btn-primary"
     
-  = form_tag evaluation_index_path, method: :get, class: "form-inline" do
+  = form_tag missing_data_evaluation_index_path, method: :get, class: "form-inline" do
     .form-group
       %label{for: "term"} Select Term:
       %select{name: "term", id: "term", class: "form-control"}
-      //  - @terms.each do |term|
-      //    %option{value: term, selected: (term == params[:id] ? "selected" : nil)}= term
-    %button{type: "submit", class: "btn btn-primary"} Go
+        //- @terms.each do |term|
+        //  %option{value: term, selected: (term == params[:id] ? "selected" : nil)}= term
+      %label{for: "instructor"} Select Instructor:
+      %select{name: "instructor", id: "instructor", class: "form-control"}
+        %option{value: nil, selected: ( params[:instructor_name].nil? ? "selected" : nil)}="All"
+        //- @instructor_names.each do |instructor|
+        //  %option{value: instructor, selected: (instructor == params[:instructor_name] ? "selected" : nil)}= instructor
+      %label{for: "course_name"} Select Course:
+      %select{name: "course_name", id: "course_name", class: "form-control"}
+        %option{value: nil, selected: ( params[:course_name].nil? ? "selected" : nil)}="All"
+        //- @course_names.each do |course_name|
+        //  %option{value: course_name, selected: (course_name == params[:course_name] ? "selected" : nil)}= course_name
+    %button{type: "submit", class: "btn btn-primary"} Go    
 
 %h1 Evaluation Table: 
 
 %table.table.table-condensed
-  %thead.light-gray-highlight
+  %thead
     %tr
       = form_tag "", method: :get do
+        %th
         - if can? :write, :all
-          %th Edit
-        %th 
+          %th.light-gray-highlight Edit
+        %th.light-gray-highlight 
           = link_to "Term", missing_data_evaluation_index_path
-        %th Subject
-        %th Course
-        %th Section
-        %th 
+        %th.light-gray-highlight Subject
+        %th.light-gray-highlight Course Name
+        %th.light-gray-highlight Course
+        %th.light-gray-highlight Section
+        %th.light-gray-highlight
           = link_to "Instructor", evaluation_index_path
-        %th Enrollment
+        %th.light-gray-highlight Enrollment
         - (1..8).each do |num|
-          %th
+          %th.light-gray-highlight
             = "Item #{num}"
             =check_box_tag "Itemz[#{num}]" , 1, nil, :id => "It#{num}"
-        %th GPR
-        %th.light-gray-highlight
-          =submit_tag 'Export to Excel'
+        %th.light-gray-highlight GPR
+        %th.light-gray-highlight 
+          %button{class: "btn btn-primary"}
+            = 'Export to Excel'
+        %th
 
   %tbody
     - @evaluation_groups.each do |group|
       - group.each do |evaluation|
         %tr
+          %td
           - if can? :write, :all
             %td
               = link_to "Edit", edit_evaluation_path(evaluation)
-          %td{ class: (evaluation.term.nil? ? "highlighted" : "" ) }
+          %td
             = evaluation.term
-          %td{ class: (evaluation.subject.nil? ? "highlighted" : "" ) }
+          %td
             = evaluation.subject
-          %td{ class: (evaluation.course.nil? ? "highlighted" : "" ) }
+          %td
+            = evaluation.course_name  
+          %td
             = evaluation.course
-          %td{ class: (evaluation.section.nil? ? "highlighted" : "" ) }
+          %td
             = evaluation.section
-          %td{ class: (evaluation.instructor.nil? ? "highlighted" : "" ) }
+          %td
             - if evaluation.instructor.present?
               = link_to evaluation.instructor.name, instructor_path(id: evaluation.instructor.id)
           %td{ class: (evaluation.enrollment.nil? ? "highlighted" : "" ) }

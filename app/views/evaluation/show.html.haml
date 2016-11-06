@@ -32,6 +32,7 @@
         %th.light-gray-highlight
           = link_to "Term", missing_data_evaluation_index_path
         %th.light-gray-highlight Subject
+        %th.light-gray-highlight Course Name
         %th.light-gray-highlight Course
         %th.light-gray-highlight Section
         %th.light-gray-highlight
@@ -44,8 +45,10 @@
         %th.light-gray-highlight GPR
         %th.light-gray-highlight Mean Student Eval Score
         %th.light-gray-highlight Course Level Average
-        %th.light-gray-highlight
-          =submit_tag 'Export to Excel'
+        %th.light-gray-highlight 
+          %button{class: "btn btn-primary"}
+            = 'Export to Excel'
+        %th
 
 
   %tbody
@@ -56,15 +59,17 @@
           - if can? :write, :all
             %td
               = link_to "Edit", edit_evaluation_path(evaluation)
-          %td{ class: (evaluation.term.nil? ? "highlighted" : "" ) }
+          %td
             = evaluation.term
-          %td{ class: (evaluation.subject.nil? ? "highlighted" : "" ) }
+          %td
             = evaluation.subject
-          %td{ class: (evaluation.course.nil? ? "highlighted" : "" ) }
+          %td
+            = evaluation.course_name
+          %td
             = evaluation.course
-          %td{ class: (evaluation.section.nil? ? "highlighted" : "" ) }
+          %td
             = evaluation.section
-          %td{ class: (evaluation.instructor.nil? ? "highlighted" : "" ) }
+          %td
             - if evaluation.instructor.present?
               = link_to evaluation.instructor.name, instructor_path(id: evaluation.instructor.id)
           %td{ class: (evaluation.enrollment.nil? ? "highlighted" : "" ) }
@@ -80,7 +85,7 @@
           %td{colspan: 1}
           %td.gray-highlight
             %b Total
-          %td.gray-highlight{colspan: 5}
+          %td.gray-highlight{colspan: 6}
           %td.gray-highlight
             %b= compute_total_enrollment(group)
           - (1..8).each do |x|
@@ -92,6 +97,7 @@
           %td.gray-highlight
             %b= compute_course_level_average(group, @evaluation_groups).round(2)
           %td.gray-highlight
+          %td{colspan: 1}
       %tr
         %td{colspan: 17}
 

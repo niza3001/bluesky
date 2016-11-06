@@ -8,6 +8,7 @@ class EvaluationReportExporter
     "Subject",
     "Course",
     "Section",
+    "Course Name",
     "Instructor",
     "Enrollment",
     "Item 1 mean",
@@ -47,18 +48,18 @@ class EvaluationReportExporter
     temp_HEADINGS = Array.new
 
     if !itemz.nil?
-      temp_HEADINGS = HEADINGS[0..6]
+      temp_HEADINGS = HEADINGS[0..7]
 
       # Add/remove Item 1..8 on everything
       count = 0
       (1..8).each do |x|
         if itemz.key?(x.to_s)
-          temp_HEADINGS[count + 6] = HEADINGS[x + 5]
+          temp_HEADINGS[count + 7] = HEADINGS[x + 6]
           count = count + 1
         end
       end
 
-      temp_HEADINGS = temp_HEADINGS + HEADINGS[14..15]
+      temp_HEADINGS = temp_HEADINGS + HEADINGS[15..16]
     else
       temp_HEADINGS = HEADINGS
     end
@@ -71,7 +72,7 @@ class EvaluationReportExporter
         end
 
         formula_data = []
-        5.times { formula_data.push("") }
+        6.times { formula_data.push("") }
         formula_data.push(compute_total_enrollment(group))
 
         if itemz.nil?
