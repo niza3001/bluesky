@@ -45,7 +45,7 @@
         %th.light-gray-highlight GPR
         %th.light-gray-highlight Mean Student Eval Score
         %th.light-gray-highlight Course Level Average
-        %th.light-gray-highlight 
+        %th.light-gray-highlight
           %button{class: "btn btn-primary"}
             = 'Export to Excel'
         %th
@@ -75,7 +75,7 @@
           %td{ class: (evaluation.enrollment.nil? ? "highlighted" : "" ) }
             = evaluation.enrollment
           - (1..8).each do |num|
-            %td{ class: (evaluation.method("item#{num}_mean".to_sym).call.nil? ? "highlighted" : "" ) }
+            %td{ class: (evaluation.method("item#{num}_mean".to_sym).call.nil? ? "highlighted" : "" ), class: (evaluation.method("item#{num}_mean".to_sym).call>5 ? "highlight-invalid-data" : "" ) }
               = evaluation.method("item#{num}_mean".to_sym).call
           %td{ class: (evaluation.gpr.nil? ? "highlighted" : "" ) }
             = evaluation.gpr
@@ -100,4 +100,3 @@
           %td{colspan: 1}
       %tr
         %td{colspan: 17}
-
