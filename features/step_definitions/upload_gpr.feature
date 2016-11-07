@@ -3,7 +3,7 @@ Feature: Integrate data uploaded from PDFs containing GPR data
   Scenario: User navigates to import GPR page
     Given User is authenticated
     And User is on the home page
-    When User clicks on the Import GPR distribution data button
+    When User clicks on the Import GPR Distribution Data button
     Then User should be on the import GPR page
 
   Scenario: User uploads GPR file to term 2015C

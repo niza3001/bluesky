@@ -133,9 +133,9 @@ RSpec.describe EvaluationController, type: :controller do
   describe "GET #export" do
     before :each do
       instructor = FactoryGirl.create(:instructor)
-      FactoryGirl.create(:evaluation, term: '2015C', section: '501', enrollment: '25', item1_mean: '4.5', instructor_id: instructor.id)
-      FactoryGirl.create(:evaluation, term: '2015C', section: '502', enrollment: '25', item1_mean: '4.5', instructor_id: instructor.id)
-      FactoryGirl.create(:evaluation, term: '2015B', section: '501', enrollment: '25', item1_mean: '4.5', instructor_id: instructor.id)
+      FactoryGirl.create(:evaluation, term: '2015C',  section: '501', enrollment: '25', item1_mean: '4.5', instructor_id: instructor.id)
+      FactoryGirl.create(:evaluation, term: '2015C',  section: '502', enrollment: '25', item1_mean: '4.5', instructor_id: instructor.id)
+      FactoryGirl.create(:evaluation, term: '2015B',  section: '501', enrollment: '25', item1_mean: '4.5', instructor_id: instructor.id)
     end
 
     it "generates a valid CSV file" do
@@ -152,8 +152,8 @@ RSpec.describe EvaluationController, type: :controller do
     it "exports a row of average and sum functions" do
       get :export, id: '2015C'
       csv = CSV.parse(response.body)
-      expect(csv[3][5]).to eq("50") # total enrollment
-      expect(csv[3][6]).to eq("4.5") # average item1_mean
+      expect(csv[3][6]).to eq("50") # total enrollment
+      expect(csv[3][7]).to eq("4.5") # average item1_mean
     end
 
     it "exports an empty row after each group" do

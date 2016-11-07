@@ -19,8 +19,9 @@ Feature: Be able to navigate to other pages from home page
     Then User should be on the home page
     And User should see FPR Utilities as text
     And User should see the User management panel button
-    And User should see the Import PICA evaluation data button
-    And User should see the Import GPR distribution data button
+    And User should see the Import PICA Evaluation Data button
+    And User should see the Import GPR Distribution Data button
+    And User should see the Import Course Names button
     And User should see the Add Paper Evaluation button
     And User should see the View Evaluation Data button
     And User should see the View Missing Data button
@@ -33,9 +34,10 @@ Feature: Be able to navigate to other pages from home page
     Then User should be on the home page
     And User should see FPR Utilities as text
     And User should not see the User management panel button
-    And User should see the Import PICA evaluation data button
-    And User should see the Import GPR distribution data button
+    And User should see the Import PICA Evaluation Data button
+    And User should see the Import GPR Distribution Data button
     And User should see the Add Paper Evaluation button
+    And User should see the Import Course Names button
     And User should see the View Evaluation Data button
     And User should see the View Missing Data button
     And User should see the View Faculty FPR Data button
@@ -47,8 +49,8 @@ Feature: Be able to navigate to other pages from home page
     Then User should be on the home page
     And User should see FPR Utilities as text
     And User should not see the User management panel button
-    And User should not see the Import PICA evaluation data button
-    And User should not see the Import GPR distribution data button
+    And User should not see the Import PICA Evaluation Data button
+    And User should not see the Import GPR Distribution Data button
     And User should not see the Add Paper Evaluation button
     And User should see the View Evaluation Data button
     And User should see the View Missing Data button
@@ -61,8 +63,8 @@ Feature: Be able to navigate to other pages from home page
     Then User should be on the home page
     And User should see FPR Utilities as text
     And User should not see the User management panel button
-    And User should not see the Import PICA evaluation data button
-    And User should not see the Import GPR distribution data button
+    And User should not see the Import PICA Evaluation Data button
+    And User should not see the Import GPR Distribution Data button
     And User should not see the Add Paper Evaluation button
     And User should not see the View View Evaluation Data button
     And User should not see the View Missing Data button

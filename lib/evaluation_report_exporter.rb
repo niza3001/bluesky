@@ -23,22 +23,6 @@ class EvaluationReportExporter
     "Course Level Average"
   ]
 
-  CSV_data = [
-    'term',
-    'subject',
-    'course',
-    "section",
-    "instructor.name",
-    "enrollment",
-    "item1_mean",
-    "item2_mean",
-    "item3_mean",
-    "item4_mean",
-    "item5_mean",
-    "item6_mean",
-    "item7_mean",
-    "item8_mean"
-  ]
 
   def initialize(evaluation_groups)
     @groups = evaluation_groups

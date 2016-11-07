@@ -54,6 +54,6 @@ end
 Then(/^User should see (.+)? empty cells in each sum and average row, given there are (.+)? groups and (.+)? evaluation records for each group$/) do |colspan,n_groups,n_records|
   (1..n_groups.to_i).each do |g|
     expect(page).to have_css("tr[#{g*(n_records.to_i+2)-1}] td[@colspan='#{colspan}']", count: 1, text: nil)
-    expect(page).to have_css("tr[#{g*(n_records.to_i+2)-1}] td", count: 12)
+    expect(page).to have_css("tr[#{g*(n_records.to_i+2)-1}] td", count: 17)
   end
 end
