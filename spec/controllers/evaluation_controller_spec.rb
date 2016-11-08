@@ -88,8 +88,8 @@ RSpec.describe EvaluationController, type: :controller do
     it "redirects to EvaluationController#show with the passed term parameter if present" do
       FactoryGirl.create(:evaluation, term: "2015C")
       FactoryGirl.create(:evaluation, term: "2014C")
-      get :index, term: "2014C"
-      expect(response).to redirect_to(evaluation_path(id: "2014C"))
+      get :index, year: "2014", semester: "C"
+      expect(response).to redirect_to(evaluation_path(id: "2014C", year: "2014", semester: "C"))
     end
   end
 
@@ -98,7 +98,7 @@ RSpec.describe EvaluationController, type: :controller do
         eval1 = FactoryGirl.create(:evaluation, course: 110, term: '2015C')
         eval2 = FactoryGirl.create(:evaluation, course: 111, term: '2015C')
         eval3 = FactoryGirl.create(:evaluation, course: 111, term: '2014C')
-        get :show, id: '2015C'
+        get :show, id: '2015C', year: "2015", semester: "C"
         expect(assigns(:evaluation_groups)).to eq([[eval1], [eval2]])
     end
 
@@ -108,7 +108,7 @@ RSpec.describe EvaluationController, type: :controller do
         eval1 = FactoryGirl.create(:evaluation, course: 110, term: '2015C', instructor_id: 1)
         eval2 = FactoryGirl.create(:evaluation, course: 110, term: '2015C', instructor_id: 2)
         eval3 = FactoryGirl.create(:evaluation, course: 111, term: '2014C', instructor_id: 2)
-        get :show, id: '2015C', course_name: 'CSCE 110', instructor_name: 'James Bond'
+        get :show, id: '2015C',year: "2015", semester: "C", course_name: 'CSCE 110', instructor_name: 'James Bond'
         expect(assigns(:evaluation_groups)).to eq([[eval1]])
     end
 

@@ -11,7 +11,7 @@ prng = Random.new
 instructor = Instructor.create(name: 'Tiffani Williams')
 (1..3).each do |i|
   Evaluation.create(
-    term: '2015C',
+    term: '2014C',
     subject: 'CSCE',
     course: '110',
     section: (500 + i).to_s,
@@ -51,7 +51,7 @@ end
 instructor = Instructor.create(name: 'Walter Daugherity')
 (1..8).each do |i|
   Evaluation.create(
-    term: '2015C',
+    term: '2015B',
     subject: 'CSCE',
     course: '121',
     section: (500 + i).to_s,
