@@ -58,7 +58,13 @@ class EvaluationController < ApplicationController
     if can? :read, :all
       @terms = Evaluation.pluck(:term).uniq.sort.reverse
       @instructor_names = Instructor.pluck(:name).uniq.sort
-      @course_names = CourseName.pluck(:subject_course).uniq.sort
+      @course_names = CourseName.pluck(:subject_course, :name).uniq.sort
+      merge_subj_name = lambda { |subj, name| return name.nil? ? subj : subj + " " + name }
+
+      @course_names.map! { |crs|
+        merge_subj_name.call(crs[0], crs[1])
+      }      
+      
       @semesters = ["A", "B", "C"]
       @years = []
       @terms.each do |e|
