@@ -3,7 +3,7 @@ require 'csv'
 class InstructorReportExporter
   include ApplicationHelper
   include InstructorHelper
-
+  
   HEADINGS = [
     "Undergraduate and Graduate Courses Taught",
     "Semester",

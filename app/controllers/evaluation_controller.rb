@@ -93,7 +93,11 @@ class EvaluationController < ApplicationController
       redirect_to root_path
     end
   end
-
+   
+  def my 
+    params[:Itemz[0]] = 1;
+  end 
+  
   def missing_data
     if can? :read, :all
       @evaluation_groups = Evaluation.missing_data.default_sorted_groups
