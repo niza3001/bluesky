@@ -64,6 +64,19 @@ RSpec.describe EvaluationController, type: :controller do
       expect(response).to render_template(:new)
     end
 
+    it "renders the new page again if table items are out of range" do
+      eval = FactoryGirl.build(:evaluation, item1_mean: 8)
+      post :create, evaluation: eval.as_json
+      expect(response).to render_template(:new)
+    end
+
+    it "does not create an evaluation if table items are out of range" do
+      eval = FactoryGirl.build(:evaluation, item1_mean: 8)
+      previous_evaluation_count = Evaluation.count
+      post :create, evaluation: eval.as_json
+      expect(Evaluation.count).to eq(previous_evaluation_count)
+    end
+
     it "does not create an evaluation if parameters are invalid" do
       eval = FactoryGirl.build(:evaluation, term: "summer")
       previous_evaluation_count = Evaluation.count
@@ -88,8 +101,8 @@ RSpec.describe EvaluationController, type: :controller do
     it "redirects to EvaluationController#show with the passed term parameter if present" do
       FactoryGirl.create(:evaluation, term: "2015C")
       FactoryGirl.create(:evaluation, term: "2014C")
-      get :index, term: "2014C"
-      expect(response).to redirect_to(evaluation_path(id: "2014C"))
+      get :index, year: "2014", semester: "C"
+      expect(response).to redirect_to(evaluation_path(id: "2014C", year: "2014", semester: "C"))
     end
   end
 
@@ -98,7 +111,7 @@ RSpec.describe EvaluationController, type: :controller do
         eval1 = FactoryGirl.create(:evaluation, course: 110, term: '2015C')
         eval2 = FactoryGirl.create(:evaluation, course: 111, term: '2015C')
         eval3 = FactoryGirl.create(:evaluation, course: 111, term: '2014C')
-        get :show, id: '2015C'
+        get :show, id: '2015C', year: "2015", semester: "C"
         expect(assigns(:evaluation_groups)).to eq([[eval1], [eval2]])
     end
 
@@ -108,7 +121,7 @@ RSpec.describe EvaluationController, type: :controller do
         eval1 = FactoryGirl.create(:evaluation, course: 110, term: '2015C', instructor_id: 1)
         eval2 = FactoryGirl.create(:evaluation, course: 110, term: '2015C', instructor_id: 2)
         eval3 = FactoryGirl.create(:evaluation, course: 111, term: '2014C', instructor_id: 2)
-        get :show, id: '2015C', course_name: 'CSCE 110', instructor_name: 'James Bond'
+        get :show, id: '2015C',year: "2015", semester: "C", course_name: 'CSCE 110', instructor_name: 'James Bond'
         expect(assigns(:evaluation_groups)).to eq([[eval1]])
     end
 
@@ -194,7 +207,7 @@ RSpec.describe EvaluationController, type: :controller do
 
   describe "PUT #update" do
     before :each do
-      @eval1 = FactoryGirl.create(:evaluation, enrollment: 47)
+      @eval1 = FactoryGirl.create(:evaluation, enrollment: 47, item1_mean: 3.56)
       @eval2 = FactoryGirl.create(:evaluation, enrollment: 22)
     end
 
@@ -219,6 +232,13 @@ RSpec.describe EvaluationController, type: :controller do
       put :update, id: @eval1, evaluation: { enrollment: "45.5" }
       @eval1.reload
       expect(@eval1.enrollment).to eq(47)
+      expect(response).to render_template("evaluation/edit")
+    end
+
+    it "rejects and redirects back to edit for out of range table items" do
+      put :update, id: @eval1, evaluation: { item1_mean: 8}
+      @eval1.reload
+      expect(@eval1.item1_mean).to eq(3.56)
       expect(response).to render_template("evaluation/edit")
     end
   end

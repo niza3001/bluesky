@@ -32,22 +32,22 @@ class EvaluationController < ApplicationController
 
   def index
     if can? :read, :all
-
-      latest_term = params[:term] || Evaluation.no_missing_data.pluck(:term).uniq.sort.reverse.first
+      
       selected_instructor = params[:instructor];
       selected_course = params[:course_name];
+      selected_year = params[:year];
+      selected_semester = params[:semester];
+      if selected_year.nil? || selected_semester.nil?
+        yr_smstr = Evaluation.no_missing_data.pluck(:term).uniq.sort.reverse.first
+      else
+        yr_smstr = selected_year+selected_semester
+      end
 
-      puts "selected instructor: "
-      puts selected_instructor ;
-
-      puts "selected course: "
-      puts selected_course ;
-
-      if latest_term.nil?
+      if yr_smstr.nil?
         flash[:notice] = "No evaluation data exists yet! Try importing some."
         redirect_to root_path
       else
-        redirect_to evaluation_path(id: latest_term, instructor_name: selected_instructor, course_name: selected_course)
+        redirect_to evaluation_path(id: yr_smstr, year: selected_year, semester: selected_semester, instructor_name: selected_instructor, course_name: selected_course)
       end
     else
       redirect_to root_path
@@ -59,16 +59,26 @@ class EvaluationController < ApplicationController
       @terms = Evaluation.pluck(:term).uniq.sort.reverse
       @instructor_names = Instructor.pluck(:name).uniq.sort
       @course_names = CourseName.pluck(:subject_course, :name).uniq.sort
-
       merge_subj_name = lambda { |subj, name| return name.nil? ? subj : subj + " " + name }
 
       @course_names.map! { |crs|
         merge_subj_name.call(crs[0], crs[1])
-      }
+      }      
+      
+      @semesters = ["A", "B", "C"]
+      @years = []
+      @terms.each do |e|
+        @years << e.clone.chop
+      end
+      @years = @years.uniq.sort.reverse
 
-      term = params[:id] || Evaluation.no_missing_data.pluck(:term).uniq.sort.reverse.first
+
+      year = params[:year]
+      semester = params[:semester]
       instructor_name = params[:instructor_name]
       course_name = params[:course_name]
+
+      @evaluation_groups = []
 
       if course_name.nil? || course_name == "All"
         subj = Evaluation.pluck(:subject).uniq.sort
@@ -86,14 +96,36 @@ class EvaluationController < ApplicationController
           Instructor.where(name: Instructor.normalize_name(instructor_name)).first.id
       end
 
-      @evaluation_groups =
-        Evaluation.no_missing_data.where(
-          term: term, subject: subj, course: course, instructor_id: instructor_id).default_sorted_groups
+      yr = []
+      if year.nil? || year == "All"
+        yr += @years
+      else
+        yr << year
+      end
+
+      smstr = []
+      if semester.nil? || semester == "All"
+        smstr += @semesters
+      else
+        smstr << semester
+      end
+
+      for y in yr
+        for s in smstr
+          @evaluation_groups += Evaluation.no_missing_data.where(
+            term: y+s, subject: subj, course: course, instructor_id: instructor_id).default_sorted_groups
+        end
+      end
+
     else
       redirect_to root_path
     end
   end
-
+   
+  def my 
+    params[:Itemz[0]] = 1;
+  end 
+  
   def missing_data
     if can? :read, :all
       @evaluation_groups = Evaluation.missing_data.default_sorted_groups

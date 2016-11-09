@@ -27,12 +27,14 @@ Rails.application.routes.draw do
     get 'remove_user'
   end
 
+    
+
   resources :evaluation do
     get  'import',       on: :collection
     get  'import_gpr',   on: :collection
     get  'export',       on: :member
     get  'missing_data', on: :collection
-
+    get  'my' => 'evaluation#my'
     post 'upload',       on: :collection
     post 'upload_gpr',   on: :collection
   end

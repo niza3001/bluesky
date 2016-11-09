@@ -4,15 +4,24 @@
 
   = form_tag evaluation_index_path, method: :get, class: "form-inline" do
     .form-group
-      %label{for: "term"} Select Term:
-      %select{name: "term", id: "term", class: "form-control"}
-        - @terms.each do |term|
-          %option{value: term, selected: (term == params[:id] ? "selected" : nil)}= term
+      %label{for: "year"} Select Year:
+      %select{name: "year", id: "year", class: "form-control"}
+        %option{value: nil, selected: ( params[:year].nil? ? "selected" : nil)}="All"
+        - @years.each do |yr|
+          %option{value: yr, selected: (yr == params[:year] ? "selected" : nil)}= yr 
+
+      %label{for: "semester"} Select Semester:
+      %select{name: "semester", id: "semester", class: "form-control"}
+        %option{value: nil, selected: ( params[:semester].nil? ? "selected" : nil)}="All"
+        - @semesters.each do |smstr|
+          %option{value: smstr, selected: (smstr == params[:semester] ? "selected" : nil)}= smstr     
+
       %label{for: "instructor"} Select Instructor:
       %select{name: "instructor", id: "instructor", class: "form-control"}
         %option{value: nil, selected: ( params[:instructor_name].nil? ? "selected" : nil)}="All"
         - @instructor_names.each do |instructor|
           %option{value: instructor, selected: (instructor == params[:instructor_name] ? "selected" : nil)}= instructor
+
       %label{for: "course_name"} Select Course:
       %select{name: "course_name", id: "course_name", class: "form-control"}
         %option{value: nil, selected: ( params[:course_name].nil? ? "selected" : nil)}="All"
