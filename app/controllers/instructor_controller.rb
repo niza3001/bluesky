@@ -15,6 +15,15 @@ class InstructorController < ApplicationController
     @all_course_groups = Evaluation.no_missing_data.default_sorted_groups
   end
 
+  def update
+    @instructor = Instructor.find(id)
+
+    @instructor.assign_attributes({:status => params[:instructor][:status].downcase})
+    @instructor.save
+
+    redirect_to instructor_path(id)
+  end
+
   def export
     instructor = Instructor.find(id)
     evaluation_groups = Evaluation.no_missing_data.default_sorted_groups
