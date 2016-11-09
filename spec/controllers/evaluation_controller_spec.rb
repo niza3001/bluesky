@@ -64,6 +64,19 @@ RSpec.describe EvaluationController, type: :controller do
       expect(response).to render_template(:new)
     end
 
+    it "renders the new page again if table items are out of range" do
+      eval = FactoryGirl.build(:evaluation, item1_mean: 8)
+      post :create, evaluation: eval.as_json
+      expect(response).to render_template(:new)
+    end
+
+    it "does not create an evaluation if table items are out of range" do
+      eval = FactoryGirl.build(:evaluation, item1_mean: 8)
+      previous_evaluation_count = Evaluation.count
+      post :create, evaluation: eval.as_json
+      expect(Evaluation.count).to eq(previous_evaluation_count)
+    end
+
     it "does not create an evaluation if parameters are invalid" do
       eval = FactoryGirl.build(:evaluation, term: "summer")
       previous_evaluation_count = Evaluation.count
@@ -194,7 +207,7 @@ RSpec.describe EvaluationController, type: :controller do
 
   describe "PUT #update" do
     before :each do
-      @eval1 = FactoryGirl.create(:evaluation, enrollment: 47)
+      @eval1 = FactoryGirl.create(:evaluation, enrollment: 47, item1_mean: 3.56)
       @eval2 = FactoryGirl.create(:evaluation, enrollment: 22)
     end
 
@@ -219,6 +232,13 @@ RSpec.describe EvaluationController, type: :controller do
       put :update, id: @eval1, evaluation: { enrollment: "45.5" }
       @eval1.reload
       expect(@eval1.enrollment).to eq(47)
+      expect(response).to render_template("evaluation/edit")
+    end
+
+    it "rejects and redirects back to edit for out of range table items" do
+      put :update, id: @eval1, evaluation: { item1_mean: 8}
+      @eval1.reload
+      expect(@eval1.item1_mean).to eq(3.56)
       expect(response).to render_template("evaluation/edit")
     end
   end
