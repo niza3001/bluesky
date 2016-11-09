@@ -3,20 +3,20 @@
 .row
   .col-md-4
     %ul
-      - Instructor.order(:name).where("status == 'current'").first(@instructors.size).each  do |instructor|
+      - Instructor.order(:name).where("status = 'current'").first(@instructors.size).each  do |instructor|
         %li= link_to instructor.name, instructor_path(id: instructor.id)
         /- slice.each do |instructor|
 %h3 Courtesy
 .row
   .col-md-4
     %ul
-      - Instructor.order(:name).where("status == 'courtesy'").first(@instructors.size).each  do |instructor|
+      - Instructor.order(:name).where("status = 'courtesy'").first(@instructors.size).each  do |instructor|
         %li= link_to instructor.name, instructor_path(id: instructor.id)
 %h3 Inactive
 .row
   .col-md-4
     %ul
-      - Instructor.order(:name).where("status == 'inactive'").first(@instructors.size).each  do |instructor|
+      - Instructor.order(:name).where("status = 'inactive'").first(@instructors.size).each  do |instructor|
         %li= link_to instructor.name, instructor_path(id: instructor.id)
 %h3 Unsorted
 .row
