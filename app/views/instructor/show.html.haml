@@ -17,7 +17,7 @@
         = form_for @instructor, method: :put, html: { } do |f|
           .form-group
             .col-sm-3
-              = f.select :status, options_for_select(["Current" , "Courtesy" , "Inactive"], "Current"), {}, class: "form-control"
+              = f.select :status, options_for_select(["Current" , "Courtesy" , "Inactive"], @instructor.status), {}, class: "form-control"
             .col-sm-2
               = f.submit "Update", class: "btn btn-primary"
 

@@ -1,6 +1,6 @@
 class InstructorController < ApplicationController
   include InstructorHelper
-  
+
   before_action :authenticate_user!
   before_action :verify_read
 
@@ -19,7 +19,7 @@ class InstructorController < ApplicationController
   def update
     @instructor = Instructor.find(id)
 
-    @instructor.assign_attributes({:status => params[:instructor][:status].downcase})
+    @instructor.assign_attributes({:status => params[:instructor][:status]})
     @instructor.save
 
     redirect_to instructor_path(id)
