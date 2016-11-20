@@ -1,7 +1,6 @@
 %p.text-right
   .pull-right
-    = link_to "Highlight Missing Data", "", class: "btn btn-primary"
-
+  
   = form_tag evaluation_index_path, method: :get, class: "form-inline" do
     .form-group
       %label{for: "year"} Select Year:
@@ -73,9 +72,9 @@
           %td
             = evaluation.subject
           %td
-            = evaluation.course_name
+            = evaluation.course_name 
           %td
-            = evaluation.course
+            = evaluation.course.to_s + is_honors(evaluation.section)
           %td
             = evaluation.section
           %td

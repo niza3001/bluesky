@@ -1,7 +1,7 @@
 class Evaluation < ActiveRecord::Base
 
   belongs_to :instructor
-  belongs_to :course_name
+  #belongs_to :course_name
   validates_associated :instructor
   validates_associated :course_name
 
