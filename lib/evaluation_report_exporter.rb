@@ -32,7 +32,7 @@ class EvaluationReportExporter
     temp_HEADINGS = Array.new
 
     if !itemz.nil?
-      temp_HEADINGS = HEADINGS[0..7]
+      temp_HEADINGS = HEADINGS[0..6]
 
       # Add/remove Item 1..8 on everything
       count = 0
