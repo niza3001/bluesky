@@ -113,7 +113,7 @@ class EvaluationController < ApplicationController
       for y in yr
         for s in smstr
           @evaluation_groups += Evaluation.no_missing_data.where(
-            term: y+s, subject: subj, course: course, instructor_id: instructor_id).default_sorted_groups
+            term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups
         end
       end
 
@@ -128,7 +128,16 @@ class EvaluationController < ApplicationController
   
   def missing_data
     if can? :read, :all
-      @evaluation_groups = Evaluation.missing_data.default_sorted_groups
+      
+      if params[:sort_by].to_s == 'year' 
+      @evaluation_groups = Evaluation.missing_data.semester_sorted_groups
+      elsif params[:sort_by].to_s == 'section'
+      @evaluation_groups = Evaluation.missing_data.section_sorted_groups
+      elsif params[:sort_by].to_s == 'course'
+      @evaluation_groups = Evaluation.missing_data.course_sorted_groups
+      else
+      @evaluation_groups = Evaluation.missing_data.semester_sorted_groups
+      end
     else
       redirect_to root_path
     end
@@ -249,7 +258,7 @@ class EvaluationController < ApplicationController
   def evaluation_params
     params.require(:evaluation).permit(:term, :subject, :course, :section, :instructor_id,
       :enrollment, :item1_mean, :item2_mean, :item3_mean, :item4_mean, :item5_mean,
-      :item6_mean, :item7_mean, :item8_mean, :Itemz, :instructor,:course_name, :gpr).to_h.symbolize_keys!
+      :item6_mean, :item7_mean, :item8_mean, :Itemz, :instructor,:course_name, :gpr,:sort_by).to_h.symbolize_keys!
   end
 
   def evaluation_id

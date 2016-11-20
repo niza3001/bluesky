@@ -1,6 +1,5 @@
 %p.text-right
   .pull-right
-    = link_to "Highlight Missing Data", "", class: "btn btn-primary"
     
   = form_tag missing_data_evaluation_index_path, method: :get, class: "form-inline" do
     .form-group
@@ -33,19 +32,19 @@
           = link_to "Term", missing_data_evaluation_index_path
         %th.light-gray-highlight Subject
         %th.light-gray-highlight Course Name
-        %th.light-gray-highlight Course
-        %th.light-gray-highlight Section
+        %th.light-gray-highlight 
+          = link_to "Course", missing_data_evaluation_index_path(sort_by: :course)
+        %th.light-gray-highlight 
+          = link_to "Section", missing_data_evaluation_index_path(sort_by: :section)
         %th.light-gray-highlight
           = link_to "Instructor", evaluation_index_path
         %th.light-gray-highlight Enrollment
         - (1..8).each do |num|
           %th.light-gray-highlight
             = "Item #{num}"
-            =check_box_tag "Itemz[#{num}]" , 1, nil, :id => "It#{num}"
         %th.light-gray-highlight GPR
         %th.light-gray-highlight 
-          %button{class: "btn btn-primary"}
-            = 'Export to Excel'
+
         %th
 
   %tbody
@@ -63,7 +62,7 @@
           %td
             = evaluation.course_name  
           %td
-            = evaluation.course
+            = evaluation.course.to_s + is_honors(evaluation.section)
           %td
             = evaluation.section
           %td
