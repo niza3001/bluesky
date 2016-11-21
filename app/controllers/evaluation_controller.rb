@@ -110,13 +110,29 @@ class EvaluationController < ApplicationController
         smstr << semester
       end
 
-      for y in yr
-        for s in smstr
-          @evaluation_groups += Evaluation.no_missing_data.where(
-            term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups
-        end
-      end
-
+           for y in yr
+              for s in smstr
+          if params[:sort_by].to_s == 'instructor_' 
+                 @evaluation_groups += Evaluation.no_missing_data.where(
+                 term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups
+          elsif params[:sort_by].to_s == 'semester_' 
+              @evaluation_groups += Evaluation.no_missing_data.where(
+             term: y+s, subject: subj, course: course, instructor_id: instructor_id).semester_sorted_groups
+          elsif params[:sort_by].to_s == 'course_' 
+            @evaluation_groups += Evaluation.no_missing_data.where(
+            term: y+s, subject: subj, course: course, instructor_id: instructor_id).course_sorted_groups
+          elsif params[:sort_by].to_s == 'section_' 
+            @evaluation_groups += Evaluation.no_missing_data.where(
+            term: y+s, subject: subj, course: course, instructor_id: instructor_id).section_sorted_groups     
+         else
+            @evaluation_groups += Evaluation.no_missing_data.where(
+            term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups     
+         end
+   
+           end
+             end
+        
+      
     else
       redirect_to root_path
     end
@@ -159,11 +175,58 @@ class EvaluationController < ApplicationController
     end
   end
 
-  def export
+  def exportfacultysort
     term = params.require(:id)
-    evaluation_groups = Evaluation.no_missing_data.where(term: term).default_sorted_groups
-    send_data EvaluationReportExporter.new(evaluation_groups).generate(params[:Itemz]), filename: "#{term}_evaluation_report_#{Time.now.strftime('%F')}.csv"
+    
+      if params[:sort_by].to_s == 'year' 
+      evaluation_groups2 = Evaluation.missing_data.semester_sorted_groups
+      elsif params[:sort_by].to_s == 'section'
+      evaluation_groups2 = Evaluation.missing_data.section_sorted_groups
+      elsif params[:sort_by].to_s == 'course'
+      evaluation_groups2 = Evaluation.missing_data.course_sorted_groups
+      else
+      evaluation_groups2 = Evaluation.no_missing_data.instructor_sorted_groups
+      end
+      
+    
+    send_data EvaluationReportExporter.new(evaluation_groups2).generate(params[:Itemz]), filename: "#{term}_evaluation_report_#{Time.now.strftime('%F')}.csv"
   end
+  
+  def exportfacultysort2
+    term = params.require(:id)
+    
+      if params[:sort_by].to_s == 'year' 
+      evaluation_groups2 = Evaluation.missing_data.semester_sorted_groups
+      elsif params[:sort_by].to_s == 'section'
+      evaluation_groups2 = Evaluation.missing_data.section_sorted_groups
+      elsif params[:sort_by].to_s == 'course'
+      evaluation_groups2 = Evaluation.missing_data.course_sorted_groups
+      else
+      evaluation_groups2 = Evaluation.no_missing_data.instructor_sorted_groups
+      end
+      
+    
+    send_data EvaluationReportExporter.new(evaluation_groups2).generate(params[:Itemz]), filename: "#{term}_evaluation_report_#{Time.now.strftime('%F')}.csv"
+  end
+  
+  def exportsemestersort
+    term = params.require(:id)
+    evaluation_groups2 = Evaluation.missing_data.semester_sorted_groups
+    send_data EvaluationReportExporter.new(evaluation_groups2).generate(params[:Itemz]), filename: "#{term}_evaluation_report_#{Time.now.strftime('%F')}.csv"
+  end
+  
+  def exportsectionsort
+    term = params.require(:id)
+    evaluation_groups2 = Evaluation.missing_data.section_sorted_groups
+    send_data EvaluationReportExporter.new(evaluation_groups2).generate(params[:Itemz]), filename: "#{term}_evaluation_report_#{Time.now.strftime('%F')}.csv"
+  end
+  
+  def exportcoursesort
+    term = params.require(:id)
+    evaluation_groups2 = Evaluation.missing_data.course_sorted_groups
+    send_data EvaluationReportExporter.new(evaluation_groups2).generate(params[:Itemz]), filename: "#{term}_evaluation_report_#{Time.now.strftime('%F')}.csv"
+  end
+  
 
   def edit
     @evaluation = Evaluation.find(evaluation_id)
@@ -258,10 +321,11 @@ class EvaluationController < ApplicationController
   def evaluation_params
     params.require(:evaluation).permit(:term, :subject, :course, :section, :instructor_id,
       :enrollment, :item1_mean, :item2_mean, :item3_mean, :item4_mean, :item5_mean,
-      :item6_mean, :item7_mean, :item8_mean, :Itemz, :instructor,:course_name, :gpr,:sort_by).to_h.symbolize_keys!
+      :item6_mean, :item7_mean, :item8_mean, :Itemz, :instructor,:course_name, :gpr).to_h.symbolize_keys!
   end
 
   def evaluation_id
     params.require(:id)
   end
+  
 end

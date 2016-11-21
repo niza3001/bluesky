@@ -32,8 +32,12 @@ Rails.application.routes.draw do
   resources :evaluation do
     get  'import',       on: :collection
     get  'import_gpr',   on: :collection
-    get  'export',       on: :member
+    get  'exportfacultysort2',       on: :member
+    get  'exportfacultysort',       on: :member
+    get  'exportsemestersort',       on: :member
+    get  'exportsectionsort',       on: :member
     get  'missing_data', on: :collection
+    get  'show', on: :collection
     get  'my' => 'evaluation#my'
     post 'upload',       on: :collection
     post 'upload_gpr',   on: :collection

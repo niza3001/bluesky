@@ -24,7 +24,7 @@
 %table.table.table-condensed
   %thead
     %tr
-      = form_tag "", method: :get do
+      = form_tag """, method: :get do
         %th
         - if can? :write, :all
           %th.light-gray-highlight Edit
@@ -32,7 +32,7 @@
           = link_to "Term", missing_data_evaluation_index_path
         %th.light-gray-highlight Subject
         %th.light-gray-highlight Course Name
-        %th.light-gray-highlight 
+        %th.light-gray-highlight Course  
           = link_to "Course", missing_data_evaluation_index_path(sort_by: :course)
         %th.light-gray-highlight 
           = link_to "Section", missing_data_evaluation_index_path(sort_by: :section)
@@ -42,8 +42,12 @@
         - (1..8).each do |num|
           %th.light-gray-highlight
             = "Item #{num}"
+            =check_box_tag "Itemz[#{num}]" , 1, nil, :id => "It#{num}"
         %th.light-gray-highlight GPR
         %th.light-gray-highlight 
+          %button{class: "btn btn-primary"}
+            = 'Export to Excel'
+
 
         %th
 
