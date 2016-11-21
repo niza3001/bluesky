@@ -1,6 +1,7 @@
 %p.text-right
   .pull-right
-  
+    = link_to "Missing Data", missing_data_evaluation_index_path, class: "btn btn-primary"
+    
   = form_tag evaluation_index_path, method: :get, class: "form-inline" do
     .form-group
       %label{for: "year"} Select Year:
