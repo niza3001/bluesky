@@ -34,7 +34,7 @@
 %table.table.table-condensed
   %thead
     %tr
-      = form_tag "", method: :get do
+      = form_tag export_evaluation_path(params[:my_sort]), method: :get do
         %th
         - if can? :write, :all
           %th.light-gray-highlight Edit
@@ -52,7 +52,7 @@
         - (1..8).each do |num|
           %th.light-gray-highlight
             = "Item #{num}"
-            =check_box_tag "Itemz[#{num}]" , 1, nil, :id => "It#{num}"
+            =check_box_tag "Itemz[#{num}]" , 1, true 
         %th.light-gray-highlight GPR
         %th.light-gray-highlight Mean Student Eval Score
         %th.light-gray-highlight Course Level Average
@@ -109,4 +109,3 @@
             %b= compute_course_level_average(group, @evaluation_groups).round(2)
           %td.gray-highlight
           %td{colspan: 1}
-      

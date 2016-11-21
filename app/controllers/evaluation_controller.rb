@@ -1,7 +1,7 @@
 class EvaluationController < ApplicationController
 
   before_action :authenticate_user!
-
+  
   def new
     if can? :write, :all
       @evaluation = Evaluation.new
@@ -109,7 +109,7 @@ class EvaluationController < ApplicationController
       else
         smstr << semester
       end
-
+            params[:my_sort] = params[:sort_by];
            for y in yr
               for s in smstr
           if params[:sort_by].to_s == 'instructor_' 
@@ -127,6 +127,7 @@ class EvaluationController < ApplicationController
          else
             @evaluation_groups += Evaluation.no_missing_data.where(
             term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups     
+            params[:my_sort] = 'instructor';
          end
    
            end
@@ -137,11 +138,7 @@ class EvaluationController < ApplicationController
       redirect_to root_path
     end
   end
-   
-  def my 
-    params[:Itemz[0]] = 1;
-  end 
-  
+ 
   def missing_data
     if can? :read, :all
       
@@ -176,19 +173,19 @@ class EvaluationController < ApplicationController
   end
 
   def export
-    term = params.require(:id)
+    #term = params.require(:id)
     
-      if params[:sort_by].to_s == 'semester_' 
-      evaluation_groups2 = Evaluation.no_missing_data.semester_sorted_groups
-      elsif params[:sort_by].to_s == 'section_'
-      evaluation_groups2 = Evaluation.no_missing_data.section_sorted_groups
-      elsif params[:sort_by].to_s == 'course_'
-      evaluation_groups2 = Evaluation.no_missing_data.course_sorted_groups
-      else
-      evaluation_groups2 = Evaluation.no_missing_data.instructor_sorted_groups
-      end
+    if params[:id] == "semester_"
+      @evaluation_groups2 = Evaluation.no_missing_data.semester_sorted_groups
+    elsif params[:id] == "section_"
+      @evaluation_groups2 = Evaluation.no_missing_data.section_sorted_groups
+    elsif params[:id] == "course_" 
+      @evaluation_groups2 = Evaluation.no_missing_data.course_sorted_groups
+    elsif params[:id].to_s == "instructor_"
+      @evaluation_groups2 = Evaluation.no_missing_data.instructor_sorted_groups
+    end
 
-    send_data EvaluationReportExporter.new(evaluation_groups2).generate(params[:Itemz]), filename: "#{term}_evaluation_report_#{Time.now.strftime('%F')}.csv"
+    send_data EvaluationReportExporter.new(@evaluation_groups2).generate(params[:Itemz]), filename: "evaluation_report_#{Time.now.strftime('%F')}.csv"
   end
   
   def edit
@@ -284,7 +281,7 @@ class EvaluationController < ApplicationController
   def evaluation_params
     params.require(:evaluation).permit(:term, :subject, :course, :section, :instructor_id,
       :enrollment, :item1_mean, :item2_mean, :item3_mean, :item4_mean, :item5_mean,
-      :item6_mean, :item7_mean, :item8_mean, :Itemz, :instructor,:course_name, :gpr).to_h.symbolize_keys!
+      :item6_mean, :item7_mean, :item8_mean, :Itemz, :instructor,:course_name, :gpr, :sort_by, :my_sort).to_h.symbolize_keys!
   end
 
   def evaluation_id

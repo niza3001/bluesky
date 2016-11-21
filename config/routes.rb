@@ -32,8 +32,8 @@ Rails.application.routes.draw do
     get  'import',       on: :collection
     get  'import_gpr',   on: :collection
     get  'export',       on: :member
-    get  'show',         on: :collection
     get  'missing_data', on: :collection
+    get  'show',         on: :collection
     post 'upload',       on: :collection
     post 'upload_gpr',   on: :collection
   end
