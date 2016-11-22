@@ -1,9 +1,7 @@
 class Evaluation < ActiveRecord::Base
 
   belongs_to :instructor
-  #belongs_to :course_name
   validates_associated :instructor
-  validates_associated :course_name
 
   def self.all_Items
      self.all.select(:Item).distinct.order(:Item).pluck(:Item)
@@ -27,7 +25,7 @@ class Evaluation < ActiveRecord::Base
   validates :item6_mean, numericality: { allow_blank: true}, inclusion: { in: 0..5, message: "must be between 0 and 5." }
   validates :item7_mean, numericality: { allow_blank: true}, inclusion: { in: 0..5, message: "must be between 0 and 5." }
   validates :item8_mean, numericality: { allow_blank: true}, inclusion: { in: 0..5, message: "must be between 0 and 5." }
-  
+
   scope :no_missing_data, -> {where.not("instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL")}
   scope :missing_data, ->{where("instructor_id is NULL OR enrollment is NULL OR item1_mean is NULL OR item2_mean is NULL OR item3_mean is NULL OR item4_mean is NULL OR item5_mean is NULL OR item6_mean is NULL OR item7_mean is NULL OR item8_mean is NULL OR gpr is NULL")}
 
@@ -71,7 +69,7 @@ class Evaluation < ActiveRecord::Base
     .map(&:last) # only take the groups and not the keys
     .map { |group| group.sort_by(&:section) } # sort each group by section
   end
-  
+
     def self.instructor_sorted_groups
     # We group by the following things and then sort the groups in this order:
     #  - Term (2015C, 2015A, 2014C)
@@ -87,7 +85,7 @@ class Evaluation < ActiveRecord::Base
     .map(&:last) # only take the groups and not the keys
     .map { |group| group.sort_by(&:section) } # sort each group by section
   end
-  
+
   def self.course_sorted_groups
     # We group by the following things and then sort the groups in this order:
     #  - Term (2015C, 2015A, 2014C)
@@ -103,7 +101,7 @@ class Evaluation < ActiveRecord::Base
     .map(&:last) # only take the groups and not the keys
     .map { |group| group.sort_by(&:section) } # sort each group by section
   end
-  
+
   def self.semester_sorted_groups
     # We group by the following things and then sort the groups in this order:
     #  - Term (2015C, 2015A, 2014C)
@@ -135,7 +133,7 @@ class Evaluation < ActiveRecord::Base
     .map(&:last) # only take the groups and not the keys
     .map { |group| group.sort_by(&:section) } # sort each group by section
   end
-  
+
   def key
     attributes.select { |k, _| Evaluation.key_attributes.include? k.to_sym }
   end

@@ -1,6 +1,5 @@
 class Instructor < ActiveRecord::Base
   has_many :evaluations
-  has_many :course_name
 
   # needed for rolify
   resourcify
