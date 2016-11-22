@@ -12,7 +12,7 @@ module InstructorHelper
   end
   
   def is_honors(course_section)
-    if (course_section.to_s.starts_with?("2"))
+    if (course_section.to_s.starts_with?("5"))
       return "H"
     else
       ""

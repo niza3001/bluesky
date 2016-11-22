@@ -127,7 +127,7 @@ class EvaluationController < ApplicationController
          else
             @evaluation_groups += Evaluation.no_missing_data.where(
             term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups     
-            params[:my_sort] = 'instructor';
+            params[:my_sort] = 'instructor_';
          end
    
            end

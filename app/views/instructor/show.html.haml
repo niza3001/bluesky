@@ -3,7 +3,7 @@
   %thead
     %tr
       %th.text-left
-        = link_to "Back to list", instructor_index_path, class: "btn btn-primary"
+        = link_to "Back to faculty member list", instructor_index_path, class: "btn btn-primary"
       %th.text-right
         = link_to "Download", export_instructor_path, class: "btn btn-primary"
 
@@ -22,7 +22,7 @@
               = f.submit "Update", class: "btn btn-primary"
 
 %table.table.table-bordered.table-condensed
-  %thead
+  %thead.light-gray-highlight
     %tr
       %th Undergraduate and Graduate Courses Taught
       %th Semester
@@ -43,16 +43,19 @@
             )
         %td= course_section_group.first.term
         %td= compute_total_enrollment(course_section_group)
-        %td= compute_mean_student_eval_score(course_section_group).round(2)
+        %td{ class: (course_section_group.nil? ? "highlighted" : "" ) }
+          =compute_mean_student_eval_score(course_section_group).round(2)
         %td= compute_course_level_average(course_section_group, @all_course_groups).round(2)
-        %td= compute_mean_gpr(course_section_group).try(:round, 2)
-        %td= compute_course_level_mean_gpr(course_section_group, @all_course_groups).try(:round, 2)
+        %td{ class: (compute_mean_gpr(course_section_group).nil? ? "highlighted" : "" ) }
+          = compute_mean_gpr(course_section_group).try(:round, 2)
+        %td{ class: (compute_course_level_mean_gpr(course_section_group, @all_course_groups).nil? ? "highlighted" : "" ) }
+          = compute_course_level_mean_gpr(course_section_group, @all_course_groups).try(:round, 2)
 
   %tfoot
   / blank table row
   %tr
     %td{colspan: 4}
 
-  %tr
+  %tr.gray-highlight
     %td{colspan: 2} TOTAL NUMBER OF STUDENTS
     %td{colspan: 2}= @instructor.course_section_groups.map { |course_section_group| compute_total_enrollment(course_section_group) }.reduce(:+)

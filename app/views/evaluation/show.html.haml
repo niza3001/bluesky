@@ -1,6 +1,8 @@
 %p.text-right
   .pull-right
-    = link_to "Missing Data", missing_data_evaluation_index_path, class: "btn btn-primary"
+    = link_to "Import Data", import_evaluation_index_path, class: "btn btn-primary"
+    = link_to "Missing Data", missing_data_evaluation_index_path, class: "btn btn-warning"
+    
     
   = form_tag evaluation_index_path, method: :get, class: "form-inline" do
     .form-group

@@ -1,11 +1,11 @@
 .outer
   .middle 
     .inner.text-center
-      %h1 FPR Utilities
+      %h1 Teaching Evaluation Scores
       -if user_signed_in?
         - if can? :write, :all
           .well.well-sm{style: "display: inline-block"}
-            %h3 Import data
+            %h3 Import Data
             %ul.nav.nav-pills.nav-stacked
               %li= link_to "Import PICA Evaluation Data", import_evaluation_index_path
               %li= link_to "Import GPR Distribution Data", import_gpr_evaluation_index_path
@@ -13,7 +13,7 @@
               %li= link_to "Add Paper Evaluation", new_evaluation_path
         - if can? :read, :all
           .well.well-sm{style: "display: inline-block"}
-            %h3 View data
+            %h3 View Data
             %ul.nav.nav-pills.nav-stacked
               %li= link_to "View Evaluation Data", evaluation_index_path
               %li= link_to "View Faculty FPR Data", instructor_index_path
@@ -24,7 +24,7 @@
       %ul.nav.nav-pills.nav-stacked
         - if user_signed_in?
           - if can? :manage, :all
-            %li= link_to "User management panel", admin_index_path
+            %li= link_to "User Management Panel", admin_index_path
           %li= link_to "Sign out", destroy_user_session_path, method: :delete
         - else
           %li= link_to "Sign In To Begin", new_user_session_path
