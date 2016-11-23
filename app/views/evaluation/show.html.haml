@@ -2,21 +2,21 @@
   .pull-right
     = link_to "Import Data", import_evaluation_index_path, class: "btn btn-primary"
     = link_to "Missing Data", missing_data_evaluation_index_path, class: "btn btn-warning"
-    
-    
+
+
   = form_tag evaluation_index_path, method: :get, class: "form-inline" do
     .form-group
       %label{for: "year"} Select Year:
       %select{name: "year", id: "year", class: "form-control"}
         %option{value: nil, selected: ( params[:year].nil? ? "selected" : nil)}="All"
         - @years.each do |yr|
-          %option{value: yr, selected: (yr == params[:year] ? "selected" : nil)}= yr 
+          %option{value: yr, selected: (yr == params[:year] ? "selected" : nil)}= yr
 
       %label{for: "semester"} Select Semester:
       %select{name: "semester", id: "semester", class: "form-control"}
         %option{value: nil, selected: ( params[:semester].nil? ? "selected" : nil)}="All"
         - @semesters.each do |smstr|
-          %option{value: smstr, selected: (smstr == params[:semester] ? "selected" : nil)}= smstr     
+          %option{value: smstr, selected: (smstr == params[:semester] ? "selected" : nil)}= smstr
 
       %label{for: "instructor"} Select Instructor:
       %select{name: "instructor", id: "instructor", class: "form-control"}
@@ -44,9 +44,9 @@
           = link_to "Term", evaluation_index_path(sort_by: :semester_)
         %th.light-gray-highlight Subject
         %th.light-gray-highlight Course Name
-        %th.light-gray-highlight 
+        %th.light-gray-highlight
           = link_to "Course", evaluation_index_path(sort_by: :course_)
-        %th.light-gray-highlight 
+        %th.light-gray-highlight
           = link_to "Section", evaluation_index_path(sort_by: :section_)
         %th.light-gray-highlight
           = link_to "Instructor", evaluation_index_path(sort_by: :instructor_)
@@ -54,7 +54,7 @@
         - (1..8).each do |num|
           %th.light-gray-highlight
             = "Item #{num}"
-            =check_box_tag "Itemz[#{num}]" , 1, true 
+            =check_box_tag "Itemz[#{num}]" , 1, true
         %th.light-gray-highlight GPR
         %th.light-gray-highlight Mean Student Eval Score
         %th.light-gray-highlight Course Level Average
@@ -73,13 +73,13 @@
             %td
               = link_to "Edit", edit_evaluation_path(evaluation)
           %td
-            = evaluation.term
+            = link_to evaluation.term, evaluation_index_path(:semester=>evaluation.term.to_s.last, :year=>evaluation.term.to_s[0..3], :instructor=>params[:instructor].nil? ? "All" : params[:instructor], :course_name=>params[:course_name].nil? ? "All" : params[:course_name])
           %td
             = evaluation.subject
           %td
-            = evaluation.course_name 
+            = link_to evaluation.course_name.nil? ? "" : evaluation.course_name, evaluation_index_path(:course_name=>evaluation.subject + " " +  evaluation.course.to_s, :instructor=>params[:instructor].nil? ? "All" : params[:instructor], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester])
           %td
-            = evaluation.course.to_s + is_honors(evaluation.section)
+            = link_to evaluation.course.to_s + is_honors(evaluation.section), evaluation_index_path(:course_name=>evaluation.subject + " " +  evaluation.course.to_s, :instructor=>params[:instructor].nil? ? "All" : params[:instructor], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester])
           %td
             = evaluation.section
           %td
