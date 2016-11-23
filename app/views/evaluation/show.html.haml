@@ -36,32 +36,30 @@
 %table.table.table-condensed
   %thead
     %tr
-      = form_tag export_evaluation_path(params[:my_sort]), method: :get do
-        %th
-        - if can? :write, :all
-          %th.light-gray-highlight Edit
+      %th
+      - if can? :write, :all
+        %th.light-gray-highlight Edit
+      %th.light-gray-highlight
+        = link_to "Term", evaluation_index_path(sort_by: :semester_)
+      %th.light-gray-highlight Subject
+      %th.light-gray-highlight Course Name
+      %th.light-gray-highlight
+        = link_to "Course", evaluation_index_path(sort_by: :course_)
+      %th.light-gray-highlight Section
+      %th.light-gray-highlight
+        = link_to "Instructor", evaluation_index_path(sort_by: :instructor_)
+      %th.light-gray-highlight Enrollment
+      - (1..8).each do |num|
         %th.light-gray-highlight
-          = link_to "Term", evaluation_index_path(sort_by: :semester_)
-        %th.light-gray-highlight Subject
-        %th.light-gray-highlight Course Name
-        %th.light-gray-highlight
-          = link_to "Course", evaluation_index_path(sort_by: :course_)
-        %th.light-gray-highlight Section
-        %th.light-gray-highlight
-          = link_to "Instructor", evaluation_index_path(sort_by: :instructor_)
-        %th.light-gray-highlight Enrollment
-        - (1..8).each do |num|
-          %th.light-gray-highlight
-            = "Item #{num}"
-            =check_box_tag "Itemz[#{num}]" , 1, true
-        %th.light-gray-highlight GPR
-        %th.light-gray-highlight Mean Student Eval Score
-        %th.light-gray-highlight Course Level Average
-        %th.light-gray-highlight
+          = "Item #{num}"
+      %th.light-gray-highlight GPR
+      %th.light-gray-highlight Mean Student Eval Score
+      %th.light-gray-highlight Course Level Average
+      %th.light-gray-highlight
+        = form_tag export_evaluation_path(params[:my_sort]), method: :get do
           %button{class: "btn btn-primary"}
             = 'Export to Excel'
-        %th
-
+      %th
 
   %tbody
     - @evaluation_groups.each do |group|
