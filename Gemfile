@@ -41,6 +41,7 @@ gem 'rake', group: :test # for TravisCI
 gem 'cancancan' # for user class-based access
 
 gem 'rolify' # to define user classes
+gem 'delayed_job_active_record'
 
 group :development, :test do
   # Use sqlite3 as the database for Active Record
