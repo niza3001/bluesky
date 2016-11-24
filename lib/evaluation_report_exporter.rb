@@ -55,8 +55,8 @@ class EvaluationReportExporter
           csv << eval.csv_data(itemz)
         end
 
-        formula_data = []
-        6.times { formula_data.push("") }
+        formula_data = ["Total"]
+        5.times { formula_data.push("") }
         formula_data.push(compute_total_enrollment(group))
 
         if itemz.nil?

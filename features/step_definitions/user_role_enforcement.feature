@@ -7,7 +7,7 @@ Feature: All actions should be checked against user roles.
     And User clicks on Sign out link
     And User is of class readOnly
     When User directly visits /evaluation/new
-    Then User should be on page with path of /evaluation/2015C
+    Then User should be on page with path of /evaluation/show
 
   Scenario: User without read access tries to access /evaluation
     Given There exists 4 users assigned admin, readWrite, readOnly, and guest as roles
@@ -34,7 +34,7 @@ Feature: All actions should be checked against user roles.
     And User clicks on Sign out link
     And User is of class readOnly
     When User directly visits /evaluation/import
-    Then User should be on page with path of /evaluation/2015C
+    Then User should be on page with path of /evaluation/show
 
   Scenario: User without write access tries to access /evaluation/import_gpr
     Given There exists 4 users assigned admin, readWrite, readOnly, and guest as roles
@@ -43,7 +43,7 @@ Feature: All actions should be checked against user roles.
     And User clicks on Sign out link
     And User is of class readOnly
     When User directly visits /evaluation/import_gpr
-    Then User should be on page with path of /evaluation/2015C
+    Then User should be on page with path of /evaluation/show
 
   Scenario: User without read access tries to access /evaluation/export
     Given There exists 4 users assigned admin, readWrite, readOnly, and guest as roles
@@ -58,7 +58,7 @@ Feature: All actions should be checked against user roles.
     And User clicks on Sign out link
     And User is of class readOnly
     When User directly visits /evaluation/import_gpr
-    Then User should be on page with path of /evaluation/2015C
+    Then User should be on page with path of /evaluation/show
 
   Scenario: User without read access tries to access /instructor
     Given There exists 4 users assigned admin, readWrite, readOnly, and guest as roles

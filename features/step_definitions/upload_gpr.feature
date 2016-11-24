@@ -13,7 +13,7 @@ Feature: Integrate data uploaded from PDFs containing GPR data
     When User fills in Term with 2015C
     And User selects GPR file
     And User clicks on the Upload button
-    Then User should see the evaluations page for 2015C
+    Then User should see the evaluations page for show
     Then User should see 11 new GPRs imported. 0 evaluation GPRs updated.
 
   Scenario: User does not select a file to uploaded

@@ -7,7 +7,7 @@ Feature: First user created should be an admin, all others afterwards default to
     And User fills in Email with test@man.com, Password with secretpass, Password confirmation with secretpass
     And User clicks on the Sign up button
     Then User should be on the home page
-    And User should see the User management panel button
+    And User should see the User Management Panel button
 
   Scenario: 2 users are created
     Given User is on the home page
