@@ -19,11 +19,11 @@
         - @semesters.each do |smstr|
           %option{value: smstr, selected: (smstr == params[:semester] ? "selected" : nil)}= smstr
 
-      %label{for: "instructor"} Select Instructor:
-      %select{name: "instructor", id: "instructor", class: "form-control"}
+      %label{for: "instructor_name"} Select Instructor:
+      %select{name: "instructor_name", id: "instructor_name", class: "form-control"}
         %option{value: nil, selected: ( params[:instructor_name].nil? ? "selected" : nil)}="All"
-        - @instructor_names.each do |instructor|
-          %option{value: instructor, selected: (instructor == params[:instructor_name] ? "selected" : nil)}= instructor
+        - @instructor_names.each do |instructor_name|
+          %option{value: instructor_name, selected: (instructor_name == params[:instructor_name] ? "selected" : nil)}= instructor_name
 
       %label{for: "course_name"} Select Course:
       %select{name: "course_name", id: "course_name", class: "form-control"}
