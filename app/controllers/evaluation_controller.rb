@@ -37,6 +37,7 @@ class EvaluationController < ApplicationController
       selected_course = params[:course_name];
       selected_year = params[:year];
       selected_semester = params[:semester];
+      
       if selected_year.nil? || selected_semester.nil?
         yr_smstr = Evaluation.no_missing_data.pluck(:term).uniq.sort.reverse.first
       else
@@ -118,6 +119,9 @@ class EvaluationController < ApplicationController
           elsif params[:sort_by].to_s == 'semester_' 
               @evaluation_groups += Evaluation.no_missing_data.where(
              term: y+s, subject: subj, course: course, instructor_id: instructor_id).semester_sorted_groups
+          elsif params[:sort_by].to_s == 'course_level' 
+              @evaluation_groups += Evaluation.no_missing_data.where(
+             term: y+s, subject: subj, course: course, instructor_id: instructor_id).level_sorted_groups   
           elsif params[:sort_by].to_s == 'course_' 
             @evaluation_groups += Evaluation.no_missing_data.where(
             term: y+s, subject: subj, course: course, instructor_id: instructor_id).course_sorted_groups
@@ -128,6 +132,7 @@ class EvaluationController < ApplicationController
             @evaluation_groups += Evaluation.no_missing_data.where(
             term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups     
             params[:my_sort] = 'instructor_';
+            params[:sort_by] = 'instructor_';
          end
    
            end
@@ -173,19 +178,96 @@ class EvaluationController < ApplicationController
   end
 
   def export
-    #term = params.require(:id)
-    
-    if params[:id] == "semester_"
-      @evaluation_groups2 = Evaluation.no_missing_data.semester_sorted_groups
-    elsif params[:id] == "section_"
-      @evaluation_groups2 = Evaluation.no_missing_data.section_sorted_groups
-    elsif params[:id] == "course_" 
-      @evaluation_groups2 = Evaluation.no_missing_data.course_sorted_groups
-    elsif params[:id].to_s == "instructor_"
-      @evaluation_groups2 = Evaluation.no_missing_data.instructor_sorted_groups
-    end
+      #term = params.require(:id)
+      @terms = Evaluation.pluck(:term).uniq.sort.reverse
+      @instructor_names = Instructor.pluck(:name).uniq.sort
+      @course_names = CourseName.pluck(:subject_course, :name).uniq.sort
+      merge_subj_name = lambda { |subj, name| return name.nil? ? subj : subj + " " + name }
 
+      @course_names.map! { |crs|
+        merge_subj_name.call(crs[0], crs[1])
+      }      
+      
+      @semesters = ["A", "B", "C"]
+      @years = []
+      @terms.each do |e|
+        @years << e.clone.chop
+      end
+      @years = @years.uniq.sort.reverse
+
+
+      year = params[:year]
+      semester = params[:semester]
+      instructor_name = params[:instructor_name]
+      course_name = params[:course_name]
+
+
+
+      if course_name.nil? || course_name == "All"
+        subj = Evaluation.pluck(:subject).uniq.sort
+        course = Evaluation.pluck(:course).uniq.sort
+      else
+        subj_course = course_name.gsub(/\s+/m, ' ').strip.split(" ")
+        subj = subj_course[0]
+        course = subj_course[1]
+      end
+
+      if instructor_name.nil? || instructor_name == "All"
+        instructor_id = Evaluation.pluck(:instructor_id)
+      else
+        instructor_id =
+          Instructor.where(name: Instructor.normalize_name(instructor_name)).first.id
+      end
+
+      yr = []
+      if year.nil? || year == "All"
+        yr += @years
+      else
+        yr << year
+      end
+
+      smstr = []
+      if semester.nil? || semester == "All"
+        smstr += @semesters
+      else
+        smstr << semester
+      end
+     
+     params[:id] = params[:sort_by];
+            
+     #smstr = ["A", "B", "C"]
+     #yr = ["2014"]
+     
+        @evaluation_groups2 = []
+            
+           for y in yr
+              for s in smstr
+          if params[:sort_by].to_s == 'instructor_' 
+                 @evaluation_groups2 += Evaluation.no_missing_data.where(
+                 term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups
+          elsif params[:sort_by].to_s == 'semester_' 
+              @evaluation_groups2 += Evaluation.no_missing_data.where(
+             term: y+s, subject: subj, course: course, instructor_id: instructor_id).semester_sorted_groups
+          elsif params[:sort_by].to_s == 'course_' 
+            @evaluation_groups2 += Evaluation.no_missing_data.where(
+            term: y+s, subject: subj, course: course, instructor_id: instructor_id).course_sorted_groups
+          elsif params[:sort_by].to_s == 'course_level' 
+            @evaluation_groups += Evaluation.no_missing_data.where(
+            term: y+s, subject: subj, course: course, instructor_id: instructor_id).level_sorted_groups   
+          elsif params[:sort_by].to_s == 'section_' 
+            @evaluation_groups2 += Evaluation.no_missing_data.where(
+            term: y+s, subject: subj, course: course, instructor_id: instructor_id).section_sorted_groups     
+         else
+            @evaluation_groups2 += Evaluation.no_missing_data.where(
+            term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups     
+            params[:sort_by] = 'semester_';
+         end
+   
+           end
+             end
+     
     send_data EvaluationReportExporter.new(@evaluation_groups2).generate(params[:Itemz]), filename: "evaluation_report_#{Time.now.strftime('%F')}.csv"
+   
   end
   
   def edit
