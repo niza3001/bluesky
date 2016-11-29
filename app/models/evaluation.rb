@@ -72,7 +72,7 @@ class Evaluation < ActiveRecord::Base
     .map { |group| group.sort_by(&:section) } # sort each group by section
   end
 
-    def self.instructor_sorted_groups
+  def self.instructor_sorted_groups
     # We group by the following things and then sort the groups in this order:
     #  - Term (2015C, 2015A, 2014C)
     #  - Subject (CSCE, ENGR)

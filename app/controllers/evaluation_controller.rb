@@ -110,7 +110,7 @@ class EvaluationController < ApplicationController
       else
         smstr << semester
       end
-            params[:my_sort] = params[:sort_by];
+            #params[:my_sort] = params[:sort_by];
            for y in yr
               for s in smstr
           if params[:sort_by].to_s == 'instructor_' 
@@ -131,7 +131,7 @@ class EvaluationController < ApplicationController
          else
             @evaluation_groups += Evaluation.no_missing_data.where(
             term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups     
-            params[:my_sort] = 'instructor_';
+            #params[:my_sort] = 'instructor_';
             params[:sort_by] = 'instructor_';
          end
    
@@ -222,6 +222,7 @@ class EvaluationController < ApplicationController
       yr = []
       if year.nil? || year == "All"
         yr += @years
+        #yr = ["2013"]
       else
         yr << year
       end
@@ -233,34 +234,34 @@ class EvaluationController < ApplicationController
         smstr << semester
       end
      
-     params[:id] = params[:sort_by];
+     #params[:id] = params[:sort_by];
             
-     #smstr = ["A", "B", "C"]
-     #yr = ["2014"]
+    # smstr = ["A", "B", "C"]
+    # yr = ["2014"]
      
         @evaluation_groups2 = []
             
            for y in yr
               for s in smstr
-          if params[:sort_by].to_s == 'instructor_' 
+          if params[:id].to_s == 'instructor_' 
                  @evaluation_groups2 += Evaluation.no_missing_data.where(
                  term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups
-          elsif params[:sort_by].to_s == 'semester_' 
+          elsif params[:id].to_s == 'semester_' 
               @evaluation_groups2 += Evaluation.no_missing_data.where(
              term: y+s, subject: subj, course: course, instructor_id: instructor_id).semester_sorted_groups
-          elsif params[:sort_by].to_s == 'course_' 
+          elsif params[:id].to_s == 'course_' 
             @evaluation_groups2 += Evaluation.no_missing_data.where(
             term: y+s, subject: subj, course: course, instructor_id: instructor_id).course_sorted_groups
-          elsif params[:sort_by].to_s == 'course_level' 
+          elsif params[:id].to_s == 'course_level' 
             @evaluation_groups += Evaluation.no_missing_data.where(
             term: y+s, subject: subj, course: course, instructor_id: instructor_id).level_sorted_groups   
-          elsif params[:sort_by].to_s == 'section_' 
+          elsif params[:id].to_s == 'section_' 
             @evaluation_groups2 += Evaluation.no_missing_data.where(
             term: y+s, subject: subj, course: course, instructor_id: instructor_id).section_sorted_groups     
          else
             @evaluation_groups2 += Evaluation.no_missing_data.where(
             term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups     
-            params[:sort_by] = 'semester_';
+            params[:id] = 'semester_';
          end
    
            end
@@ -363,7 +364,7 @@ class EvaluationController < ApplicationController
   def evaluation_params
     params.require(:evaluation).permit(:term, :subject, :course, :section, :instructor_id,
       :enrollment, :item1_mean, :item2_mean, :item3_mean, :item4_mean, :item5_mean,
-      :item6_mean, :item7_mean, :item8_mean, :Itemz, :instructor,:course_name, :gpr, :sort_by, :my_sort).to_h.symbolize_keys!
+      :item6_mean, :item7_mean, :item8_mean, :Itemz, :instructor,:course_name, :gpr).to_h.symbolize_keys!
   end
 
   def evaluation_id
