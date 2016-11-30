@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     get  'export',       on: :member
     get  'missing_data', on: :collection
     get  'show',         on: :collection
+    post 'show',         on: :collection
     post 'upload',       on: :collection
     post 'upload_gpr',   on: :collection
   end
