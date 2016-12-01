@@ -57,7 +57,7 @@
       %th.light-gray-highlight GPR
       %th.light-gray-highlight Mean Student Eval Score
       %th.light-gray-highlight Course Level Average
-      %th.light-gray-highlight  
+      %th.light-gray-highlight
         = form_tag export_evaluation_path(:id=>params[:sort_by]), method: :get do
           =hidden_field_tag :year, params[:year].nil? ? "All" : params[:year]
           =hidden_field_tag :semester, params[:semester].nil? ? "All" : params[:semester]
@@ -76,13 +76,13 @@
             %td
               = link_to "Edit", edit_evaluation_path(evaluation)
           %td
-            = link_to evaluation.term, evaluation_index_path(:semester=>evaluation.term.to_s.last, :year=>evaluation.term.to_s[0..3], :instructor=>params[:instructor].nil? ? "All" : params[:instructor], :course_name=>params[:course_name].nil? ? "All" : params[:course_name])
+            = link_to evaluation.term, evaluation_index_path(:semester=>evaluation.term.to_s.last, :year=>evaluation.term.to_s[0..3], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name])
           %td
             = evaluation.subject
           %td
-            = link_to evaluation.course_name.nil? ? "" : evaluation.course_name, evaluation_index_path(:course_name=>evaluation.subject + " " +  evaluation.course.to_s, :instructor=>params[:instructor].nil? ? "All" : params[:instructor], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester])
+            = link_to evaluation.course_name.nil? ? "" : evaluation.course_name, evaluation_index_path(:course_name=>evaluation.subject + " " +  evaluation.course.to_s, :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester])
           %td
-            = link_to evaluation.course.to_s + is_honors(evaluation.section), evaluation_index_path(:course_name=>evaluation.subject + " " +  evaluation.course.to_s, :instructor=>params[:instructor].nil? ? "All" : params[:instructor], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester])
+            = link_to evaluation.course.to_s + is_honors(evaluation.section), evaluation_index_path(:course_name=>evaluation.subject + " " +  evaluation.course.to_s, :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester])
           %td
             = evaluation.section
           %td
