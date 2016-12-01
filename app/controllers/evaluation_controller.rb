@@ -1,7 +1,7 @@
 class EvaluationController < ApplicationController
 
   before_action :authenticate_user!
-  
+
   def new
     if can? :write, :all
       @evaluation = Evaluation.new
@@ -32,12 +32,12 @@ class EvaluationController < ApplicationController
 
   def index
     if can? :read, :all
-      
+
       selected_instructor = params[:instructor];
       selected_course = params[:course_name];
       selected_year = params[:year];
       selected_semester = params[:semester];
-      
+
       if selected_year.nil? || selected_semester.nil?
         yr_smstr = Evaluation.no_missing_data.pluck(:term).uniq.sort.reverse.first
       else
@@ -61,11 +61,8 @@ class EvaluationController < ApplicationController
       @instructor_names = Instructor.pluck(:name).uniq.sort
       @course_names = CourseName.pluck(:subject_course, :name).uniq.sort
       merge_subj_name = lambda { |subj, name| return name.nil? ? subj : subj + " " + name }
+      @course_names.map! { |crs| merge_subj_name.call(crs[0], crs[1]) }
 
-      @course_names.map! { |crs|
-        merge_subj_name.call(crs[0], crs[1])
-      }      
-      
       @semesters = ["A", "B", "C"]
       @years = []
       @terms.each do |e|
@@ -113,41 +110,41 @@ class EvaluationController < ApplicationController
             #params[:my_sort] = params[:sort_by];
            for y in yr
               for s in smstr
-          if params[:sort_by].to_s == 'instructor_' 
+          if params[:sort_by].to_s == 'instructor_'
                  @evaluation_groups += Evaluation.no_missing_data.where(
                  term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups
-          elsif params[:sort_by].to_s == 'semester_' 
+          elsif params[:sort_by].to_s == 'semester_'
               @evaluation_groups += Evaluation.no_missing_data.where(
              term: y+s, subject: subj, course: course, instructor_id: instructor_id).semester_sorted_groups
-          elsif params[:sort_by].to_s == 'course_level' 
+          elsif params[:sort_by].to_s == 'course_level'
               @evaluation_groups += Evaluation.no_missing_data.where(
-             term: y+s, subject: subj, course: course, instructor_id: instructor_id).level_sorted_groups   
-          elsif params[:sort_by].to_s == 'course_' 
+             term: y+s, subject: subj, course: course, instructor_id: instructor_id).level_sorted_groups
+          elsif params[:sort_by].to_s == 'course_'
             @evaluation_groups += Evaluation.no_missing_data.where(
             term: y+s, subject: subj, course: course, instructor_id: instructor_id).course_sorted_groups
-          elsif params[:sort_by].to_s == 'section_' 
+          elsif params[:sort_by].to_s == 'section_'
             @evaluation_groups += Evaluation.no_missing_data.where(
-            term: y+s, subject: subj, course: course, instructor_id: instructor_id).section_sorted_groups     
+            term: y+s, subject: subj, course: course, instructor_id: instructor_id).section_sorted_groups
          else
             @evaluation_groups += Evaluation.no_missing_data.where(
-            term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups     
+            term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups
             #params[:my_sort] = 'instructor_';
             params[:sort_by] = 'instructor_';
          end
-   
+
            end
              end
-        
-      
+
+
     else
       redirect_to root_path
     end
   end
- 
+
   def missing_data
     if can? :read, :all
-      
-      if params[:sort_by].to_s == 'year' 
+
+      if params[:sort_by].to_s == 'year'
       @evaluation_groups = Evaluation.missing_data.semester_sorted_groups
       elsif params[:sort_by].to_s == 'section'
       @evaluation_groups = Evaluation.missing_data.section_sorted_groups
@@ -186,8 +183,8 @@ class EvaluationController < ApplicationController
 
       @course_names.map! { |crs|
         merge_subj_name.call(crs[0], crs[1])
-      }      
-      
+      }
+
       @semesters = ["A", "B", "C"]
       @years = []
       @terms.each do |e|
@@ -233,44 +230,44 @@ class EvaluationController < ApplicationController
       else
         smstr << semester
       end
-     
+
      #params[:id] = params[:sort_by];
-            
+
     # smstr = ["A", "B", "C"]
     # yr = ["2014"]
-     
+
         @evaluation_groups2 = []
-            
+
            for y in yr
               for s in smstr
-          if params[:id].to_s == 'instructor_' 
+          if params[:id].to_s == 'instructor_'
                  @evaluation_groups2 += Evaluation.no_missing_data.where(
                  term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups
-          elsif params[:id].to_s == 'semester_' 
+          elsif params[:id].to_s == 'semester_'
               @evaluation_groups2 += Evaluation.no_missing_data.where(
              term: y+s, subject: subj, course: course, instructor_id: instructor_id).semester_sorted_groups
-          elsif params[:id].to_s == 'course_' 
+          elsif params[:id].to_s == 'course_'
             @evaluation_groups2 += Evaluation.no_missing_data.where(
             term: y+s, subject: subj, course: course, instructor_id: instructor_id).course_sorted_groups
-          elsif params[:id].to_s == 'course_level' 
+          elsif params[:id].to_s == 'course_level'
             @evaluation_groups += Evaluation.no_missing_data.where(
-            term: y+s, subject: subj, course: course, instructor_id: instructor_id).level_sorted_groups   
-          elsif params[:id].to_s == 'section_' 
+            term: y+s, subject: subj, course: course, instructor_id: instructor_id).level_sorted_groups
+          elsif params[:id].to_s == 'section_'
             @evaluation_groups2 += Evaluation.no_missing_data.where(
-            term: y+s, subject: subj, course: course, instructor_id: instructor_id).section_sorted_groups     
+            term: y+s, subject: subj, course: course, instructor_id: instructor_id).section_sorted_groups
          else
             @evaluation_groups2 += Evaluation.no_missing_data.where(
-            term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups     
+            term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups
             params[:id] = 'semester_';
          end
-   
+
            end
              end
-     
+
     send_data EvaluationReportExporter.new(@evaluation_groups2).generate(params[:Itemz]), filename: "evaluation_report_#{Time.now.strftime('%F')}.csv"
-   
+
   end
-  
+
   def edit
     @evaluation = Evaluation.find(evaluation_id)
     @instructors = Instructor.select_menu_options
@@ -370,5 +367,5 @@ class EvaluationController < ApplicationController
   def evaluation_id
     params.require(:id)
   end
-  
+
 end

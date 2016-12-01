@@ -9,6 +9,7 @@
 prng = Random.new
 
 instructor = Instructor.create(name: 'Tiffani Williams')
+course = CourseName.create(subject_course: 'CSCE 110')
 (1..3).each do |i|
   Evaluation.create(
     term: '2014C',
@@ -29,6 +30,7 @@ instructor = Instructor.create(name: 'Tiffani Williams')
 end
 
 instructor = Instructor.create(name: 'Joseph Daniel Hurley')
+course = CourseName.create(subject_course: 'CSCE 111')
 (1..3).each do |i|
   Evaluation.create(
     term: '2015C',
@@ -49,6 +51,7 @@ instructor = Instructor.create(name: 'Joseph Daniel Hurley')
 end
 
 instructor = Instructor.create(name: 'Walter Daugherity')
+course = CourseName.create(subject_course: 'CSCE 121')
 (1..8).each do |i|
   Evaluation.create(
     term: '2015B',

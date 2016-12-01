@@ -51,6 +51,10 @@ class Evaluation < ActiveRecord::Base
       other_attrs[:instructor_id] = new_instructor.id
     end
 
+    subj_course = key_attrs[:subject].to_s + " " + key_attrs[:course].to_s;
+    new_course = CourseName.where(subject_course: subj_course).first_or_initialize
+    new_course.save
+
     evaluation.update(other_attrs)
 
     [ evaluation, is_new_record ]
@@ -103,7 +107,7 @@ class Evaluation < ActiveRecord::Base
     .map(&:last) # only take the groups and not the keys
     .map { |group| group.sort_by(&:section) } # sort each group by section
   end
-  
+
   def self.level_sorted_groups
     # We group by the following things and then sort the groups in this order:
     #  - Term (2015C, 2015A, 2014C)
