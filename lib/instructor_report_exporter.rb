@@ -3,7 +3,7 @@ require 'csv'
 class InstructorReportExporter
   include ApplicationHelper
   include InstructorHelper
-  
+
   HEADINGS = [
     "Undergraduate and Graduate Courses Taught",
     "Semester",
@@ -27,7 +27,7 @@ class InstructorReportExporter
       csv << HEADINGS
       @course_groups.each do |courses|
         course_data = []
-        course_data.push(course_name_for(courses.first))
+        course_data.push(get_complete_name(courses.first))
         course_data.push(courses.first.term)
         course_data.push(compute_total_enrollment(courses))
         course_data.push(compute_mean_student_eval_score(courses).round(2))
