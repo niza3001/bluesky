@@ -69,6 +69,7 @@ class EvaluationController < ApplicationController
         @years << e.clone.chop
       end
       @years = @years.uniq.sort.reverse
+      @course_levels = ["1xx","2xx","3xx","4xx","5xx","6xx"]
 
 
       year = params[:year]
