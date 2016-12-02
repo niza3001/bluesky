@@ -30,6 +30,12 @@
         %option{value: nil, selected: ( params[:course_name].nil? ? "selected" : nil)}="All"
         - @course_names.each do |course_name|
           %option{value: course_name, selected: (course_name == params[:course_name] ? "selected" : nil)}= course_name
+
+      %label{for: "course_level"} Select Course Level:
+      %select{name: "course_level", id: "course_level", class: "form-control"}
+        %option{value: nil, selected: ( params[:course_level].nil? ? "selected" : nil)}="All"
+        - @course_levels.each do |course_level|
+          %option{value: course_level, selected: (course_level == params[:course_level] ? "selected" : nil)}= course_level    
     %button{type: "submit", class: "btn btn-primary"} Go
 
 %h1 Evaluation Table:

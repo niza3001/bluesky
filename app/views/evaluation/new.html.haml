@@ -2,7 +2,7 @@
 = javascript_include_tag 'evaluation', 'data-turbolinks-track' => true
 
 
-= form_for :evaluation, url: evaluation_index_path, method: :post, html: { class: "form-horizontal" } do |f|
+= form_for :evaluation, url:{:controller=>'evaluation', :action=>'create'}, method: :post, html: { class: "form-horizontal" } do |f|
   .form-group
     %label{for: "evaluation_term", class: "col-sm-2 control-label"} Term
     .col-sm-4
@@ -35,7 +35,7 @@
         %p.help-block
           %a#cancel_manual_instructor_entry{href: "#"} Cancel
 
-  = render partial: 'evaluation/items.html.haml', :locals => {:f => f} 
+  = render partial: 'evaluation/items.html.haml', :locals => {:f => f}
   .form-group
     .col-sm-10.col-sm-offset-2
       = f.submit "Add Evaluation", class: "btn btn-primary"
