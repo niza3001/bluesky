@@ -28,6 +28,20 @@
   background: rgb(157, 146, 114);
 }
 
+.my_light_background{
+  background: rgb(250, 250, 255);
+}
+
+ul.nav > li > a:hover {
+	background-color: rgb(210, 210, 255);
+	color: #000000;
+	border-style: none;
+}
+
+.mybackground{
+  background: rgb(240, 240, 255);
+}
+
 .light-gray-highlight {
   background: rgb(158, 151, 142);
 }

@@ -1,18 +1,18 @@
-.outer
-  .middle 
+.outer.my_light_background
+  .middle
     .inner.text-center
       %h1 Teaching Evaluation Scores
       -if user_signed_in?
         - if can? :write, :all
-          .well.well-sm{style: "display: inline-block"}
+          .well.well-sm.mybackground{style: "display: inline-block"}
             %h3 Import Data
-            %ul.nav.nav-pills.nav-stacked
+            %ul.nav.nav-pills.mybackground.nav-stacked
               %li= link_to "Import PICA Evaluation Data", import_evaluation_index_path
               %li= link_to "Import GPR Distribution Data", import_gpr_evaluation_index_path
               %li= link_to "Import Course Names", import_course_name_index_path
               %li= link_to "Add Paper Evaluation", new_evaluation_path
         - if can? :read, :all
-          .well.well-sm{style: "display: inline-block"}
+          .well.well-sm.mybackground{style: "display: inline-block"}
             %h3 View Data
             %ul.nav.nav-pills.nav-stacked
               %li= link_to "View Evaluation Data", evaluation_index_path
