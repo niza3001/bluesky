@@ -14,18 +14,17 @@
     %ul
       - Instructor.order(:name).where("status = 'Courtesy'").first(@instructors.size).each  do |instructor|
         %li= link_to instructor.name, instructor_path(id: instructor.id)
-%h3 
+%h3
   %ul Inactive
 .row
   .col-md-4
     %ul
       - Instructor.order(:name).where("status = 'Inactive'").first(@instructors.size).each  do |instructor|
         %li= link_to instructor.name, instructor_path(id: instructor.id)
-%h3 
+%h3
   %ul Unsorted
 .row
   .col-md-4
     %ul
-      %ul
-        - Instructor.order(:name).where("status IS NULL").first(@instructors.size).each  do |instructor|
-          %li= link_to instructor.name, instructor_path(id: instructor.id)
+      - Instructor.order(:name).where("status IS NULL").first(@instructors.size).each  do |instructor|
+        %li= link_to instructor.name, instructor_path(id: instructor.id)
