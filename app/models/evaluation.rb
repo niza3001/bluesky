@@ -68,12 +68,14 @@ class Evaluation < ActiveRecord::Base
     #  - Instructor (Williams, Hurley)
     #  - First character of section (200s, 500s are grouped together)
 
+    n = 0
     all.group_by do |eval| # start by grouping them by the groupings above
       eval.term.to_s + eval.subject.to_s + eval.course.to_s + eval.instructor.try(:id).to_s + eval.section.to_s[0]
     end
     .sort { |group1, group2| group1.first <=> group2.first } # sort by their "group by" keys
     .map(&:last) # only take the groups and not the keys
     .map { |group| group.sort_by(&:section) } # sort each group by section
+    .map { |group| group.sort_by { |ev| n+=1; [ev[:course], n] } } # stable sort each group by course
   end
 
   def self.instructor_sorted_groups
@@ -84,44 +86,36 @@ class Evaluation < ActiveRecord::Base
     #  - Instructor (Williams, Hurley)
     #  - First character of section (200s, 500s are grouped together)
 
+    n = 0
     all.group_by do |eval| # start by grouping them by the groupings above
       eval.instructor.try(:id).to_s
     end
     .sort { |group1, group2| group1.first <=> group2.first } # sort by their "group by" keys
     .map(&:last) # only take the groups and not the keys
-    .map { |group| group.sort_by(&:course) } # sort each group by section
+    .map { |group| group.sort_by(&:section) } # sort each group by section
+    .map { |group| group.sort_by { |ev| n+=1; [ev[:course], n] } } # stable sort each group by course
   end
 
   def self.course_sorted_groups
-    # We group by the following things and then sort the groups in this order:
-    #  - Term (2015C, 2015A, 2014C)
-    #  - Subject (CSCE, ENGR)
-    #  - Course (110, 111, 121)
-    #  - Instructor (Williams, Hurley)
-    #  - First character of section (200s, 500s are grouped together)
-
+    n = 0
     all.group_by do |eval| # start by grouping them by the groupings above
       eval.course.to_s
     end
     .sort { |group1, group2| group1.first <=> group2.first } # sort by their "group by" keys
     .map(&:last) # only take the groups and not the keys
     .map { |group| group.sort_by(&:section) } # sort each group by section
+    .map { |group| group.sort_by { |ev| n+=1; [ev[:course], n] } } # stable sort each group by course
   end
 
   def self.level_sorted_groups
-    # We group by the following things and then sort the groups in this order:
-    #  - Term (2015C, 2015A, 2014C)
-    #  - Subject (CSCE, ENGR)
-    #  - Course (110, 111, 121)
-    #  - Instructor (Williams, Hurley)
-    #  - First character of section (200s, 500s are grouped together)
-
+    n = 0
     all.group_by do |eval| # start by grouping them by the groupings above
       eval.course.to_s.first
     end
     .sort { |group1, group2| group1.first <=> group2.first } # sort by their "group by" keys
     .map(&:last) # only take the groups and not the keys
-    .map { |group| group.sort_by(&:course) } # sort each group by section
+    .map { |group| group.sort_by(&:section) } # sort each group by section
+    .map { |group| group.sort_by { |ev| n+=1; [ev[:course], n] } } # stable sort each group by course
   end
 
   def self.semester_sorted_groups
@@ -132,12 +126,14 @@ class Evaluation < ActiveRecord::Base
     #  - Instructor (Williams, Hurley)
     #  - First character of section (200s, 500s are grouped together)
 
+    n = 0
     all.group_by do |eval| # start by grouping them by the groupings above
       eval.term.to_s
     end
     .sort { |group1, group2| group2.first <=> group1.first } # sort by their "group by" keys
     .map(&:last) # only take the groups and not the keys
-    .map { |group| group.sort_by(&:course) } # sort each group by section
+    .map { |group| group.sort_by(&:section) } # sort each group by section
+    .map { |group| group.sort_by { |ev| n+=1; [ev[:course], n] } } # stable sort each group by course
   end
 
   def self.section_sorted_groups
@@ -148,12 +144,14 @@ class Evaluation < ActiveRecord::Base
     #  - Instructor (Williams, Hurley)
     #  - First character of section (200s, 500s are grouped together)
 
+    n = 0
     all.group_by do |eval| # start by grouping them by the groupings above
       eval.section.to_s[0]
     end
     .sort { |group1, group2| group1.first <=> group2.first } # sort by their "group by" keys
     .map(&:last) # only take the groups and not the keys
     .map { |group| group.sort_by(&:section) } # sort each group by section
+    .map { |group| group.sort_by { |ev| n+=1; [ev[:course], n] } } # stable sort each group by course
   end
 
   def key
