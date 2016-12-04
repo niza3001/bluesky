@@ -68,9 +68,9 @@ class EvaluationController < ApplicationController
       @terms.each do |e|
         @years << e.clone.chop
       end
+
       @years = @years.uniq.sort.reverse
       @course_levels = ["1xx","2xx","3xx","4xx","5xx","6xx"]
-
 
       year = params[:year]
       semester = params[:semester]
@@ -108,35 +108,29 @@ class EvaluationController < ApplicationController
       else
         smstr << semester
       end
-            #params[:my_sort] = params[:sort_by];
-           for y in yr
-              for s in smstr
+
+      for y in yr
+        for s in smstr
           if params[:sort_by].to_s == 'instructor_'
-                 @evaluation_groups += Evaluation.no_missing_data.where(
-                 term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups
+            @evaluation_groups += Evaluation.no_missing_data.where(
+              term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups
           elsif params[:sort_by].to_s == 'semester_'
-              @evaluation_groups += Evaluation.no_missing_data.where(
-             term: y+s, subject: subj, course: course, instructor_id: instructor_id).semester_sorted_groups
+            @evaluation_groups += Evaluation.no_missing_data.where(
+              term: y+s, subject: subj, course: course, instructor_id: instructor_id).semester_sorted_groups
           elsif params[:sort_by].to_s == 'course_level'
-              @evaluation_groups += Evaluation.no_missing_data.where(
-             term: y+s, subject: subj, course: course, instructor_id: instructor_id).level_sorted_groups
+            @evaluation_groups += Evaluation.no_missing_data.where(
+              term: y+s, subject: subj, course: course, instructor_id: instructor_id).level_sorted_groups
           elsif params[:sort_by].to_s == 'course_'
             @evaluation_groups += Evaluation.no_missing_data.where(
-            term: y+s, subject: subj, course: course, instructor_id: instructor_id).course_sorted_groups
-          elsif params[:sort_by].to_s == 'section_'
+              term: y+s, subject: subj, course: course, instructor_id: instructor_id).course_sorted_groups
+          else
             @evaluation_groups += Evaluation.no_missing_data.where(
-            term: y+s, subject: subj, course: course, instructor_id: instructor_id).section_sorted_groups
-         else
-            @evaluation_groups += Evaluation.no_missing_data.where(
-            term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups
-            #params[:my_sort] = 'instructor_';
-            params[:sort_by] = 'instructor_';
-         end
+              term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups
+              params[:sort_by] = 'instructor_';
+          end
 
-           end
-             end
-
-
+        end
+      end
     else
       redirect_to root_path
     end
@@ -144,15 +138,12 @@ class EvaluationController < ApplicationController
 
   def missing_data
     if can? :read, :all
-
       if params[:sort_by].to_s == 'year'
-      @evaluation_groups = Evaluation.missing_data.semester_sorted_groups
-      elsif params[:sort_by].to_s == 'section'
-      @evaluation_groups = Evaluation.missing_data.section_sorted_groups
+        @evaluation_groups = Evaluation.missing_data.semester_sorted_groups
       elsif params[:sort_by].to_s == 'course'
-      @evaluation_groups = Evaluation.missing_data.course_sorted_groups
+        @evaluation_groups = Evaluation.missing_data.course_sorted_groups
       else
-      @evaluation_groups = Evaluation.missing_data.semester_sorted_groups
+        @evaluation_groups = Evaluation.missing_data.semester_sorted_groups
       end
     else
       redirect_to root_path
@@ -176,7 +167,6 @@ class EvaluationController < ApplicationController
   end
 
   def export
-      #term = params.require(:id)
       @terms = Evaluation.pluck(:term).uniq.sort.reverse
       @instructor_names = Instructor.pluck(:name).uniq.sort
       @course_names = CourseName.pluck(:subject_course, :name).uniq.sort
@@ -193,13 +183,10 @@ class EvaluationController < ApplicationController
       end
       @years = @years.uniq.sort.reverse
 
-
       year = params[:year]
       semester = params[:semester]
       instructor_name = params[:instructor_name]
       course_name = params[:course_name]
-
-
 
       if course_name.nil? || course_name == "All"
         subj = Evaluation.pluck(:subject).uniq.sort
@@ -220,7 +207,6 @@ class EvaluationController < ApplicationController
       yr = []
       if year.nil? || year == "All"
         yr += @years
-        #yr = ["2013"]
       else
         yr << year
       end
@@ -232,41 +218,31 @@ class EvaluationController < ApplicationController
         smstr << semester
       end
 
-     #params[:id] = params[:sort_by];
+      @evaluation_groups2 = []
 
-    # smstr = ["A", "B", "C"]
-    # yr = ["2014"]
-
-        @evaluation_groups2 = []
-
-           for y in yr
-              for s in smstr
+      for y in yr
+        for s in smstr
           if params[:id].to_s == 'instructor_'
-                 @evaluation_groups2 += Evaluation.no_missing_data.where(
-                 term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups
+            @evaluation_groups2 += Evaluation.no_missing_data.where(
+              term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups
           elsif params[:id].to_s == 'semester_'
-              @evaluation_groups2 += Evaluation.no_missing_data.where(
-             term: y+s, subject: subj, course: course, instructor_id: instructor_id).semester_sorted_groups
+            @evaluation_groups2 += Evaluation.no_missing_data.where(
+              term: y+s, subject: subj, course: course, instructor_id: instructor_id).semester_sorted_groups
           elsif params[:id].to_s == 'course_'
             @evaluation_groups2 += Evaluation.no_missing_data.where(
-            term: y+s, subject: subj, course: course, instructor_id: instructor_id).course_sorted_groups
+              term: y+s, subject: subj, course: course, instructor_id: instructor_id).course_sorted_groups
           elsif params[:id].to_s == 'course_level'
             @evaluation_groups += Evaluation.no_missing_data.where(
-            term: y+s, subject: subj, course: course, instructor_id: instructor_id).level_sorted_groups
-          elsif params[:id].to_s == 'section_'
+              term: y+s, subject: subj, course: course, instructor_id: instructor_id).level_sorted_groups
+          else
             @evaluation_groups2 += Evaluation.no_missing_data.where(
-            term: y+s, subject: subj, course: course, instructor_id: instructor_id).section_sorted_groups
-         else
-            @evaluation_groups2 += Evaluation.no_missing_data.where(
-            term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups
-            params[:id] = 'semester_';
-         end
+              term: y+s, subject: subj, course: course, instructor_id: instructor_id).instructor_sorted_groups
+              params[:id] = 'semester_';
+          end
+        end
+      end
 
-           end
-             end
-
-    send_data EvaluationReportExporter.new(@evaluation_groups2).generate(params[:Itemz]), filename: "evaluation_report_#{Time.now.strftime('%F')}.csv"
-
+      send_data EvaluationReportExporter.new(@evaluation_groups2).generate(params[:Itemz]), filename: "evaluation_report_#{Time.now.strftime('%F')}.csv"
   end
 
   def edit
@@ -344,29 +320,29 @@ class EvaluationController < ApplicationController
 
   private
   def split_attributes(all_attrs)
-      # key attributes are ones for which we should have one unique record for a set of them
-      key_attributes = all_attrs.select { |k,v| Evaluation.key_attributes.include?(k.to_sym) }
+    # key attributes are ones for which we should have one unique record for a
+    # set of them
+    key_attributes = all_attrs.select { |k,v| Evaluation.key_attributes.include?(k.to_sym) }
 
-      # other atttributes are ones that should either be assigned or updated
-      other_attributes = all_attrs.reject { |k,v| Evaluation.key_attributes.include?(k.to_sym) }
-      if other_attributes[:instructor] && !other_attributes[:instructor].instance_of?(Instructor) && !other_attributes[:instructor].empty?
-        other_attributes[:instructor] = Instructor.where(name: Instructor.normalize_name(other_attributes[:instructor])).first_or_create
-      elsif other_attributes[:instructor_id] && other_attributes[:instructor_id] != "0"
-        other_attributes[:instructor] = Instructor.where(id: other_attributes[:instructor_id]).first
-        other_attributes.delete(:instructor_id)
-      end
+    # other atttributes are ones that should either be assigned or updated
+    other_attributes = all_attrs.reject { |k,v| Evaluation.key_attributes.include?(k.to_sym) }
+    if other_attributes[:instructor] && !other_attributes[:instructor].instance_of?(Instructor) && !other_attributes[:instructor].empty?
+      other_attributes[:instructor] = Instructor.where(name: Instructor.normalize_name(other_attributes[:instructor])).first_or_create
+    elsif other_attributes[:instructor_id] && other_attributes[:instructor_id] != "0"
+      other_attributes[:instructor] = Instructor.where(id: other_attributes[:instructor_id]).first
+      other_attributes.delete(:instructor_id)
+    end
 
-      [ key_attributes, other_attributes ]
+    [ key_attributes, other_attributes ]
   end
 
   def evaluation_params
     params.require(:evaluation).permit(:term, :subject, :course, :section, :instructor_id,
-      :enrollment, :item1_mean, :item2_mean, :item3_mean, :item4_mean, :item5_mean,
-      :item6_mean, :item7_mean, :item8_mean, :Itemz, :instructor,:course_name, :gpr).to_h.symbolize_keys!
+                                       :enrollment, :item1_mean, :item2_mean, :item3_mean, :item4_mean, :item5_mean,
+                                       :item6_mean, :item7_mean, :item8_mean, :Itemz, :instructor,:course_name, :gpr).to_h.symbolize_keys!
   end
 
   def evaluation_id
     params.require(:id)
   end
-
 end
