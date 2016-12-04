@@ -23,7 +23,6 @@ class EvaluationReportExporter
     "Course Level Average"
   ]
 
-
   def initialize(evaluation_groups)
     @groups = evaluation_groups
   end

@@ -74,7 +74,7 @@ class Evaluation < ActiveRecord::Base
   def self.instructor_sorted_groups
     n = 0
     all.group_by do |eval| # start by grouping them by the groupings above
-      eval.instructor.try(:id).to_s
+      eval.instructor.try(:id).to_s + eval.course.to_s
     end
     .sort { |group1, group2| group1.first <=> group2.first } # sort by their "group by" keys
     .map(&:last) # only take the groups and not the keys

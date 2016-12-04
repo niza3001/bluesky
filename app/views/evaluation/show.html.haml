@@ -33,7 +33,7 @@
     = link_to "Import PICA Data", import_evaluation_index_path, class: "btn btn-primary"
     = link_to "Import GPR Data", import_gpr_evaluation_index_path, class: "btn btn-primary"
     = link_to "Missing Data", missing_data_evaluation_index_path, class: "btn btn-warning"
-    
+
 %h1 Evaluation Table:
 
 %table.table.table-condensed
@@ -59,7 +59,7 @@
       %th.light-gray-highlight GPR
       %th.light-gray-highlight Mean Student Eval Score
       %th.light-gray-highlight Course Level Average
-      %th.light-gray-highlight  
+      %th.light-gray-highlight
         = form_tag export_evaluation_path(:id=>params[:sort_by]), method: :get do
           =hidden_field_tag :year, params[:year].nil? ? "All" : params[:year]
           =hidden_field_tag :semester, params[:semester].nil? ? "All" : params[:semester]
