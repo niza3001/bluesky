@@ -1,28 +1,24 @@
-%h1 Instructors List
-%h3
-  %ul Current
+%h1 &nbsp;Instructors List
+%h3 &nbsp;&nbsp;Current
 .row
   .col-md-4
     %ul
       - Instructor.order(:name).where("status = 'Current'").first(@instructors.size).each  do |instructor|
         %li= link_to instructor.name, instructor_path(id: instructor.id)
         /- slice.each do |instructor|
-%h3
-  %ul Courtesy
+%h3 &nbsp;&nbsp;Courtesy
 .row
   .col-md-4
     %ul
       - Instructor.order(:name).where("status = 'Courtesy'").first(@instructors.size).each  do |instructor|
         %li= link_to instructor.name, instructor_path(id: instructor.id)
-%h3
-  %ul Inactive
+%h3 &nbsp;&nbsp;Inactive
 .row
   .col-md-4
     %ul
       - Instructor.order(:name).where("status = 'Inactive'").first(@instructors.size).each  do |instructor|
         %li= link_to instructor.name, instructor_path(id: instructor.id)
-%h3
-  %ul Unsorted
+%h3 &nbsp;&nbsp;Unsorted
 .row
   .col-md-4
     %ul
