@@ -146,7 +146,7 @@ RSpec.describe EvaluationController, type: :controller do
       expect(assigns(:evaluation_groups).first.first.course.to_s).to eq('110')
 
       get :show, id: '2015C', sort_by: 'course_level'
-      expect(assigns(:evaluation_groups).last.first.course.to_s).to eq('112')
+      expect(assigns(:evaluation_groups).last.first.course.to_s).to eq('110')
 
       get :show, id: '2015C', sort_by: 'semester_'
       expect(assigns(:evaluation_groups).last.first.course.to_s).to eq('112')
