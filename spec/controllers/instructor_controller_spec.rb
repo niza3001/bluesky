@@ -75,6 +75,8 @@ RSpec.describe InstructorController, type: :controller do
       FactoryGirl.create(:evaluation, subject: 'CSCE', course: '123', term: '2015C', section: '501', enrollment: '25', item1_mean: '4.5', instructor_id: instructor.id)
       FactoryGirl.create(:evaluation, subject: 'CSCE', course: '123', term: '2015C', section: '502', enrollment: '25', item1_mean: '4.5', instructor_id: instructor.id)
       FactoryGirl.create(:evaluation, subject: 'CSCE', course: '123', term: '2015B', section: '501', enrollment: '25', item1_mean: '4.5', instructor_id: instructor.id)
+      FactoryGirl.create(:evaluation, subject: 'CSCE', course: '681', term: '2015C', section: '201', enrollment: '25', item1_mean: '4.5', instructor_id: instructor.id)
+      FactoryGirl.create(:course_name, subject_course: 'CSCE 681', name: "Advanced Compiler")
     end
 
     it "generates a valid CSV file" do
@@ -91,7 +93,7 @@ RSpec.describe InstructorController, type: :controller do
     it "has a separate entry for the same course in different terms" do
       get :export, id: 1
       csv = CSV.parse(response.body)
-      expect(csv.size).to eq(5) # total enrollment
+      expect(csv.size).to eq(6) # total enrollment
     end
 
   end

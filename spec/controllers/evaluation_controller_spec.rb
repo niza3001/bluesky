@@ -134,6 +134,25 @@ RSpec.describe EvaluationController, type: :controller do
       expect(assigns(:terms)).to include(eval2.term)
       expect(assigns(:terms).length).to be(2) # should only include unique terms!
     end
+
+    it "sorts evaluations by a criteria correctly" do
+      ins1  = FactoryGirl.create(:instructor, id: 1, name: 'James Bond')
+      ins2  = FactoryGirl.create(:instructor, id: 2, name: 'Bat Man')
+      eval1 = FactoryGirl.create(:evaluation, course: 111, term: '2015C', instructor_id: 1)
+      eval2 = FactoryGirl.create(:evaluation, course: 110, term: '2015C', instructor_id: 2)
+      eval3 = FactoryGirl.create(:evaluation, course: 112, term: '2014C', instructor_id: 2)
+
+      get :show, id: '2015C', sort_by: 'course_'
+      expect(assigns(:evaluation_groups).first.first.course.to_s).to eq('110')
+
+      get :show, id: '2015C', sort_by: 'course_level'
+      expect(assigns(:evaluation_groups).last.first.course.to_s).to eq('112')
+
+      get :show, id: '2015C', sort_by: 'semester_'
+      expect(assigns(:evaluation_groups).last.first.course.to_s).to eq('112')
+
+    end
+
   end
 
   describe "GET #import" do
@@ -146,14 +165,21 @@ RSpec.describe EvaluationController, type: :controller do
   describe "GET #export" do
     before :each do
       instructor = FactoryGirl.create(:instructor)
-      FactoryGirl.create(:evaluation, term: '2015C',  section: '501', enrollment: '25', item1_mean: '4.5', instructor_id: instructor.id)
-      FactoryGirl.create(:evaluation, term: '2015C',  section: '502', enrollment: '25', item1_mean: '4.5', instructor_id: instructor.id)
-      FactoryGirl.create(:evaluation, term: '2015B',  section: '501', enrollment: '25', item1_mean: '4.5', instructor_id: instructor.id)
+      FactoryGirl.create(:evaluation, term: '2015B', subject: 'CSCE', course: '110',  section: '501', enrollment: '25', item1_mean: '4.5', instructor_id: instructor.id)
+      FactoryGirl.create(:evaluation, term: '2015C', subject: 'CSCE', course: '121',  section: '502', enrollment: '25', item1_mean: '4.5', instructor_id: instructor.id)
+      FactoryGirl.create(:evaluation, term: '2015C', subject: 'CSCE', course: '131',  section: '501', enrollment: '25', item1_mean: '4.5', instructor_id: instructor.id)
+      FactoryGirl.create(:course_name, subject_course: 'CSCE 110', name: 'Introduction to Algorithms')
+      FactoryGirl.create(:course_name, subject_course: 'CSCE 121', name: 'Advanced Programming')
+      FactoryGirl.create(:course_name, subject_course: 'CSCE 131', name: 'Data Structures')
     end
 
     it "generates a valid CSV file" do
       get :export, id: '2015C'
       expect { CSV.parse(response.body) }.to_not raise_error
+
+      get :export, id: '2015C', course_name: 'Data Structures'
+      expect { CSV.parse(response.body) }.to_not raise_error
+
     end
 
     it "only exports records for the term selected" do
@@ -258,6 +284,12 @@ RSpec.describe EvaluationController, type: :controller do
       expect(flash[:errors]).to_not be(nil)
     end
 
+    it "gracefully fails when no file is specified" do
+      post :upload
+      expect(response).to redirect_to("/evaluation/import")
+      expect(flash[:errors]).to_not be(nil)
+    end
+
     it "accepts .xlsx files for uploading" do
       @file = fixture_file_upload('/StatisticsReport.xlsx', 'application/vnd.ms-excel')
       post :upload, data_file: @file
@@ -315,6 +347,13 @@ RSpec.describe EvaluationController, type: :controller do
     it "fails gracefully if term is missing" do
       @file = fixture_file_upload('/grade_distribution.pdf', 'application/pdf')
       post :upload_gpr, data_file: @file
+      expect(response).to redirect_to(import_gpr_evaluation_index_path)
+      expect(flash[:errors]).to_not be(nil)
+    end
+
+    it "fails gracefully if file is missing" do
+
+      post :upload_gpr
       expect(response).to redirect_to(import_gpr_evaluation_index_path)
       expect(flash[:errors]).to_not be(nil)
     end

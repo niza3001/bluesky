@@ -25,11 +25,11 @@ module InstructorHelper
   end
 
   def is_honors(course_section)
+    pos_fix = ""
     if (course_section.to_s.starts_with?("2"))
-      return "H"
-    else
-      ""
+      pos_fix = "H"
     end
+    return pos_fix
   end
 
 end
