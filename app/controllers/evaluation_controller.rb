@@ -100,25 +100,31 @@ class EvaluationController < ApplicationController
         Instructor.where(name: Instructor.normalize_name(instructor_name)).first.id
     end
 
-    yr = []
-    if year.nil? || year == "All"
-      yr += @years
-    else
-      yr << year
+    term_qry = []
+    if (year.nil? or year == "All") and (semester.nil? or semester == "All")
+      term_qry = @terms
+    elsif year.nil? or year == "All" # semester is specified
+      @terms.each do |t|
+        if t[4] == semester
+          term_qry << t
+        end
+      end
+    elsif semester.nil? or semester == "All" # year is specified
+      @terms.each do |t|
+        if t[0..3] == year
+          term_qry << t
+        end
+      end
+    else # both are specified
+      @terms.each do |t|
+        if t[0..3] == year and t[4] == semester
+          term_qry << t
+        end
+      end
     end
+    term_qry = term_qry.sort{ |a, b| a[0..3] < b[0..3] ? -1 : (a[0..3] > b[0..3] ? 1 : (a[4] == "C" ? 1 : (b[4] <=> a[4]))) }.reverse
 
-    smstr = []
-    if semester.nil? || semester == "All"
-      smstr += @semesters
-    else
-      smstr << semester
-    end
-
-    if Rails.env.production?
-      cast = "::varchar"
-    else
-      cast = ""
-    end
+    cast = Rails.env.production? ? "::varchar" : ""
 
     if params[:honors].nil? or params[:honors] == "yes"
       honors_query = ""
@@ -140,22 +146,20 @@ class EvaluationController < ApplicationController
 
     if params[:sort_by].to_s == 'semester_'
       @evaluation_groups += Evaluation.no_missing_data.where(
-        "subject IN (?) AND course IN (?) AND instructor_id IN (?)" + query_append, subj, course, instructor_id).semester_sorted_groups
+        "subject IN (?) AND course IN (?) AND instructor_id IN (?) AND term IN (?)" + query_append, subj, course, instructor_id, term_qry).semester_sorted_groups
     elsif params[:sort_by].to_s == 'course_'
       @evaluation_groups += Evaluation.no_missing_data.where(
-        "subject IN (?) AND course IN (?) AND instructor_id IN (?)" + query_append, subj, course, instructor_id).course_sorted_groups
+        "subject IN (?) AND course IN (?) AND instructor_id IN (?) AND term IN (?)" + query_append, subj, course, instructor_id, term_qry).course_sorted_groups
     elsif params[:sort_by].to_s == 'instructor_'
       @evaluation_groups += Evaluation.no_missing_data.where(
-        "subject IN (?) AND course IN (?) AND instructor_id IN (?)" + query_append, subj, course, instructor_id).instructor_sorted_groups
+        "subject IN (?) AND course IN (?) AND instructor_id IN (?) AND term IN (?)" + query_append, subj, course, instructor_id, term_qry).instructor_sorted_groups
     elsif params[:sort_by].to_s == 'course_level'
       @evaluation_groups += Evaluation.no_missing_data.where(
-        "subject IN (?) AND course IN (?) AND instructor_id IN (?)" + query_append, subj, course, instructor_id).level_sorted_groups
+        "subject IN (?) AND course IN (?) AND instructor_id IN (?) AND term IN (?)" + query_append, subj, course, instructor_id, term_qry).level_sorted_groups
     else
-      for y in yr
-        for s in smstr
-          @evaluation_groups += Evaluation.no_missing_data.where(
-            "term IN (?) AND subject IN (?) AND course IN (?) AND instructor_id IN (?)" + query_append, y+s, subj, course, instructor_id).default_sorted_groups
-        end
+      for t in term_qry
+        @evaluation_groups += Evaluation.no_missing_data.where(
+          "term IN (?) AND subject IN (?) AND course IN (?) AND instructor_id IN (?)" + query_append, t, subj, course, instructor_id).default_sorted_groups
       end
     end
 
