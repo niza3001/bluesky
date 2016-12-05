@@ -224,7 +224,7 @@ class EvaluationController < ApplicationController
     @evaluation, _ = Evaluation.create_if_needed_and_update(@evaluation.key, evaluation_params)
     if @evaluation.errors.empty?
       flash[:notice] = "Evaluation updated."
-      redirect_to evaluation_path(id: @evaluation.term)
+      redirect_to evaluation_index_path(semester: @evaluation.term[4], year: @evaluation.term[0..3])
     else
       flash[:errors] = @evaluation.errors
       @instructors = Instructor.select_menu_options
