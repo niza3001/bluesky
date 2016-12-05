@@ -27,47 +27,20 @@ class EvaluationReportExporter
     @groups = evaluation_groups
   end
 
-  def generate(itemz)
-    temp_HEADINGS = Array.new
-
-    if !itemz.nil?
-      temp_HEADINGS = HEADINGS[0..6]
-
-      # Add/remove Item 1..8 on everything
-      count = 0
-      (1..8).each do |x|
-        if itemz.key?(x.to_s)
-          temp_HEADINGS[count + 7] = HEADINGS[x + 6]
-          count = count + 1
-        end
-      end
-
-      temp_HEADINGS = temp_HEADINGS + HEADINGS[15..16]
-    else
-      temp_HEADINGS = HEADINGS
-    end
-
+  def generate
     CSV.generate do |csv|
-      csv << temp_HEADINGS
+      csv << HEADINGS
       @groups.each do |group|
         group.each do |eval|
-          csv << eval.csv_data(itemz)
+          csv << eval.csv_data
         end
 
         formula_data = ["Total"]
         5.times { formula_data.push("") }
         formula_data.push(compute_total_enrollment(group))
 
-        if itemz.nil?
-          (1..8).each do |x|
-            formula_data.push(compute_weighted_average_for_item(x, group).round(2))
-          end
-        else
-          (1..8).each do |x|
-            if itemz.key?(x.to_s)
-              formula_data.push(compute_weighted_average_for_item2(x, group).round(2))
-            end
-          end
+        (1..8).each do |x|
+          formula_data.push(compute_weighted_average_for_item(x, group).round(2))
         end
 
         formula_data.push(compute_mean_student_eval_score(group).round(2))

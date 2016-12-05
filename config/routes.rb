@@ -27,7 +27,6 @@ Rails.application.routes.draw do
     get 'remove_user'
   end
 
-
   resources :evaluation do
     get  'import',       on: :collection
     get  'import_gpr',   on: :collection
@@ -40,7 +39,7 @@ Rails.application.routes.draw do
   end
 
   resources :instructor do
-    get 'export', on: :member
+    get 'export',        on: :member
   end
 
   resources :course_name do

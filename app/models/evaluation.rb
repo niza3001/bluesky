@@ -74,12 +74,13 @@ class Evaluation < ActiveRecord::Base
   def self.instructor_sorted_groups
     n = 0
     all.group_by do |eval| # start by grouping them by the groupings above
-      eval.instructor.try(:id).to_s + eval.course.to_s
+      eval.instructor.try(:id).to_s
     end
     .sort { |group1, group2| group1.first <=> group2.first } # sort by their "group by" keys
     .map(&:last) # only take the groups and not the keys
-    .map { |group| group.sort_by(&:section) } # sort each group by section
-    .map { |group| group.sort_by { |ev| n+=1; [ev[:course], n] } } # stable sort each group by course
+    .map { |group| group.sort_by { |ev| n+=1; [ev[:section], n] } } # stable sort each group by section
+    .map { |group| group.sort_by { |ev| n+=1; [ev[:course], n] }.reverse! } # stable sort each group by course
+    .map { |group| group.sort_by { |ev| n+=1; [ev[:term], n] }.reverse! } # stable sort each group by term
   end
 
   def self.course_sorted_groups
@@ -89,8 +90,9 @@ class Evaluation < ActiveRecord::Base
     end
     .sort { |group1, group2| group1.first <=> group2.first } # sort by their "group by" keys
     .map(&:last) # only take the groups and not the keys
-    .map { |group| group.sort_by(&:section) } # sort each group by section
-    .map { |group| group.sort_by { |ev| n+=1; [ev[:course], n] } } # stable sort each group by course
+    .map { |group| group.sort_by { |ev| n+=1; [ev[:section], n] } } # stable sort each group by section
+    .map { |group| group.sort_by { |ev| n+=1; [ev[:course], n] }.reverse! } # stable sort each group by course
+    .map { |group| group.sort_by { |ev| n+=1; [ev[:term], n] }.reverse! } # stable sort each group by term
   end
 
   def self.level_sorted_groups
@@ -100,8 +102,9 @@ class Evaluation < ActiveRecord::Base
     end
     .sort { |group1, group2| group1.first <=> group2.first } # sort by their "group by" keys
     .map(&:last) # only take the groups and not the keys
-    .map { |group| group.sort_by(&:section) } # sort each group by section
-    .map { |group| group.sort_by { |ev| n+=1; [ev[:course], n] } } # stable sort each group by course
+    .map { |group| group.sort_by { |ev| n+=1; [ev[:section], n] } } # stable sort each group by section
+    .map { |group| group.sort_by { |ev| n+=1; [ev[:course], n] }.reverse! } # stable sort each group by course
+    .map { |group| group.sort_by { |ev| n+=1; [ev[:term], n] }.reverse! } # stable sort each group by term
   end
 
   def self.semester_sorted_groups
@@ -135,19 +138,15 @@ class Evaluation < ActiveRecord::Base
     CourseName.where(subject_course: subject_course).first.try(:name)
   end
 
-  def csv_data(columns)
-
-    temp_csv = [
+  def csv_data
+    [
       term,
       subject,
       course,
       section,
       course_name,
       instructor.name,
-      enrollment
-    ]
-
-    itemss = [
+      enrollment,
       item1_mean,
       item2_mean,
       item3_mean,
@@ -156,20 +155,6 @@ class Evaluation < ActiveRecord::Base
       item6_mean,
       item7_mean,
       item8_mean
-    ]
-
-    if columns.nil?
-      temp_csv = temp_csv + itemss
-    else
-      count = 0
-      (1..8).each do |x|
-        if columns.key?(x.to_s)
-          temp_csv[count + 7] = itemss[x - 1]
-          count = count + 1
-        end
-      end
-    end
-
-    temp_csv
+    ].map(&:to_s)
   end
 end

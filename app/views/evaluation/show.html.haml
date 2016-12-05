@@ -28,11 +28,15 @@
           %option{value: course_name, selected: (course_name == params[:course_name] ? "selected" : nil)}= course_name
     %button{type: "submit", class: "btn btn-primary"} Go
 
+%p.text-left
+
+  = link_to "Group by Levels", evaluation_index_path(sort_by: :course_level, :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name]), class: "btn btn-primary"
+
 %p.text-right
-  .pull-right
-    = link_to "Import PICA Data", import_evaluation_index_path, class: "btn btn-primary"
-    = link_to "Import GPR Data", import_gpr_evaluation_index_path, class: "btn btn-primary"
-    = link_to "Missing Data", missing_data_evaluation_index_path, class: "btn btn-warning"
+  = link_to "Import PICA Data", import_evaluation_index_path, class: "btn btn-primary"
+  = link_to "Import GPR Data", import_gpr_evaluation_index_path, class: "btn btn-primary"
+  = link_to "Missing Data", missing_data_evaluation_index_path, class: "btn btn-warning"
+  = link_to "Export to Excel",  export_evaluation_path(:id=>params[:sort_by].nil? ? "default" : params[:sort_by], :sort_by=>params[:sort_by].nil? ? "default" : params[:sort_by], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name]), class: "btn btn-primary"
 
 %h1 Evaluation Table:
 
@@ -48,7 +52,6 @@
       %th.light-gray-highlight Course Name
       %th.light-gray-highlight
         = link_to "Course", evaluation_index_path(sort_by: :course_, :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name])
-        = link_to "level", evaluation_index_path(sort_by: :course_level, :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name])
       %th.light-gray-highlight Section
       %th.light-gray-highlight
         = link_to "Instructor", evaluation_index_path(sort_by: :instructor_, :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name])
@@ -59,14 +62,6 @@
       %th.light-gray-highlight GPR
       %th.light-gray-highlight Mean Student Eval Score
       %th.light-gray-highlight Course Level Average
-      %th.light-gray-highlight
-        = form_tag export_evaluation_path(:id=>params[:sort_by]), method: :get do
-          =hidden_field_tag :year, params[:year].nil? ? "All" : params[:year]
-          =hidden_field_tag :semester, params[:semester].nil? ? "All" : params[:semester]
-          =hidden_field_tag :instructor_name, params[:instructor_name].nil? ? "All" : params[:instructor_name]
-          =hidden_field_tag :course_name, params[:course_name].nil? ? "All" : params[:course_name]
-          %button{class: "btn btn-primary"}
-            = 'Export to Excel'
       %th
 
   %tbody
@@ -78,13 +73,13 @@
             %td
               = link_to "Edit", edit_evaluation_path(evaluation)
           %td
-            = link_to evaluation.term, evaluation_index_path(:semester=>evaluation.term.to_s.last, :year=>evaluation.term.to_s[0..3], :instructor=>params[:instructor].nil? ? "All" : params[:instructor], :course_name=>params[:course_name].nil? ? "All" : params[:course_name])
+            = link_to evaluation.term, evaluation_index_path(:semester=>evaluation.term.to_s.last, :year=>evaluation.term.to_s[0..3], :instructor=>params[:instructor].nil? ? "All" : params[:instructor], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :sort_by=>params[:sort_by].nil? ? "default" : params[:sort_by])
           %td
             = evaluation.subject
           %td
-            = link_to evaluation.course_name.nil? ? "" : evaluation.course_name, evaluation_index_path(:course_name=>evaluation.subject + " " +  evaluation.course.to_s, :instructor=>params[:instructor].nil? ? "All" : params[:instructor], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester])
+            = link_to evaluation.course_name.nil? ? "" : evaluation.course_name, evaluation_index_path(:course_name=>evaluation.subject + " " +  evaluation.course.to_s, :instructor=>params[:instructor].nil? ? "All" : params[:instructor], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :sort_by=>params[:sort_by].nil? ? "default" : params[:sort_by])
           %td
-            = link_to evaluation.course.to_s + is_honors(evaluation.section), evaluation_index_path(:course_name=>evaluation.subject + " " +  evaluation.course.to_s, :instructor=>params[:instructor].nil? ? "All" : params[:instructor], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester])
+            = link_to evaluation.course.to_s + is_honors(evaluation.section), evaluation_index_path(:course_name=>evaluation.subject + " " +  evaluation.course.to_s, :instructor=>params[:instructor].nil? ? "All" : params[:instructor], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :sort_by=>params[:sort_by].nil? ? "default" : params[:sort_by])
           %td
             = evaluation.section
           %td
