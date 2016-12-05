@@ -22,7 +22,7 @@ class EvaluationController < ApplicationController
 
     if @evaluation.errors.empty?
       flash[:notice] = "Evaluation created."
-      redirect_to evaluation_index_path(term: @evaluation.term)
+      redirect_to evaluation_index_path(semester: @evaluation.term[4], year: @evaluation.term[0..3])
     else
       flash[:errors] = @evaluation.errors
       @instructors = Instructor.select_menu_options
