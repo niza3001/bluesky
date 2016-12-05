@@ -52,7 +52,7 @@
 
   = link_to "All Levels", evaluation_index_path(:sort_by=>params[:sort_by].nil? ? "default" : params[:sort_by], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :honors=>params[:honors].nil? ? "yes" : params[:honors]), class: "btn btn-primary"
   &nbsp;&nbsp;
-  = link_to "Group by Level", evaluation_index_path(:year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :honors=>params[:honors].nil? ? "yes" : params[:honors]), class: "btn btn-primary"
+  = link_to "Group by Level", evaluation_index_path(:sort_by=>"course_level", :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :honors=>params[:honors].nil? ? "yes" : params[:honors]), class: "btn btn-primary"
   &nbsp;&nbsp;
   = link_to "Reset All Options", evaluation_index_path, class: "btn btn-warning"
 
