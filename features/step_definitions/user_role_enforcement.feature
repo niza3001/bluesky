@@ -51,13 +51,13 @@ Feature: All actions should be checked against user roles.
     When User directly visits /evaluation/export
     Then User should be on page with path of /
 
-  Scenario: User without write access tries to access /evaluation/edit
+  Scenario: User without write access tries to access /evaluation/1/edit
     Given There exists 4 users assigned admin, readWrite, readOnly, and guest as roles
     And User is of class admin
     And User has uploaded PICA data
     And User clicks on Sign out link
     And User is of class readOnly
-    When User directly visits /evaluation/import_gpr
+    When User directly visits /evaluation/1/edit
     Then User should be on page with path of /evaluation/show
 
   Scenario: User without read access tries to access /instructor

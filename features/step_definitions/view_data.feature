@@ -21,11 +21,11 @@ Feature: Be able to view data in the database
     And Clicks on the name of instructor Brent Walther
     Then User should see courses page for Brent Walther
 
-  Scenario: User can view an empty row between groups and check weighted means are stored in the correct colums 
+  Scenario: User can view an empty row between groups and check weighted means are stored in the correct columns
     Given There exists 3 group of 2 evaluation records in the database for instructor Brent Walther
     And User is authenticated
     When User visits the evaluation index page
-    Then User should see a table of 7 data rows
+    Then User should see a table of 9 data rows
     #And User should see an empty row between the 3 groups, given there are 2 evaluation records for each group
     #And User should see 6 empty cells in each sum and average row, given there are 3 groups and 2 evaluation records for each group
 

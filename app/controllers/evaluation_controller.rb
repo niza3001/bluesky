@@ -64,7 +64,7 @@ class EvaluationController < ApplicationController
     @course_temp.each do |sub, num|
       course_entry = CourseName.where(subject_course: sub + " " + num.to_s)
 
-      name = course_entry.blank? ? "" : " " + course_entry.first.name
+      name = course_entry.blank? ? "" : course_entry.first.name.nil? ? "" : " " + course_entry.first.name
 
       @course_names << sub + " " + num.to_s + name
     end
@@ -202,9 +202,13 @@ class EvaluationController < ApplicationController
   end
 
   def edit
-    @evaluation = Evaluation.find(evaluation_id)
-    @instructors = Instructor.select_menu_options
-    render layout: "layouts/centered_form"
+    if can? :write, :all
+      @evaluation = Evaluation.find(evaluation_id)
+      @instructors = Instructor.select_menu_options
+      render layout: "layouts/centered_form"
+    else
+      redirect_to evaluation_index_path
+    end
   end
 
   def destroy
