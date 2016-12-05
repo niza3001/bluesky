@@ -26,6 +26,7 @@ Feature: Be able to navigate to other pages from home page
     And User should see the View Evaluation Data button
     And User should see the View Missing Data button
     And User should see the View Faculty FPR Data button
+    And User should see the View Course Names button
     And User should see the Sign out link
 
   Scenario: Read/Write user first loads webapp
@@ -41,7 +42,9 @@ Feature: Be able to navigate to other pages from home page
     And User should see the View Evaluation Data button
     And User should see the View Missing Data button
     And User should see the View Faculty FPR Data button
+    And User should see the View Course Names button
     And User should see the Sign out link
+    
 
   Scenario: Read Only user first loads webapp
     Given There exists 4 users assigned admin, readWrite, readOnly, and guest as roles
@@ -55,6 +58,7 @@ Feature: Be able to navigate to other pages from home page
     And User should see the View Evaluation Data button
     And User should see the View Missing Data button
     And User should see the View Faculty FPR Data button
+    And User should see the View Course Names button
     And User should see the Sign out link
 
   Scenario: Guest user first loads webapp

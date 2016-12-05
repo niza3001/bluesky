@@ -32,6 +32,11 @@ When(/^User vists the instructor index page$/) do
   visit '/instructor'
 end
 
+
+When(/^Clicks on header of (.+)$/) do |term_sort|
+  click_link(term_sort)
+end
+
 When(/^Clicks on the name of instructor (.+)$/) do |name|
   click_link(name, match: :first)
 end
