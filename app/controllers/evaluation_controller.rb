@@ -58,9 +58,16 @@ class EvaluationController < ApplicationController
   def build_eval_groups
     @terms = Evaluation.pluck(:term).uniq.sort.reverse
     @instructor_names = Instructor.pluck(:name).uniq.sort
-    @course_names = CourseName.pluck(:subject_course, :name).uniq.sort
-    merge_subj_name = lambda { |subj, name| return name.nil? ? subj : subj + " " + name }
-    @course_names.map! { |crs| merge_subj_name.call(crs[0], crs[1]) }
+
+    @course_names = []
+    @course_temp = Evaluation.pluck(:subject, :course).uniq.sort
+    @course_temp.each do |sub, num|
+      course_entry = CourseName.where(subject_course: sub + " " + num.to_s)
+
+      name = course_entry.blank? ? "" : " " + course_entry.first.name
+
+      @course_names << sub + " " + num.to_s + name
+    end
 
     @semesters = ["A", "B", "C"]
     @years = []
