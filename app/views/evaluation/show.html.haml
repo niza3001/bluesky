@@ -1,56 +1,67 @@
-%p.text-right
-  .pull-right
-
+%div{align: "right"}
   = form_tag evaluation_index_path(sort_by: :sort_by), method: :get, class: "form-inline" do
     .form-group
-      %label{for: "year"} Select Year:
+      &nbsp;
+      %label{for: "year"} Year:
       %select{name: "year", id: "year", class: "form-control"}
         %option{value: nil, selected: ( params[:year].nil? ? "selected" : nil)}="All"
         - @years.each do |yr|
           %option{value: yr, selected: (yr == params[:year] ? "selected" : nil)}= yr
 
-      %label{for: "semester"} Select Semester:
+      &nbsp;
+      %label{for: "semester"} Semester:
       %select{name: "semester", id: "semester", class: "form-control"}
         %option{value: nil, selected: ( params[:semester].nil? ? "selected" : nil)}="All"
         - @semesters.each do |smstr|
           %option{value: smstr, selected: (smstr == params[:semester] ? "selected" : nil)}= smstr
 
-      %label{for: "instructor_name"} Select Instructor:
+      &nbsp;
+      %label{for: "instructor_name"} Instructor:
       %select{name: "instructor_name", id: "instructor_name", class: "form-control"}
         %option{value: nil, selected: ( params[:instructor_name].nil? ? "selected" : nil)}="All"
         - @instructor_names.each do |instructor_name|
           %option{value: instructor_name, selected: (instructor_name == params[:instructor_name] ? "selected" : nil)}= instructor_name
 
-      %label{for: "course_name"} Select Course:
+      &nbsp;
+      %label{for: "course_name"} Course:
       %select{name: "course_name", id: "course_name", class: "form-control"}
         %option{value: nil, selected: ( params[:course_name].nil? ? "selected" : nil)}="All"
         - @course_names.each do |course_name|
           %option{value: course_name, selected: (course_name == params[:course_name] ? "selected" : nil)}= course_name
 
+      &nbsp;
       %label{for: "honors"} View Honors:
       %select{name: "honors", id: "honors", class: "form-control"}
         %option{value: "yes", selected: (params[:honors].nil? ? "selected" : "yes" == params[:honors] ? "selected" : nil)}= "Yes"
         %option{value: "no", selected: ("no" == params[:honors] ? "selected" : nil)}= "No"
         %option{value: "only", selected: ("only" == params[:honors] ? "selected" : nil)}= "Only"
 
+      &nbsp;
     %button{type: "submit", class: "btn btn-primary"} Go
+
+%p
 
 %p.text-right
 
-  = link_to "1XX", evaluation_index_path(sort_by: :course_level, :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :honors=>params[:honors].nil? ? "yes" : params[:honors], :level=>1), class: "btn btn-primary"
-  = link_to "2XX", evaluation_index_path(sort_by: :course_level, :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :honors=>params[:honors].nil? ? "yes" : params[:honors], :level=>2), class: "btn btn-primary"
-  = link_to "3XX", evaluation_index_path(sort_by: :course_level, :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :honors=>params[:honors].nil? ? "yes" : params[:honors], :level=>3), class: "btn btn-primary"
-  = link_to "4XX", evaluation_index_path(sort_by: :course_level, :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :honors=>params[:honors].nil? ? "yes" : params[:honors], :level=>4), class: "btn btn-primary"
-  = link_to "Undergrad", evaluation_index_path(sort_by: :course_level, :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :honors=>params[:honors].nil? ? "yes" : params[:honors], :level=>"u"), class: "btn btn-primary"
-  = link_to "6XX / Grad", evaluation_index_path(sort_by: :course_level, :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :honors=>params[:honors].nil? ? "yes" : params[:honors], :level=>6), class: "btn btn-primary"
+  = link_to "1XX", evaluation_index_path(:sort_by=>params[:sort_by].nil? ? "default" : params[:sort_by], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :honors=>params[:honors].nil? ? "yes" : params[:honors], :level=>1), class: "btn btn-primary"
+  = link_to "2XX", evaluation_index_path(:sort_by=>params[:sort_by].nil? ? "default" : params[:sort_by], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :honors=>params[:honors].nil? ? "yes" : params[:honors], :level=>2), class: "btn btn-primary"
+  = link_to "3XX", evaluation_index_path(:sort_by=>params[:sort_by].nil? ? "default" : params[:sort_by], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :honors=>params[:honors].nil? ? "yes" : params[:honors], :level=>3), class: "btn btn-primary"
+  = link_to "4XX", evaluation_index_path(:sort_by=>params[:sort_by].nil? ? "default" : params[:sort_by], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :honors=>params[:honors].nil? ? "yes" : params[:honors], :level=>4), class: "btn btn-primary"
+  = link_to "Undergrad", evaluation_index_path(:sort_by=>params[:sort_by].nil? ? "default" : params[:sort_by], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :honors=>params[:honors].nil? ? "yes" : params[:honors], :level=>"u"), class: "btn btn-primary"
+  = link_to "6XX / Grad", evaluation_index_path(:sort_by=>params[:sort_by].nil? ? "default" : params[:sort_by], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :honors=>params[:honors].nil? ? "yes" : params[:honors], :level=>6), class: "btn btn-primary"
 
-  = link_to "Group by Levels", evaluation_index_path(sort_by: :course_level, :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :honors=>params[:honors].nil? ? "yes" : params[:honors]), class: "btn btn-primary"
-  = link_to "Reset View", evaluation_index_path, class: "btn btn-warning"
+  = link_to "All Levels", evaluation_index_path(:sort_by=>params[:sort_by].nil? ? "default" : params[:sort_by], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :honors=>params[:honors].nil? ? "yes" : params[:honors]), class: "btn btn-primary"
+  &nbsp;&nbsp;
+  = link_to "Group by Level", evaluation_index_path(:year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :honors=>params[:honors].nil? ? "yes" : params[:honors]), class: "btn btn-primary"
+  &nbsp;&nbsp;
+  = link_to "Reset All Options", evaluation_index_path, class: "btn btn-warning"
 
 %p.text-right
   = link_to "Import PICA Data", import_evaluation_index_path, class: "btn btn-primary"
   = link_to "Import GPR Data", import_gpr_evaluation_index_path, class: "btn btn-primary"
+  &nbsp;&nbsp;
   = link_to "Missing Data", missing_data_evaluation_index_path, class: "btn btn-warning"
+  &nbsp;&nbsp;
   = link_to "Export to Excel",  export_evaluation_path(:id=>params[:sort_by].nil? ? "default" : params[:sort_by], :sort_by=>params[:sort_by].nil? ? "default" : params[:sort_by], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :honors=>params[:honors].nil? ? "yes" : params[:honors], :level=>params[:level]), class: "btn btn-primary"
 
 %h1 Evaluation Table:
