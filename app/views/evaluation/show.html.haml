@@ -27,7 +27,7 @@
       %select{name: "course_name", id: "course_name", class: "form-control"}
         %option{value: nil, selected: ( params[:course_name].nil? ? "selected" : nil)}="All"
         - @course_names.each do |course_name|
-          %option{value: course_name, selected: (course_name == params[:course_name] ? "selected" : nil)}= course_name
+          %option{value: course_name, selected: (course_name[0, 8] == params[:course_name] ? "selected" : nil)}= course_name
 
       &nbsp;
       %label{for: "honors"} View Honors:
