@@ -18,7 +18,7 @@ Feature: Manually enter evaluation data from paper evaluations
     And User fills in Term with 2015C, Subject with CSCE, Course with 111, Section with 506, Enrollment with 50, Item 1 Mean with 4.32, Item 2 Mean with 4.32, Item 3 Mean with 4.32, Item 4 Mean with 4.32, Item 5 Mean with 4.32, Item 6 Mean with 4.32, Item 7 Mean with 4.32, Item 8 Mean with 4.32
     And User selects Brent Walther from the Instructor select menu
     And User clicks on the Add Evaluation button
-    Then User should see the evaluations page for show
+    Then User should be in evaluation page
     And User should see a table of 7 data rows
 
   Scenario: Administrator is able to access the manual evaluation entry screen
