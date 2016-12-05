@@ -114,20 +114,26 @@ class EvaluationController < ApplicationController
       smstr << semester
     end
 
+    if Rails.env.production?
+      cast = "::varchar"
+    else
+      cast = ""
+    end
+
     if params[:honors].nil? or params[:honors] == "yes"
       honors_query = ""
     elsif params[:honors] == "no"
-      honors_query = " AND NOT section LIKE '2%'"
+      honors_query = " AND NOT section" + cast + " LIKE '2%'"
     elsif params[:honors] == "only"
-      honors_query = " AND section LIKE '2%'"
+      honors_query = " AND section" + cast + " LIKE '2%'"
     end
 
     if params[:level].nil?
       level_query = ""
     elsif params[:level] == "u"
-      level_query = " AND course NOT LIKE '6%'"
+      level_query = " AND course" + cast + " NOT LIKE '6%'"
     else
-      level_query = " AND course LIKE '" + params[:level] + "%'"
+      level_query = " AND course" + cast + " LIKE '" + params[:level] + "%'"
     end
 
     query_append = honors_query + level_query
