@@ -127,22 +127,12 @@ class EvaluationController < ApplicationController
     cast = Rails.env.production? ? "::varchar" : ""
 
     if params[:honors].nil? or params[:honors] == "yes"
-      honors_query = ""
+      query_append = ""
     elsif params[:honors] == "no"
-      honors_query = " AND NOT section" + cast + " LIKE '2%'"
+      query_append = " AND NOT section" + cast + " LIKE '2%'"
     elsif params[:honors] == "only"
-      honors_query = " AND section" + cast + " LIKE '2%'"
+      query_append = " AND section" + cast + " LIKE '2%'"
     end
-
-    if params[:level].nil?
-      level_query = ""
-    elsif params[:level] == "u"
-      level_query = " AND course" + cast + " NOT LIKE '6%'"
-    else
-      level_query = " AND course" + cast + " LIKE '" + params[:level] + "%'"
-    end
-
-    query_append = honors_query + level_query
 
     if params[:sort_by].to_s == 'semester_'
       @evaluation_groups += Evaluation.no_missing_data.where(
