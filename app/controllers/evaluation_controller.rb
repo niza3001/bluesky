@@ -38,6 +38,7 @@ class EvaluationController < ApplicationController
       selected_year = params[:year];
       selected_semester = params[:semester];
 
+
       if selected_year.nil? || selected_semester.nil?
         yr_smstr = Evaluation.no_missing_data.pluck(:term).uniq.sort.reverse.first
       else
@@ -76,21 +77,43 @@ class EvaluationController < ApplicationController
     end
 
     @years = @years.uniq.sort.reverse
+    @course_level_filters = ["1XX","2XX","3XX","4XX","5XX","6XX"]
 
     year = params[:year]
     semester = params[:semester]
     instructor_name = params[:instructor_name]
     course_name = params[:course_name]
+    course_level_filter = params[:course_level_filter]
 
     @evaluation_groups = []
 
     if course_name.nil? || course_name == "All"
-      subj = Evaluation.pluck(:subject).uniq.sort
-      course = Evaluation.pluck(:course).uniq.sort
+      if course_level_filter.nil? || course_level_filter == "All"
+        subj = Evaluation.pluck(:subject).uniq.sort
+        course = Evaluation.pluck(:course).uniq.sort
+      else
+        subj = Evaluation.pluck(:subject).uniq.sort
+        course_all = Evaluation.pluck(:course).uniq.sort
+        course = []
+        course_all.each do |c|
+          if c.to_s.starts_with?(course_level_filter.first)
+            course << c
+          end
+        end
+      end
     else
-      subj_course = course_name.gsub(/\s+/m, ' ').strip.split(" ")
-      subj = subj_course[0]
-      course = subj_course[1]
+      if course_level_filter.nil? || course_level_filter == "All"
+        subj_course = course_name.gsub(/\s+/m, ' ').strip.split(" ")
+        subj = subj_course[0]
+        course = subj_course[1]
+      else
+        subj_course = course_name.gsub(/\s+/m, ' ').strip.split(" ")
+        subj = subj_course[0]
+        course_selected = subj_course[1]
+          if course_selected.to_s.starts_with?(course_level_filter.first)
+            course = course_selected
+          end
+      end
     end
 
     if instructor_name.nil? || instructor_name == "All"

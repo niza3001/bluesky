@@ -30,6 +30,13 @@
           %option{value: course_name, selected: (course_name[0, 8] == params[:course_name] ? "selected" : nil)}= course_name
 
       &nbsp;
+      %label{for: "course_level_filter"} Course Level:
+      %select{name: "course_level_filter", id: "course_level_filter", class: "form-control"}
+        %option{value: nil, selected: ( params[:course_level_filter].nil? ? "selected" : nil)}="All"
+        - @course_level_filters.each do |course_level_filter|
+          %option{value: course_level_filter, selected: (course_level_filter == params[:course_level_filter] ? "selected" : nil)}= course_level_filter
+
+      &nbsp;
       %label{for: "honors"} View Honors:
       %select{name: "honors", id: "honors", class: "form-control"}
         %option{value: "yes", selected: (params[:honors].nil? ? "selected" : "yes" == params[:honors] ? "selected" : nil)}= "Yes"
