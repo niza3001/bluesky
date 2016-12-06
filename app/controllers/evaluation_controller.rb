@@ -77,7 +77,7 @@ class EvaluationController < ApplicationController
     end
 
     @years = @years.uniq.sort.reverse
-    @course_level_filters = ["1XX","2XX","3XX","4XX","5XX","6XX"]
+    @course_level_filters = ["1XX","2XX","3XX","4XX","5XX","6XX/Grad","Undergrad"]
 
     year = params[:year]
     semester = params[:semester]
@@ -95,9 +95,18 @@ class EvaluationController < ApplicationController
         subj = Evaluation.pluck(:subject).uniq.sort
         course_all = Evaluation.pluck(:course).uniq.sort
         course = []
-        course_all.each do |c|
-          if c.to_s.starts_with?(course_level_filter.first)
-            course << c
+        case course_level_filter
+         when "Undergrad"
+          course_all.each do |c|
+            if c.to_s.starts_with?("1","2","3","4","5")
+              course << c
+            end
+          end
+        else
+          course_all.each do |c|
+            if c.to_s.starts_with?(course_level_filter.first)
+              course << c
+            end
           end
         end
       end
@@ -110,9 +119,16 @@ class EvaluationController < ApplicationController
         subj_course = course_name.gsub(/\s+/m, ' ').strip.split(" ")
         subj = subj_course[0]
         course_selected = subj_course[1]
+        case course_level_filter
+        when "Undergrad"
+          if course_selected.to_s.starts_with?("1","2","3","4","5")
+            course = course_selected
+          end
+        else
           if course_selected.to_s.starts_with?(course_level_filter.first)
             course = course_selected
           end
+        end
       end
     end
 
@@ -322,7 +338,7 @@ class EvaluationController < ApplicationController
   def evaluation_params
     params.require(:evaluation).permit(:term, :subject, :course, :section, :instructor_id,
                                        :enrollment, :item1_mean, :item2_mean, :item3_mean, :item4_mean, :item5_mean,
-                                       :item6_mean, :item7_mean, :item8_mean, :Itemz, :instructor,:course_name, :gpr).to_h.symbolize_keys!
+                                       :item6_mean, :item7_mean, :item8_mean, :Itemz, :instructor,:course_name, :gpr, :course_level_filter).to_h.symbolize_keys!
   end
 
   def evaluation_id
