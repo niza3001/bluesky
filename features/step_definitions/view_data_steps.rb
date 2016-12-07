@@ -24,11 +24,19 @@ Given(/^There exists (\d+) groups? of (\d+) evaluation records in the database f
   end
 end
 
+When /^User selects "(.*)" from "(.*)"$/ do |value, field|
+  select(value, :from => field)
+end
+
+When /^User clicks on button "(.*)"$/ do |value|
+  click_button(value)
+end
+
 When(/^User visits the evaluation index page$/) do
   visit '/evaluation'
 end
 
-When(/^User vists the instructor index page$/) do
+When(/^User visits the instructor index page$/) do
   visit '/instructor'
 end
 
