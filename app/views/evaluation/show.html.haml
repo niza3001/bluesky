@@ -19,15 +19,15 @@
       %label{for: "instructor_name"} Instructor:
       %select{name: "instructor_name", id: "instructor_name", class: "form-control"}
         %option{value: nil, selected: ( params[:instructor_name].nil? ? "selected" : nil)}="All"
-        - @instructor_names.each do |instructor_name|
-          %option{value: instructor_name, selected: (instructor_name == params[:instructor_name] ? "selected" : nil)}= instructor_name
+        - @instructor_names.each do |current_instructor_name|
+          %option{value: current_instructor_name, selected: (current_instructor_name == params[:instructor_name] ? "selected" : nil)}= current_instructor_name
 
       &nbsp;
       %label{for: "course_name"} Course:
       %select{name: "course_name", id: "course_name", class: "form-control"}
         %option{value: nil, selected: ( params[:course_name].nil? ? "selected" : nil)}="All"
         - @course_names.each do |course_name|
-          %option{value: course_name, selected: (course_name[0, 8] == params[:course_name] ? "selected" : nil)}= course_name
+          %option{value: course_name, selected: (course_name == params[:course_name] ? "selected" : nil)}= course_name
 
       &nbsp;
       %label{for: "course_level_filter"} Course Level:
@@ -97,13 +97,13 @@
             %td
               = link_to "Edit", edit_evaluation_path(evaluation)
           %td
-            = link_to evaluation.term, evaluation_index_path(:semester=>evaluation.term.to_s.last, :year=>evaluation.term.to_s[0..3], :instructor=>params[:instructor].nil? ? "All" : params[:instructor], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :sort_by=>params[:sort_by].nil? ? "default" : params[:sort_by], :honors=>params[:honors].nil? ? "yes" : params[:honors])
+            = link_to evaluation.term, evaluation_index_path(:semester=>evaluation.term.to_s.last, :year=>evaluation.term.to_s[0..3], :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :course_name=>params[:course_name].nil? ? "All" : params[:course_name], :sort_by=>params[:sort_by].nil? ? "default" : params[:sort_by], :honors=>params[:honors].nil? ? "yes" : params[:honors])
           %td
             = evaluation.subject
           %td
-            = link_to evaluation.course_name.nil? ? "" : evaluation.course_name, evaluation_index_path(:course_name=>evaluation.subject + " " +  evaluation.course.to_s, :instructor=>params[:instructor].nil? ? "All" : params[:instructor], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :sort_by=>params[:sort_by].nil? ? "default" : params[:sort_by], :honors=>params[:honors].nil? ? "yes" : params[:honors])
+            = link_to evaluation.course_name.nil? ? "" : evaluation.course_name, evaluation_index_path(:course_name=>evaluation.subject + " " +  evaluation.course.to_s, :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :sort_by=>params[:sort_by].nil? ? "default" : params[:sort_by], :honors=>params[:honors].nil? ? "yes" : params[:honors])
           %td
-            = link_to evaluation.course.to_s + is_honors(evaluation.section), evaluation_index_path(:course_name=>evaluation.subject + " " +  evaluation.course.to_s, :instructor=>params[:instructor].nil? ? "All" : params[:instructor], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :sort_by=>params[:sort_by].nil? ? "default" : params[:sort_by], :honors=>params[:honors].nil? ? "yes" : params[:honors])
+            = link_to evaluation.course.to_s + is_honors(evaluation.section), evaluation_index_path(:course_name=>evaluation.subject + " " +  evaluation.course.to_s, :instructor_name=>params[:instructor_name].nil? ? "All" : params[:instructor_name], :year=>params[:year].nil? ? "All" : params[:year], :semester=>params[:semester].nil? ? "All" : params[:semester], :sort_by=>params[:sort_by].nil? ? "default" : params[:sort_by], :honors=>params[:honors].nil? ? "yes" : params[:honors])
           %td
             = evaluation.section
           %td
