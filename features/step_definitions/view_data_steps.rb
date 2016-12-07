@@ -36,7 +36,7 @@ When(/^User visits the evaluation index page$/) do
   visit '/evaluation'
 end
 
-When(/^User vists the instructor index page$/) do
+When(/^User visits the instructor index page$/) do
   visit '/instructor'
 end
 
