@@ -52,3 +52,11 @@ Feature: Manually enter evaluation data from paper evaluations
     And There exists 1 group of 5 evaluation records in the database for instructor Brent Walther
     When User visits the instructor evaluation page for Brent Walther
     Then User should not see the Add Course Name link
+
+  Scenario: User should see export and update buttons
+    Given User is authenticated
+    And There exists 1 group of 5 evaluation records in the database for instructor Brent Walther
+    When User visits the evaluation index page
+    And User clicks on Brent Walther link
+    Then User should see the Update button   
+    Then User should see the Export to Excel button

@@ -20,6 +20,20 @@ Feature: Edit enrollment numbers for classes
     And User clicks on Done button on edit page
     Then User should be redirected to evaluation index page
 
+  Scenario: User gets redirected to evaluation index page after updating
+    Given There exists 5 evaluation record in the database for instructor xyz
+    And User is authenticated
+    When User is on edit page for user 1
+    And User clicks on Cancel button on edit page
+    Then User should be redirected to evaluation index page
+
+  Scenario: User gets redirected to evaluation index page after updating
+    Given There exists 5 evaluation record in the database for instructor xyz
+    And User is authenticated
+    When User is on edit page for user 1
+    And User clicks on Delete Evaluation button on edit page
+    Then User should be redirected to evaluation index page
+
   Scenario: Guest is able to access the manual evaluation entry screen
     Given There exists 4 users assigned admin, readWrite, readOnly, and guest as roles
     And User is of class guest

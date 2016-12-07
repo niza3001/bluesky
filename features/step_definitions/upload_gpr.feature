@@ -65,3 +65,10 @@ Feature: Integrate data uploaded from PDFs containing GPR data
     And User clicks on Faculty Member Data link
     And User clicks on Jennifer Welch link
     Then User should see a GPR of 3.65
+
+  Scenario: User decides not to upload
+    Given User is authenticated
+    And User is on the import GPR page
+    And User clicks on the Cancel button
+    Then User should be on the home page
+

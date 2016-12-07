@@ -27,3 +27,10 @@ Feature: Integrate data uploaded from excel files downloaded from PICA website
     And User is on the import page
     And User clicks on the Upload button
     Then User should see message stating File not attached, please select file to upload
+
+  Scenario: User decides not to upload
+    Given User is authenticated
+    And User is on the import GPR page
+    And User clicks on the Cancel button
+    Then User should be on the home page
+

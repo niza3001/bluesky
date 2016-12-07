@@ -41,6 +41,22 @@ When(/^Clicks on the name of instructor (.+)$/) do |name|
   click_link(name, match: :first)
 end
 
+When(/^User selects "([^"]*)" from "([^"]*)"$/) do |value, field|
+  select(value, :from => field) 
+end
+
+When(/^User clicks on (.+)? button on evaluation index page$/) do |button|
+  click_on(button)
+end
+
+When(/^User clicks on term (.+)$/) do |name|
+  click_link(name, match: :first)
+end
+
+When(/^User clicks on course number (.+)$/) do |name|
+  click_link(name, match: :first)
+end
+
 Then(/^User should see courses page for (.+)$/) do |name|
   expect(page).to have_content(name)
   expect(page).to have_css("tbody tr")
@@ -49,6 +65,15 @@ end
 Then(/^User should see a link for instructor (.+)$/) do |name|
   expect(page).to have_link(name)
 end
+
+Then(/^User should see a link for term (.+)$/) do |name|
+  expect(page).to have_link(name)
+end
+
+Then(/^User should see a link for course number (.+)$/) do |name|
+  expect(page).to have_link(name)
+end
+
 
 Then(/^User should see an empty row between the (.+)? groups, given there are (.+)? evaluation records for each group$/) do |n_groups,n_records|
   (1..n_groups.to_i).each do |g|
@@ -61,4 +86,5 @@ Then(/^User should see (.+)? empty cells in each sum and average row, given ther
     expect(page).to have_css("tr[#{g*(n_records.to_i+2)-1}] td[@colspan='#{colspan}']", count: 1, text: nil)
     expect(page).to have_css("tr[#{g*(n_records.to_i+2)-1}] td", count: 17)
   end
+
 end
